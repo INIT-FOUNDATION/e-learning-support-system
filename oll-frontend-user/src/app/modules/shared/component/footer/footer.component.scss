@@ -1,0 +1,21 @@
+.footerContainer {
+  background-color: #484848;
+  color: #fff;
+  margin-top: 10px;
+
+  ul {
+    padding: 0;
+    li {
+      list-style-type: none;
+      padding-bottom: 10px;
+    }
+  }
+
+  .footerIcons {
+    width: 50%;
+
+    @media screen and (max-width: 425px) {
+      width: 100%;
+    }
+  }
+}

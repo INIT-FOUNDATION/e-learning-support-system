@@ -1,0 +1,133 @@
+<div class="d-flex align-items-center justify-content-center h-100 pt-5">
+  <div
+    class="d-flex flex-column"
+    [ngClass]="{ 'py-5 form-width': loginUsing === 'password' }"
+  >
+    <span class="text-center fw-500 fs-15" *ngIf="loginUsing === 'password'"
+      >Sign in to OLL
+    </span>
+
+    <ng-container *ngIf="loginUsing === 'password'">
+      <form [formGroup]="loginForm" (ngSubmit)="LoginWithPassword()">
+        <div class="my-3 mb-1">
+          <input
+            type="text"
+            placeholder="Email or Username"
+            formControlName="emailId"
+            class="rounded-pill border ps-3 py-2 fs-09 w-100"
+          />
+          <div
+            *ngIf="loginForm.get('emailId').errors?.['required'] && loginForm.get('emailId').touched"
+          >
+            <small class="text-danger m-0 ms-2">Email is required</small>
+          </div>
+        </div>
+        <p
+          *ngIf="registerUser"
+          class="m-0 ms-2 text-danger"
+          style="font-size: 0.7rem"
+        >
+          User does not exists
+        </p>
+
+        <div class="mt-3" *ngIf="userExists">
+          <input
+            type="text"
+            placeholder="Password"
+            formControlName="password"
+            class="rounded-pill border ps-3 py-2 fs-09 w-100"
+          />
+          <div
+            *ngIf="
+              loginForm.get('password').errors?.['required']  &&
+              loginForm.get('password').touched
+            "
+          >
+            <small class="text-danger m-0 ms-2">Password is required</small>
+          </div>
+          <div
+            *ngIf="
+            loginForm.get('password').errors?.['invalidPassword'] &&
+            loginForm.get('password').touched
+          "
+          >
+            <small class="text-danger m-0 ms-2">Invalid Password</small>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn submit-btn text-white rounded-pill py-2 w-100 fs-08 mt-3"
+          [disabled]="loginForm.get('emailId').value === ''"
+          (click)="loginForm.markAllAsTouched()"
+        >
+          Sign in
+        </button>
+
+        <div id="google-btn" class="mt-3"></div>
+      </form>
+    </ng-container>
+
+    <ng-container *ngIf="loginUsing === 'face'">
+      <span class="fs-15 fw-bold lh-base">Login with Face Authentication</span>
+      <div class="custom-border-bottom my-1"></div>
+      <span class="fs-09 my-1"
+        >"Please position your face within the frame, ensure good lighting, and
+        click 'Capture' to take a photo."</span
+      >
+      <ng-container class="my-3" *ngIf="!imageCaptured; else captured">
+        <video
+          #video
+          autoplay
+          muted
+          class="rounded custom-video-height mt-3 d-flex align-self-start"
+          id="webCam"
+        ></video>
+        <div
+          class="position-absolute canvas-position"
+          id="canvasEl"
+          style="display: none"
+        ></div>
+        <div class="d-flex flex-column my-3">
+          <div class="d-flex align-items-center">
+            <!-- <button
+              (click)="capture()"
+              class="btn bg-danger text-white px-5 rounded-pill fs-09 mx-2 py-2 custom-btn-width"
+            >
+              Proceed
+            </button> -->
+            <button
+              (click)="loginUsingPassword()"
+              class="btn bg-light border text-dark rounded-pill fs-09 py-2 custom-btn-width"
+            >
+              Login Using Password
+            </button>
+          </div>
+        </div>
+        <canvas id="canvas-real" class="position-absolute"></canvas>
+      </ng-container>
+
+      <ng-template #captured>
+        <img [src]="captures" class="" [width]="WIDTH" [height]="HEIGHT" />
+        <!-- <div class="d-flex flex-column ms-3 my-3">
+          <div class="d-flex align-items-center">
+            <button
+              (click)="confirmFaceAuth()"
+              class="btn border text-dark rounded-pill fs-09 mx-2 py-2 custom-btn-width"
+            >
+              Confirm
+            </button>
+            <button
+              (click)="retakeFaceAuth()"
+              class="btn border text-dark rounded-pill fs-09 py-2 custom-btn-width"
+            >
+              Retake
+            </button>
+          </div>
+        </div> -->
+      </ng-template>
+    </ng-container>
+  </div>
+</div>
+
+<img src="" id="capturedImage" style="display: none" />

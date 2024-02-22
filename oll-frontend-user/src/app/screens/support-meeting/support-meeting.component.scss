@@ -1,0 +1,111 @@
+.meetingVideoCall {
+    width: 100%;
+    display: block;
+    border: 0px solid transparent;
+    overflow: hidden !important;
+    height: 100vh;
+    background: #0a2640;
+  }
+  
+  
+  
+  ::ng-deep {
+    iframe {
+      height: 100vh !important;
+      overflow: hidden !important;
+  
+      // @media only screen and (min-width: 320px) {
+      //   height: calc(100vh - 5rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 390px) {
+      //   height: calc(100vh - 5rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 414px) {
+      //   height: calc(100vh - 5rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 568px) {
+      //   height: calc(100vh - 9rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 640px) {
+      //   height: calc(100vh - 9rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 658px) {
+      //   height: calc(100vh - 9rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 736px) {
+      //   height: calc(100vh - 9rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 768px) {
+      //   height: calc(100vh - 10rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 800px) {
+      //   height: calc(100vh - 10rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 812px) {
+      //   height: calc(100vh - 10rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 820px) {
+      //   height: calc(100vh - 10rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 823px) {
+      //   height: calc(100vh - 10rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 844px) {
+      //   height: calc(100vh - 10rem) !important;
+      // }
+  
+      // @media only screen and (min-width: 896px) {
+      //   height: calc(100vh - 10rem) !important;
+      // }
+  
+  
+      // @media only screen and (min-width: 1024px) {
+      //   height: 100vh !important;
+      // }
+  
+      // @media only screen and (min-width: 1098px) {
+      //   height: 100vh !important;
+      // }
+  
+      // @media only screen and (min-width: 1152px) {
+      //   height: 100vh !important;
+      // }
+  
+      // @media only screen and (min-width: 1180px) {
+      //   height: 100vh !important;
+      // }
+  
+      // @media only screen and (min-width: 1280px) {
+      //   height: 100vh !important;
+      // }
+  
+      // @media only screen and (min-width: 1360px) {
+      //   height: 100vh !important;
+      // }
+  
+      // @media only screen and (min-width: 1366px) {
+      //   height: 100vh !important;
+      // }
+  
+      // @media only screen and (min-width: 1440px) {
+      //   height: 100vh !important;
+      // }
+  
+      // @media only screen and (min-width: 1600px) {
+      //   height: 100vh !important;
+      // }
+    }
+  }
+  

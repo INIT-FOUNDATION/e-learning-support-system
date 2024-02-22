@@ -1,0 +1,108 @@
+/* You can add global styles to this file, and also import other style files */
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "../node_modules/ngx-toastr/toastr.css";
+
+@import "@angular/material/theming";
+@include mat-core();
+
+$my-app-primary: mat-palette($mat-red);
+$my-app-accent: mat-palette($mat-red, A200, A100, A400);
+$my-app-theme: mat-light-theme($my-app-primary, $my-app-accent);
+
+@include angular-material-theme($my-app-theme);
+
+html,
+body {
+  height: 100%;
+  font-family: "Poppins" !important;
+  letter-spacing: 0.04rem;
+  --mat-option-selected-state-label-text-color: #000 !important;
+  overflow: auto !important;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 0.8rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #da2128;
+  border-radius: 0.8rem;
+}
+
+.btn {
+  letter-spacing: 0.04rem;
+}
+
+.btn:focus {
+  outline: 0;
+  box-shadow: none;
+}
+
+input:focus-visible {
+  outline: 2px solid rgb(232 164 170 / 80%);
+}
+
+button:focus:not(:focus-visible) {
+  box-shadow: none;
+}
+
+.fs-08 {
+  font-size: 0.8rem !important;
+}
+
+.fs-09 {
+  font-size: 0.9rem;
+}
+
+.fs-11 {
+  font-size: 1.1rem !important;
+}
+
+.fs-12 {
+  font-size: 1.2rem;
+}
+
+.fs-13 {
+  font-size: 1.3rem;
+}
+
+.fs-15 {
+  font-size: 1.5rem;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.mat-mdc-form-field-infix {
+  padding-top: 0.6rem !important;
+  padding-bottom: 0.6rem !important;
+  min-height: 0rem;
+}
+
+.mat-mdc-form-field:not(.mat-form-field-disabled)
+  .mat-mdc-floating-label.mdc-floating-label {
+  padding: 0rem 0rem 1rem 0rem;
+}
+
+.custom-video-height {
+  // width: calc(100vw - 3rem);
+  height: 60vh;
+
+  @media only screen and (max-width: 768px) {
+    height: 30vh;
+  }
+}

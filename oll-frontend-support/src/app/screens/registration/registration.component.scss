@@ -1,0 +1,55 @@
+.example-form {
+  // min-width: 50rem;
+  // max-width: 500px;
+  width: 70%;
+
+  @media screen and (max-width: 845px) {
+    width: 100%;
+  }
+}
+
+:host ::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-shape: 0.8rem;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+:host ::ng-deep .mat-mdc-form-field {
+  min-width: 0;
+
+  @media screen and (max-width: 593px) {
+    min-width: 25rem;
+  }
+
+  @media screen and (max-width: 430px) {
+    min-width: 18rem;
+  }
+}
+
+.mobileInput {
+  @media screen and (max-width: 593px) {
+    margin-top: 20px;
+  }
+}
+
+::ng-deep .mdc-floating-label--required {
+  color: #da2128;
+}
+
+.custom-border-bottom {
+  border: 5px solid #da2128;
+  border-radius: 1rem;
+  width: 2.5rem;
+}
+
+.text-danger.position-absolute {
+  top: 2.7rem;
+  left: -0.5rem;
+}
+
+.submit-btn {
+  background-color: #da2128;
+  letter-spacing: 0.04rem;
+}

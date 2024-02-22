@@ -1,0 +1,229 @@
+<div class="w-100">
+  <span class="fs-15 fw-bold lh-base"
+    >Register for Video Conferencing Support</span
+  >
+  <div class="custom-border-bottom"></div>
+  <form
+    class="example-form mt-3"
+    [formGroup]="registrationForm"
+    (ngSubmit)="register()"
+  >
+    <div class="fs-13 fw-500 mb-3">Basic Info</div>
+    <div
+      class="d-flex align-items-center justify-content-between flex-wrap my-3"
+    >
+      <mat-form-field class="rounded w-75" appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input
+          type="text"
+          matInput
+          formControlName="firstName"
+          name="firstName"
+        />
+      </mat-form-field>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['firstName']).touched &&
+          registrationForm.get(['firstName']).hasError('required')
+        "
+      >
+        First Name is required
+      </span>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['firstName']).touched &&
+          registrationForm.get(['firstName']).hasError('minlength')
+        "
+      >
+        First Name must be at least 4 characters long
+      </span>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['firstName']).touched &&
+          registrationForm.get(['firstName']).hasError('maxlength')
+        "
+      >
+        First Name must be less than 30 characters
+      </span>
+    </div>
+
+    <div
+      class="d-flex align-items-center justify-content-between flex-wrap my-3"
+    >
+      <mat-form-field class="w-75 rounded" appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input type="text" matInput formControlName="lastName" />
+      </mat-form-field>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['lastName']).touched &&
+          registrationForm.get(['lastName']).hasError('required')
+        "
+      >
+        Last Name is required
+      </span>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['lastName']).touched &&
+          registrationForm.get(['lastName']).hasError('minlength')
+        "
+      >
+        Last Name must be at least 4 characters long
+      </span>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['lastName']).touched &&
+          registrationForm.get(['lastName']).hasError('maxlength')
+        "
+      >
+        Last Name must be less than 30 characters
+      </span>
+    </div>
+
+    <div
+      class="d-flex align-items-center justify-content-between flex-wrap my-3"
+    >
+      <mat-form-field class="w-75 rounded" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input type="text" matInput formControlName="emailId" />
+      </mat-form-field>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['emailId']).touched &&
+          registrationForm.get(['emailId']).hasError('required')
+        "
+      >
+        Email is required
+      </span>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get('emailId').touched &&
+          registrationForm.get('emailId').hasError('email')
+        "
+        >Invalid email format</span
+      >
+    </div>
+
+    <div
+      class="d-flex align-items-center justify-content-between flex-wrap my-3"
+    >
+      <div class="w-75">
+        <mat-form-field appearance="outline" class="me-1" style="width: 24%">
+          <mat-label>Dial code</mat-label>
+          <mat-select formControlName="dialCode">
+            <mat-option
+              *ngFor="let item of countryCodesList"
+              [value]="item?.dial_code"
+            >
+              {{ item?.dial_code }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="rounded w-75 mobileInput" appearance="outline">
+          <mat-label>Mobile Number</mat-label>
+          <input
+            type="tel"
+            matInput
+            formControlName="mobileNumber"
+            maxlength="10"
+            (keypress)="validateNumber($event)"
+          />
+        </mat-form-field>
+      </div>
+
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['mobileNumber']).touched &&
+          registrationForm.get(['mobileNumber']).hasError('required')
+        "
+      >
+        Mobile Number is required
+      </span>
+    </div>
+
+    <div
+      class="d-flex align-items-center w-100 justify-content-between flex-wrap my-3"
+    >
+      <mat-form-field appearance="outline" class="w-75">
+        <mat-label>Choose Role</mat-label>
+        <mat-select formControlName="roleId">
+          <mat-option *ngFor="let item of rolesList" [value]="item.roleId">{{
+            item?.roleName
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['roleId']).touched &&
+          registrationForm.get(['roleId']).hasError('required')
+        "
+      >
+        Role is required
+      </span>
+    </div>
+
+    <div
+      class="d-flex align-items-center w-100 justify-content-between flex-wrap my-3"
+    >
+      <mat-form-field class="w-75 rounded" appearance="outline">
+        <mat-label>Password</mat-label>
+        <input type="text" matInput formControlName="password" />
+      </mat-form-field>
+      <span
+        class="text-danger pt-2 ps-2"
+        *ngIf="
+          submitAttempt &&
+          registrationForm.get(['password']).touched &&
+          registrationForm.get(['password']).hasError('required')
+        "
+      >
+        Password is required
+      </span>
+    </div>
+
+    <div
+      class="d-flex align-items-center w-100 justify-content-between flex-wrap my-3"
+    >
+      <mat-form-field
+        class="w-75 rounded position-relative"
+        appearance="outline"
+      >
+        <mat-label>Confirm Password</mat-label>
+        <input type="text" matInput formControlName="confirmPassword" />
+        <span
+          class="text-danger position-absolute fs-08 pt-2 ps-2"
+          *ngIf="passwordValidation"
+          >Password does not match.</span
+        >
+      </mat-form-field>
+    </div>
+
+    <button
+      type="submit"
+      class="btn submit-btn text-white rounded-pill fs-09 py-2 py-lg-3 py-md-3 py-sm-2 w-50 my-3 mb-lg-0"
+      (click)="registrationForm.markAllAsTouched()"
+    >
+      Register
+    </button>
+  </form>
+</div>

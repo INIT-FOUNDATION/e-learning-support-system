@@ -1,0 +1,59 @@
+<h1 class="fs-11 mb-2" mat-dialog-title>
+  {{
+    data.success
+      ? "Face verification Successful, " +
+        (dataService.userData | async)?.first_name +
+        " " +
+        (dataService.userData | async)?.last_name +
+        "!"
+      : "Face Authentication
+  Failed!"
+  }}
+</h1>
+
+<div mat-dialog-content>
+  {{
+    data.success
+      ? ""
+      : "Looks like you are having some trouble while authenticating. Please try login with password."
+  }}
+</div>
+
+<div *ngIf="data.success">
+  <div mat-dialog-content class="d-flex justify-content-center pt-0">
+    <img
+      src="../../../../../../assets/images/tickImage.svg"
+      alt=""
+      class="w-25"
+    />
+  </div>
+  <div
+    mat-dialog-actions
+    class="d-flex align-items-center justify-content-center my-2"
+  >
+    <button
+      mat-dialog-close
+      type="button"
+      class="btn ms-2 fs-09 px-3 modalBtn"
+      (click)="redirectToDashboard()"
+    >
+      Go to Dashboard
+    </button>
+  </div>
+</div>
+
+<!-- Button for error -->
+<div
+  *ngIf="!data.success"
+  mat-dialog-actions
+  class="d-flex align-items-center justify-content-center"
+>
+  <button
+    mat-dialog-close
+    type="button"
+    class="btn ms-2 fs-09 px-3 modalBtn"
+    (click)="redirectToLogin()"
+  >
+    Proceed
+  </button>
+</div>

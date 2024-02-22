@@ -1,0 +1,11 @@
+<app-header></app-header>
+<app-loader></app-loader>
+<div
+  class=""
+  [ngClass]="{
+    'custom-padding': utilityService.showHeader$ | async
+  }"
+>
+  <router-outlet></router-outlet>
+</div>
+<!-- <app-footer></app-footer> -->

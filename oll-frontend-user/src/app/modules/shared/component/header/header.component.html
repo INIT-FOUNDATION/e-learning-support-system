@@ -1,0 +1,40 @@
+<div
+  *ngIf="utilityService.showHeader$ | async"
+  class="d-flex align-items-center justify-content-between custom-padding py-2 shadow position-fixed w-100 bg-white"
+>
+  <a href="https://www.oll.co/" class="rounded-circle overflow-hidden">
+    <img src="assets/images/ollLogo.svg" style="width: 3rem" />
+  </a>
+
+  <div class="d-flex align-items-center">
+    <span></span>
+  </div>
+
+  <div class="dropdown" *ngIf="dataService.userData | async">
+    <button
+      class="btn btn-transparent dropdown-toggle"
+      type="button"
+      id="dropdownMenuButton1"
+      data-bs-toggle="dropdown"
+    >
+      {{ (dataService.userData | async)?.first_name }}
+      {{ (dataService.userData | async)?.last_name }}
+    </button>
+    <ul class="dropdown-menu fs-09">
+      <li
+        class="border-bottom pb-2 mb-2 cursor-pointer"
+        (click)="goToFaceAuthentication()"
+      >
+        <a class="dropdown-item">Face Authentication</a>
+      </li>
+      <li (click)="logout()">
+        <a class="dropdown-item d-flex align-items-center" href="">
+          <i
+            class="fa-solid fa-right-from-bracket text-danger me-2 cursor-pointer"
+          ></i
+          >Logout</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
@@ -7,7 +7,13 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class SupportMeetingService {
-  constructor(private http: HttpClient) {}
+  private requestAccepted: BehaviorSubject<boolean>;
+  requestAccepted$: Observable<boolean>;
+
+  constructor(private http: HttpClient) {
+    this.requestAccepted = new BehaviorSubject(false);
+    this.requestAccepted$ = this.requestAccepted.asObservable();
+  }
 
   updateLoginStatus(postParams: any): Observable<any> {
     return this.http.post(
@@ -53,5 +59,9 @@ export class SupportMeetingService {
 
   getRoles(): Observable<any> {
     return this.http.get(`${environment.auth_prefix}/listRoles`);
+  }
+
+  set requestAcceptedSet(flag) {
+    this.requestAccepted.next(flag);
   }
 }

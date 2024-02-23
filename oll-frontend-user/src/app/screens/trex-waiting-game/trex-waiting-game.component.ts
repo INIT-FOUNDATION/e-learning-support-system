@@ -51,6 +51,7 @@ export class TrexWaitingGameComponent
 
   ngOnInit(): void {
     if (this.requestDetails) {
+      this.websocketService.connect();
       this.startTimer();
       this.websocketService.emit(
         'lss_user_requests',
@@ -62,7 +63,11 @@ export class TrexWaitingGameComponent
           switchMap((res: any) => {
             if (res) {
               const data = JSON.parse(res);
-              if (data.meetingCode && data.status == 2) {
+              if (
+                data.meetingCode &&
+                data.status == 2 &&
+                this.requestDetails.requestId == data.requestId
+              ) {
                 return this.customerSupportService.joinUser({
                   requestId: this.requestDetails?.requestId,
                 });
@@ -220,6 +225,7 @@ export class TrexWaitingGameComponent
   }
 
   ngOnDestroy(): void {
+    // this.websocketService.disconnect()
     if (this.interval) {
       clearInterval(this.interval);
     }

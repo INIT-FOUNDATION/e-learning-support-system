@@ -74,6 +74,8 @@ export class TrexWaitingGameComponent
                 data.status == 2 &&
                 this.requestDetails.requestId == data.requestId
               ) {
+                Swal.close();
+                this.supportMeetingService.requestAcceptedSet = true;
                 return this.customerSupportService.joinUser({
                   requestId: this.requestDetails?.requestId,
                 });
@@ -239,7 +241,7 @@ export class TrexWaitingGameComponent
     if (this.interval) {
       clearInterval(this.interval);
     }
-
+    Swal.close();
     if (this.joinsupportSubscription) {
       this.joinsupportSubscription.unsubscribe();
     }

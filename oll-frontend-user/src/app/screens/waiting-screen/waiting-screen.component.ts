@@ -64,6 +64,7 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
                 data.status == 2 &&
                 this.requestDetails.requestId == data.requestId
               ) {
+                Swal.close();
                 this.supportMeetingService.requestAcceptedSet = true;
                 return this.supportMeetingService.joinUser({
                   requestId: this.requestDetails?.requestId,
@@ -186,7 +187,7 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
     if (this.interval) {
       clearInterval(this.interval);
     }
-
+    Swal.close();
     if (this.joinsupportSubscription) {
       this.joinsupportSubscription.unsubscribe();
     }

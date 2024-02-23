@@ -61,20 +61,10 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       if (!this.meetingCode) {
         if (this.auth.currentUserValue?.token) {
           this.router.navigate(['/dashboard']);
-        } else {
-          this.router.navigate(['/home']);
         }
       }
       return;
     }
-
-    // this.meetingLink = 'jitsi.aieze.ai'
-    // this.meeting_details = {
-    //   jwt: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250ZXh0Ijp7InVzZXIiOnsiYXZhdGFyIjoiaHR0cHM6Ly9saW5rLXByb2QuYmxyMS5kaWdpdGFsb2NlYW5zcGFjZXMuY29tL2xpbmstdXNlcnMvcHJvZmlsZS1waWN0dXJlcy8yNDEyMjAyMzEzMzkzNi5qcGVnIiwibmFtZSI6IlN1ZGhpcmt1bWFycmFvIEFsbGFkYSIsImVtYWlsIjoiIiwiaWQiOiJlYTJjY2NiMi01YTE5LTRlNDAtODRiNC1kMzUzZWVlZWM1MGYifX0sImlzcyI6IkFJRVpFIiwic3ViIjoiVTBBWlFZIiwicm9vbSI6IlUwQVpRWSIsIm1vZGVyYXRvciI6dHJ1ZSwiYXVkIjoiKiIsImV4cCI6MTcwODMzNjAyOCwibmJmIjoxNzA4MjQ2MDI4LCJpYXQiOjE3MDgyNDk2Mjh9.5QCIlZSbK3BqldmDeo524cbUEfgjAbrx8nomFyT8JiA"      ,
-    //   meeting_code: 'U0AZQY',
-    //   participant_name: 'Sudhirkumarrao Allada(OLL)',
-    //   requestId: ''
-    // }
 
     window.addEventListener('beforeunload', this.beforeUnload, true);
   }
@@ -167,13 +157,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
     this.options.configOverwrite['disablePolls'] = true;
 
-    // if (this.meeting_details.featureDetails.includes('recording')) {
-    //   this.options.configOverwrite['localRecording'] = {
-    //     disable: false,
-    //     notifyAllParticipants: true,
-    //   };
-    // }
-
     this.options.configOverwrite['securityUi'] = {
       disableLobbyPassword: true,
     };
@@ -208,8 +191,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       } else {
         this.router.navigate(['/dashboard']);
       }
-    } else {
-      this.router.navigate(['/home']);
     }
   };
 
@@ -239,9 +220,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   handleVideoConferenceLeft = () => {
-    // if (this.meeting_details.isMod) {
-    //   this.router.navigate(['/home']);
-    // }
     this.closeRequestAndRoute();
   };
 
@@ -264,10 +242,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   // custom events
   executeCommand(command: string) {
     this.api.executeCommand(command);
-    // if (command == 'hangup') {
-    //   this.router.navigate(['/home']);
-    //   return;
-    // }
 
     if (command == 'toggleAudio') {
       this.isAudioMuted = !this.isAudioMuted;
@@ -279,21 +253,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    // if (this.auth.currentUserValue?.token) {
-    //   this.dashboardService
-    //     .closeRequest({ requestId: this.meeting_details.requestId })
-    //     .subscribe(
-    //       (res) => {
-    //         this.router.navigate(['/dashboard']);
-    //       },
-    //       (error) => {
-    //         console.log(error);
-    //         this.router.navigate(['/dashboard']);
-    //       }
-    //     );
-    // } else {
-    //   this.router.navigate(['/home']);
-    // }
     window.removeEventListener('beforeunload', this.beforeUnload, true);
   }
 }

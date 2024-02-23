@@ -56,13 +56,10 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       this.meeting_details = state;
     } else {
       this.meetingCode = this.route.snapshot.params['meetingCode'];
-      // if (!this.meetingCode) {
-      //   if (this.auth.currentUserValue?.token) {
-      //     this.router.navigate(['/dashboard']);
-      //   } else {
-      //     this.router.navigate(['/home']);
-      //   }
-      // }
+      if (!this.meetingCode) {
+        this.router.navigate(['/home']);
+      }
+
       return;
     }
 
@@ -190,25 +187,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   closeRequestAndRoute = () => {
-    // if (this.auth.currentUserValue?.token) {
-    if (this.meeting_details.requestId) {
-      this.supportMeetingService
-        .closeRequest({ requestId: this.meeting_details.requestId })
-        .subscribe(
-          (res) => {
-            this.router.navigate(['/dashboard']);
-          },
-          (error) => {
-            console.log(error);
-            this.router.navigate(['/dashboard']);
-          }
-        );
-    } else {
-      this.router.navigate(['/dashboard']);
-    }
-    // } else {
-    // this.router.navigate(['/home']);
-    // }
+    this.router.navigate(['/home']);
   };
 
   handleClose = () => {
@@ -237,9 +216,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   handleVideoConferenceLeft = () => {
-    // if (this.meeting_details.isMod) {
-    //   this.router.navigate(['/home']);
-    // }
     this.closeRequestAndRoute();
   };
 
@@ -262,10 +238,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   // custom events
   executeCommand(command: string) {
     this.api.executeCommand(command);
-    // if (command == 'hangup') {
-    //   this.router.navigate(['/home']);
-    //   return;
-    // }
 
     if (command == 'toggleAudio') {
       this.isAudioMuted = !this.isAudioMuted;
@@ -277,21 +249,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    // if (this.auth.currentUserValue?.token) {
-    //   this.supportMeetingService
-    //     .closeRequest({ requestId: this.meeting_details.requestId })
-    //     .subscribe(
-    //       (res) => {
-    //         this.router.navigate(['/dashboard']);
-    //       },
-    //       (error) => {
-    //         console.log(error);
-    //         this.router.navigate(['/dashboard']);
-    //       }
-    //     );
-    // } else {
-    //   this.router.navigate(['/home']);
-    // }
     window.removeEventListener('beforeunload', this.beforeUnload, true);
+    this.closeRequestAndRoute();
   }
 }

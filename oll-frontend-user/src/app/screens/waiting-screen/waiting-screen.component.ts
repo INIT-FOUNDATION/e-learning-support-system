@@ -43,6 +43,7 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.requestDetails) {
+      this.websocketService.connect();
       this.startTimer();
       this.websocketService.emit(
         'lss_user_requests',
@@ -54,10 +55,17 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
           switchMap((res: any) => {
             if (res) {
               const data = JSON.parse(res);
-              if (data.meetingCode && data.status == 2) {
+              if (
+                data.meetingCode &&
+                data.status == 2 &&
+                this.requestDetails.requestId == data.requestId
+              ) {
+                this.supportMeetingService.requestAcceptedSet = true;
                 return this.supportMeetingService.joinUser({
                   requestId: this.requestDetails?.requestId,
                 });
+              } else {
+                this.supportMeetingService.requestAcceptedSet = false;
               }
             }
             return of(null);
@@ -142,12 +150,16 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
   }
 
   startTimer(): void {
-    this.interval = setInterval(() => {
+    this.interval = setInterval(async () => {
       if (this.remainingTime > 0) {
         this.remainingTime--;
       } else {
         clearInterval(this.interval);
-        this.showConfirmationDialog();
+        const isRequestAccepted =
+          await this.supportMeetingService.requestAccepted$.toPromise();
+        if (!isRequestAccepted) {
+          this.showConfirmationDialog();
+        }
       }
     }, 1000);
   }
@@ -168,6 +180,7 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // this.websocketService.disconnect();
     if (this.interval) {
       clearInterval(this.interval);
     }

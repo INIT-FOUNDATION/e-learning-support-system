@@ -64,6 +64,17 @@ export class RegistrationComponent implements OnInit {
     this.getRoles();
     this.getCountryCodes();
   }
+  
+  hidePassword: boolean = true;
+  hideConfirmPassword: boolean = true;
+  
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
+  }
+  
+  toggleConfirmPasswordVisibility(): void {
+    this.hideConfirmPassword = !this.hideConfirmPassword;
+  }
 
   getRoles() {
     this.registrationService.getRoles().subscribe((res: any) => {

@@ -16,6 +16,7 @@ import { LoaderComponent } from './component/loader/loader.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { RecordingModalComponent } from './modal/recording-modal/recording-modal.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 const export_material_modules = [
   MatInputModule,
@@ -30,6 +31,7 @@ const export_material_modules = [
   MatButtonModule,
   MatTooltipModule,
   NgxSpinnerModule,
+  MatIconModule
 ];
 
 const export_components = [

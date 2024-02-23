@@ -23,6 +23,7 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
   redirectionModalOpen: boolean = false;
   requestDetails: any;
   interval;
+  requestAccepted = false;
   joinsupportSubscription: Subscription;
   constructor(
     private websocketService: WebsocketService,
@@ -42,6 +43,9 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.supportMeetingService.requestAccepted$.subscribe((res) => {
+      this.requestAccepted = res;
+    });
     if (this.requestDetails) {
       this.websocketService.connect();
       this.startTimer();
@@ -64,8 +68,6 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
                 return this.supportMeetingService.joinUser({
                   requestId: this.requestDetails?.requestId,
                 });
-              } else {
-                this.supportMeetingService.requestAcceptedSet = false;
               }
             }
             return of(null);
@@ -122,29 +124,31 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
       },
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        const navigationExtras: NavigationExtras = {
-          state: {
-            ...this.requestDetails,
-          },
-        };
-        this.router.navigate(['/trex-game'], navigationExtras);
-        // Runner('.interstitial-wrapper').play();
-        // this.resetTimer();
-        if (this.interval) {
-          clearInterval(this.interval);
-        }
-      } else if (result.isDismissed) {
-        let payload = {
-          requestId: this.requestDetails?.requestId,
-        };
-        this.customerSupportService
-          .deniedWaiting(payload)
-          .subscribe((res: any) => {
-            this.router.navigate(['/home']).then(() => {
-              location.reload();
+      if (!this.requestAccepted) {
+        if (result.isConfirmed) {
+          const navigationExtras: NavigationExtras = {
+            state: {
+              ...this.requestDetails,
+            },
+          };
+          this.router.navigate(['/trex-game'], navigationExtras);
+          // Runner('.interstitial-wrapper').play();
+          // this.resetTimer();
+          if (this.interval) {
+            clearInterval(this.interval);
+          }
+        } else if (result.isDismissed) {
+          let payload = {
+            requestId: this.requestDetails?.requestId,
+          };
+          this.customerSupportService
+            .deniedWaiting(payload)
+            .subscribe((res: any) => {
+              this.router.navigate(['/home']).then(() => {
+                location.reload();
+              });
             });
-          });
+        }
       }
     });
   }
@@ -155,9 +159,7 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
         this.remainingTime--;
       } else {
         clearInterval(this.interval);
-        const isRequestAccepted =
-          await this.supportMeetingService.requestAccepted$.toPromise();
-        if (!isRequestAccepted) {
+        if (!this.requestAccepted) {
           this.showConfirmationDialog();
         }
       }

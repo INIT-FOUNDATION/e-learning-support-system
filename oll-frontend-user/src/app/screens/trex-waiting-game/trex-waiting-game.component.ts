@@ -15,6 +15,7 @@ import { Subscription, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CustomerSupportModalService } from 'src/app/modules/shared/modal/customer-support-modal/services/customer-support-modal.service';
 import { TrexGameService } from 'src/app/screens/trex-waiting-game/services/trex-game.service.js';
+import { SupportMeetingService } from '../support-meeting/services/support-meeting.service.js';
 
 declare var Runner: any;
 
@@ -26,6 +27,7 @@ declare var Runner: any;
 export class TrexWaitingGameComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+  requestAccepted = false;
   remainingTime: number = environment.waiting_timer;
   requestDetails: any;
   interval;
@@ -36,6 +38,7 @@ export class TrexWaitingGameComponent
     private router: Router,
     private websocketService: WebsocketService,
     // private trexGameService: TrexGameService,
+    private supportMeetingService: SupportMeetingService,
     private customerSupportService: CustomerSupportModalService
   ) {
     const navigation = this.router.getCurrentNavigation();
@@ -50,6 +53,9 @@ export class TrexWaitingGameComponent
   redirectionModalOpen: boolean = false;
 
   ngOnInit(): void {
+    this.supportMeetingService.requestAccepted$.subscribe((res) => {
+      this.requestAccepted = res;
+    });
     if (this.requestDetails) {
       this.websocketService.connect();
       this.startTimer();
@@ -104,7 +110,9 @@ export class TrexWaitingGameComponent
       } else {
         clearInterval(this.interval);
         this.stop();
-        this.showConfirmationDialog();
+        if (!this.requestAccepted) {
+          this.showConfirmationDialog();
+        }
       }
     }, 1000);
   }
@@ -151,18 +159,20 @@ export class TrexWaitingGameComponent
       },
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        Runner('.interstitial-wrapper').play();
-        this.resetTimer();
-      } else if (result.isDismissed) {
-        let payload = {
-          requestId: this.requestDetails?.requestId,
-        };
-        this.customerSupportService
-          .deniedWaiting(payload)
-          .subscribe((res: any) => {
-            this.showRegretAlert();
-          });
+      if (!this.requestAccepted) {
+        if (result.isConfirmed) {
+          Runner('.interstitial-wrapper').play();
+          this.resetTimer();
+        } else if (result.isDismissed) {
+          let payload = {
+            requestId: this.requestDetails?.requestId,
+          };
+          this.customerSupportService
+            .deniedWaiting(payload)
+            .subscribe((res: any) => {
+              this.showRegretAlert();
+            });
+        }
       }
     });
   }

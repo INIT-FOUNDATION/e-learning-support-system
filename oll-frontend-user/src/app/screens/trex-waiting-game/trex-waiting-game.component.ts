@@ -15,7 +15,7 @@ import { Subscription, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CustomerSupportModalService } from 'src/app/modules/shared/modal/customer-support-modal/services/customer-support-modal.service';
 import { TrexGameService } from 'src/app/screens/trex-waiting-game/services/trex-game.service.js';
-import { SupportMeetingService } from '../support-meeting/services/support-meeting.service.js';
+import { SupportMeetingService } from '../support-meeting/services/support-meeting.service';
 
 declare var Runner: any;
 

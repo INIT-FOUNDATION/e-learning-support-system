@@ -67,7 +67,7 @@ export class RegistrationComponent implements OnInit {
 
   getRoles() {
     this.registrationService.getRoles().subscribe((res: any) => {
-      this.rolesList = res.roles.filter(role => role.roleName != 'Dr. Simran Negi');
+      this.rolesList = res.roles;
     });
   }
 

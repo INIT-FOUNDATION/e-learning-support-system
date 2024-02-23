@@ -27,29 +27,10 @@ export class HomeComponent {
   ngOnInit(): void {
     this.utilityService.showHeaderSet = true;
     this.detectDeviceType();
-
-    this.activeRoute.url.subscribe((urlSegments) => {
-      this.idFound = urlSegments.some(
-        (segment) => segment.path === 'drseemanegi'
-      );
-    });
-    this.getRoles();
   }
-
-  // onNameSubmitted(name: string): void {
-  //   this.userName = name;
-  // }
 
   detectDeviceType(): void {
     this.isMobile = window.innerWidth <= 768;
-  }
-
-  getRoles() {
-    this.supportMeetingService.getRoles().subscribe((res: any) => {
-      this.rolesList = res.roles.filter(
-        (role) => role.roleName != 'Dr. Simran Negi'
-      );
-    });
   }
 
   connectWithSupportTeam() {
@@ -58,7 +39,6 @@ export class HomeComponent {
         ? this.userName
         : `Guest-${moment().format('HHmmssDDMMYY')}`,
       requestedUserDeviceInfo: this.isMobile ? 'Mobile' : 'Desktop',
-      roleId: this.rolesList[0].roleId,
     };
 
     try {

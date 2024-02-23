@@ -1,5 +1,5 @@
-const BASE_URL = 'https://apivc-lb.aieze.in';
-const DIRECT_BASE_URL = 'https://apivc-lb.aieze.in';
+const BASE_URL = 'https://apilss.aieze.in';
+const DIRECT_BASE_URL = 'https://apilss.aieze.in';
 
 export const environment = {
   production: true,
@@ -17,7 +17,7 @@ export const environment = {
   support_system_prefix: `${BASE_URL}/api/v1/supportSystem`,
   auth_prefix: `${BASE_URL}/api/v1/auth`,
   lss_websocket_url: `wss://apilss.dev.aieze.in`,
-  waiting_timer: 60,
+  waiting_timer: 120,
   lss_web_url: `https://oll.aieze.in`,
   enable_no_support: false,
   client_id: 'OLL'

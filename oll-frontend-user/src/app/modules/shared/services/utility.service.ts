@@ -12,9 +12,15 @@ export class UtilityService {
   private showFooter: BehaviorSubject<boolean>;
   showFooter$: Observable<boolean>;
 
+  private showPadding: BehaviorSubject<boolean>;
+  showPadding$: Observable<boolean>;
+
   constructor(private toasterService: ToastrService) {
     this.showHeader = new BehaviorSubject(true);
     this.showHeader$ = this.showHeader.asObservable();
+
+    this.showPadding = new BehaviorSubject(true);
+    this.showPadding$ = this.showPadding.asObservable();
 
     this.showFooter = new BehaviorSubject(true);
     this.showFooter$ = this.showHeader.asObservable();
@@ -26,6 +32,10 @@ export class UtilityService {
 
   set showFooterSet(flag) {
     this.showFooter.next(flag);
+  }
+
+  set showPaddingSet(flag) {
+    this.showPadding.next(flag);
   }
 
   showSuccessMessage(msg) {

@@ -43,7 +43,7 @@ export class RegistrationComponent implements OnInit {
       Validators.minLength(3),
       Validators.maxLength(30),
     ]),
-    emailId: new FormControl('', [Validators.required, Validators.email]),
+    emailId: new FormControl({value: '', disabled: true}, [Validators.required, Validators.email]),
     dialCode: new FormControl('+91', [Validators.required]),
     mobileNumber: new FormControl('', [
       Validators.required,

@@ -16,7 +16,7 @@ export const environment = {
 
   support_system_prefix: `${BASE_URL}/api/v1/supportSystem`,
   auth_prefix: `${BASE_URL}/api/v1/auth`,
-  lss_websocket_url: `wss://apilss.dev.aieze.in`,
+  lss_websocket_url: `wss://apilss.aieze.in`,
   waiting_timer: 120,
   lss_web_url: `https://oll.aieze.in`,
   enable_no_support: false,

@@ -75,7 +75,7 @@ export class TrexWaitingGameComponent
                 this.requestDetails.requestId == data.requestId
               ) {
                 Swal.close();
-                this.supportMeetingService.requestAcceptedSet = true;
+                // this.supportMeetingService.requestAcceptedSet = true;
                 return this.customerSupportService.joinUser({
                   requestId: this.requestDetails?.requestId,
                 });

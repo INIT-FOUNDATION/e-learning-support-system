@@ -65,7 +65,7 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
                 this.requestDetails.requestId == data.requestId
               ) {
                 Swal.close();
-                this.supportMeetingService.requestAcceptedSet = true;
+                // this.supportMeetingService.requestAcceptedSet = true;
                 return this.supportMeetingService.joinUser({
                   requestId: this.requestDetails?.requestId,
                 });

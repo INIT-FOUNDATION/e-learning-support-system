@@ -11,14 +11,17 @@ export const environment = {
     token_uri: 'https://oauth2.googleapis.com/token',
     auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
     client_secret: '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',
-    javascript_origins: ['http://localhost:4200', 'https://apilss.dev.aieze.in'],
+    javascript_origins: [
+      'http://localhost:4200',
+      'https://apilss.dev.aieze.in',
+    ],
   },
 
   support_system_prefix: `${BASE_URL}/api/v1/supportSystem`,
   auth_prefix: `${BASE_URL}/api/v1/auth`,
   lss_websocket_url: `wss://apilss.aieze.in`,
   waiting_timer: 120,
-  lss_web_url: `https://oll.aieze.in`,
+  lss_web_url: `https://support.188188.live`,
   enable_no_support: false,
-  client_id: 'OLL'
+  client_id: 'OLL',
 };

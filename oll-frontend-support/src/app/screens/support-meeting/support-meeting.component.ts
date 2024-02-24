@@ -115,7 +115,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'tileview',
     ];
     if (this.auth.currentUserValue?.token) {
-      toolbarButtons.push('recording');
+      // toolbarButtons.push('recording');
       toolbarButtons.push('invite');
     }
     this.options = {

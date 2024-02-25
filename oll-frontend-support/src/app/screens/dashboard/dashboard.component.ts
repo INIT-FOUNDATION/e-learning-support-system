@@ -125,6 +125,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         }
 
         this.onInit = false;
+      } else {
+        this.callQueueWaitingList = [];
       }
     });
 
@@ -154,8 +156,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     return differenceArray2;
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   meetingHistoryFilter: any = [
     { id: 1, label: 'Today' },
@@ -260,7 +261,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             );
           });
 
-          
           this.callHistoryList = [
             ...this.callHistoryList,
             ...res.requestsHistory,

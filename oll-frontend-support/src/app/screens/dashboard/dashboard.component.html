@@ -11,9 +11,9 @@
       src="assets/images/userLoginStatus.svg"
       style="width: 0.9rem; padding-top: 0.1rem"
     />
-    <span class="fw-500 mx-1"> Login Status:</span>
+    <span class="fw-500 mx-2"> Login Status:</span>
 
-    <mat-form-field class="login-status" appearance="outline" class="me-1">
+    <!-- <mat-form-field class="login-status" appearance="outline" class="me-1">
       <mat-select
         class="fs-08"
         [value]="availabilityStatus.availability_status"
@@ -27,7 +27,11 @@
           {{ item?.label }}</mat-option
         >
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
+
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked [(ngModel)]="toggleStatus" (ngModelChange)="changeLoginStatus()">
+    </div>
   </div>
 </div>
 

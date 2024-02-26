@@ -113,6 +113,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'microphone',
       'raisehand',
       'tileview',
+      'sharescreen'
     ];
     if (this.auth.currentUserValue?.token) {
       // toolbarButtons.push('recording');

@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   displaySize: any;
   videoInput: any;
   captures: any = '';
+  zoomImage: any = '';
   disableCaptureButton = true;
   imageCaptured = false;
   interval;
@@ -208,7 +209,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     if (faceImages && faceImages.length > 0) {
       this.imageCaptured = true;
       clearInterval(this.interval);
-      this.captures = faceImages[0].toDataURL('image/png');
+      this.zoomImage = faceImages[0].toDataURL('image/png');
       this.stopVideo();
       this.confirmFaceAuth();
     }

@@ -43,15 +43,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   callHistoryList: any = [];
   deviceInfo: any;
   onInit = true;
+  toggleStatus: boolean = true; 
+  supportStatus: any = 1; 
   previousQueueWaitingList = [];
   @ViewChild('popover') popover: ElementRef;
 
   loginStatus: any = [
     { label: 'Offline', availability_status: 0 },
     { label: 'Online', availability_status: 1 },
-    { label: 'Away', availability_status: 2 },
-    { label: 'Do Not Disturb', availability_status: 3 },
-    { label: 'In Meeting', availability_status: 4 },
+    // { label: 'Away', availability_status: 2 },
+    // { label: 'Do Not Disturb', availability_status: 3 },
+    // { label: 'In Meeting', availability_status: 4 },
   ];
 
   availabilityStatus = this.loginStatus[1];
@@ -131,6 +133,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
 
     this.meetingHistory();
+    this.changeLoginStatus();
   }
 
   playAudio(): void {
@@ -166,10 +169,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     { id: 5, label: 'All' },
   ];
 
-  changeLoginStatus(value: any) {
-    this.hideMatLabel = true;
+  changeLoginStatus() {
+    this.supportStatus = this.toggleStatus ? 1 : 0;
+    console.log(this.supportStatus)
+    // this.hideMatLabel = true;
     this.dashboardService
-      .updateLoginStatus({ availability_status: value })
+      .updateLoginStatus({ availability_status: this.supportStatus })
       .subscribe((res: any) => {});
   }
 

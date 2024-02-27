@@ -49,4 +49,8 @@ export class DashboardService {
       postParams
     );
   }
+
+  expertsRoleCount() {
+    return this.http.get(`${environment.auth_prefix}/nonPrimaryRoleCount`);
+  }
 }

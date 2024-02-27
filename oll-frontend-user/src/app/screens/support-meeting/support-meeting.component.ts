@@ -6,6 +6,7 @@ import { DataService } from 'src/app/modules/shared/services/data.service';
 import { UtilityService } from 'src/app/modules/shared/services/utility.service';
 import { environment } from 'src/environments/environment';
 import { SupportMeetingService } from './services/support-meeting.service';
+import Swal from 'sweetalert2';
 
 declare var JitsiMeetExternalAPI: any;
 
@@ -36,6 +37,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   // For Custom Controls
   isAudioMuted = false;
   isVideoMuted = false;
+  requestId: string;
 
   constructor(
     private router: Router,
@@ -87,6 +89,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     this.location.onPopState(() => {
       history.pushState(null, null, window.location.href);
     });
+
   }
 
   async ngAfterViewInit() {
@@ -118,7 +121,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'microphone',
       'raisehand',
       'tileview',
-      'sharescreen'
+      'desktop'
     ];
     // if (this.auth.currentUserValue?.token) {
     //   toolbarButtons.push('recording');
@@ -189,6 +192,55 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   closeRequestAndRoute = () => {
     this.router.navigate(['/home']);
+    Swal.fire({
+      title: "Thank you for connecting. We hope it was helpful for you. Your feedback is valuable to us.",
+      input: "text",
+      inputAttributes: {
+        autocapitalize: "off"
+      },
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      confirmButtonColor: '#da2128',
+      showLoaderOnConfirm: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        const text = document.querySelector('.swal2-title');
+        const btnContainer = document.querySelector('.swal2-actions');
+        const confirmButton = document.querySelector('.swal2-confirm');
+        const cancelButton = document.querySelector('.swal2-cancel');
+
+        if (confirmButton && cancelButton) {
+          btnContainer.setAttribute('style', 'margin-bottom: 10px;'),
+            confirmButton.setAttribute(
+              'style',
+              'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
+            );
+            cancelButton.setAttribute(
+              'style',
+              'border-radius: 18px; width: 100px; background-color: #fff; color: #da2128; border: 1px solid #da2128; padding:8px 10px;'
+            );
+          text.setAttribute(
+            'style',
+            'color: #000; margin: 10px 0; display: flex; justify-content: center; align-items: center'
+          );
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let feedbackText = result.value;
+        let payload = {
+          requestId: 'requestId',
+          feedback: feedbackText,
+          ratings: 5
+        };
+        this.supportMeetingService
+          .userFeedback(payload)
+          .subscribe((res: any) => {
+           console.log(res)
+          });
+      }
+    });
   };
 
   handleClose = () => {

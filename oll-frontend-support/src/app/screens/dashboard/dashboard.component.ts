@@ -17,6 +17,7 @@ import { NotificationService } from 'src/app/modules/shared/services/notificatio
 import { MatSelectChange } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { RecordingModalComponent } from 'src/app/modules/shared/modal/recording-modal/recording-modal.component';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -134,6 +135,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     this.meetingHistory();
     this.changeLoginStatus();
+
+     this.dashboardService.expertsRoleCount().toPromise();
   }
 
   playAudio(): void {
@@ -171,7 +174,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   changeLoginStatus() {
     this.supportStatus = this.toggleStatus ? 1 : 0;
-    console.log(this.supportStatus)
     // this.hideMatLabel = true;
     this.dashboardService
       .updateLoginStatus({ availability_status: this.supportStatus })

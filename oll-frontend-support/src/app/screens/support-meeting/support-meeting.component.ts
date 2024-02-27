@@ -113,10 +113,10 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'microphone',
       'raisehand',
       'tileview',
-      'sharescreen'
+      'desktop'
     ];
     if (this.auth.currentUserValue?.token) {
-      // toolbarButtons.push('recording');
+      toolbarButtons.push('recording');
       toolbarButtons.push('invite');
     }
     this.options = {
@@ -213,6 +213,9 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   handleVideoConferenceJoined = async (participant) => {
     this.api.executeCommand('toggleTileView');
+    this.api.executeCommand('startRecording', {
+      mode: 'local'
+  });
     let data: any = await this.getParticipants();
   };
 

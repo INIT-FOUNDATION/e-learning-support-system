@@ -56,9 +56,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
     if (state) {
-      this.meetingLink = 'jitsi.aieze.ai';
+      this.meetingLink = state.backend_server_url;
       this.meeting_details = state;
-      console.log(this.meeting_details.requestId)
     } else {
       this.meetingCode = this.route.snapshot.params['meetingCode'];
       if (!this.meetingCode) {
@@ -216,11 +215,9 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     didRender: () => {
       const confirmButton = document.querySelector('.swal2-confirm') as HTMLButtonElement;
       const feedbackInput = document.getElementById('swal-input') as HTMLInputElement;
-      
-      // Disable submit button initially
+
       confirmButton.disabled = true;
 
-      // Enable submit button only if both feedback and ratings are provided
       feedbackInput.addEventListener('input', () => {
         confirmButton.disabled = !(feedbackInput.value != '' && this.selectedRating);
       });
@@ -299,7 +296,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       }
     }
   
-    // Enable submit button if both rating and feedback are provided
     const feedbackInput = (document.getElementById('swal-input') as HTMLInputElement).value;
     const confirmButton = document.querySelector('.swal2-confirm') as HTMLButtonElement;
     confirmButton.disabled = !(feedbackInput != '' && this.selectedRating);

@@ -54,7 +54,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
     if (state) {
-      this.meetingLink = state.backend_server_url;
+      this.meetingLink = 'jitsi.aieze.ai';
       this.meeting_details = state;
     } else {
       this.meetingCode = this.route.snapshot.params['meetingCode'];

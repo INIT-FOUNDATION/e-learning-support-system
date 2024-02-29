@@ -62,6 +62,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   interval;
   handleFaceClick: any = 0;
   subscription: Subscription[] = [];
+  hidePassword: boolean = true;
   ngOnInit(): void {
     this.initLoginForm();
 

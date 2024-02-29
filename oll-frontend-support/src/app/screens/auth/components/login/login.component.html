@@ -30,13 +30,25 @@
           User does not exists
         </p>
 
-        <div class="mt-3" *ngIf="userExists">
+        <div class="mt-3 position-relative" *ngIf="userExists">
           <input
-            type="text"
+            [type]="!hidePassword ? 'text' : 'password'"
             placeholder="Password"
             formControlName="password"
             class="rounded-pill border ps-3 py-2 fs-09 w-100"
           />
+          <button
+            type="button"
+            class="position-absolute hide-show-password"
+            mat-icon-button
+            matSuffix
+            aria-label="Toggle confirm password visibility"
+            (click)="hidePassword = !hidePassword"
+          >
+            <mat-icon class="fs-11">{{
+              hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
           <div
             *ngIf="
               loginForm.get('password').errors?.['required']  &&

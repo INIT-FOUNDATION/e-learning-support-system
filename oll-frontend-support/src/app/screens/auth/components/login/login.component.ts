@@ -221,7 +221,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
   confirmFaceAuth() {
     try {
-      let onlyBase64 = this.captures.replace('data:image/png;base64,', '');
+      let onlyBase64 = this.zoomImage.replace('data:image/png;base64,', '');
       let blob = this.utilityService.b64toBlob(onlyBase64, 'image/png');
 
       const formData = new FormData();

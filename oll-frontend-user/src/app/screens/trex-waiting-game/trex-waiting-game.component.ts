@@ -39,7 +39,7 @@ export class TrexWaitingGameComponent
     private websocketService: WebsocketService,
     // private trexGameService: TrexGameService,
     private supportMeetingService: SupportMeetingService,
-    private customerSupportService: CustomerSupportModalService,
+    private customerSupportService: CustomerSupportModalService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
@@ -51,7 +51,6 @@ export class TrexWaitingGameComponent
     }
   }
   redirectionModalOpen: boolean = false;
-
 
   ngOnInit(): void {
     this.supportMeetingService.requestAccepted$.subscribe((res) => {
@@ -95,7 +94,6 @@ export class TrexWaitingGameComponent
               },
             };
             this.router.navigate(['/support'], navigationExtras);
-            console.log(navigationExtras)
           }
         });
     }
@@ -129,7 +127,8 @@ export class TrexWaitingGameComponent
 
   showConfirmationDialog() {
     Swal.fire({
-      title: 'All customer support executives are currently occupied. Please request again later.',
+      title:
+        'All customer support executives are currently occupied. Please request again later.',
       showCancelButton: false,
       confirmButtonText: 'Okay',
       confirmButtonColor: '#da2128',
@@ -166,10 +165,10 @@ export class TrexWaitingGameComponent
             .deniedWaiting(payload)
             .subscribe((res: any) => {
               this.router.navigate(['/home']).then(() => {
-                        location.reload();
-                      });
+                location.reload();
+              });
             });
-        } 
+        }
       }
     });
   }

@@ -45,8 +45,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   callHistoryList: any = [];
   deviceInfo: any;
   onInit = true;
-  toggleStatus: boolean = true; 
-  supportStatus: any = 1; 
+  toggleStatus: boolean = true;
+  supportStatus: any = 1;
   previousQueueWaitingList = [];
 
   @ViewChild('popover') popover: ElementRef;
@@ -140,16 +140,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     this.meetingHistory();
     this.changeLoginStatus();
-    this.expertsCount()
-    
+    this.expertsCount();
   }
 
-  expertsCount(){
-    this.dashboardService.expertsRoleCount().toPromise().then((data: any) => {
-      this.expertsCountData = data.nonPrimaryRoleCount;
-    }).catch(error => {
-      console.error('Error fetching experts role count:', error);
-    });
+  expertsCount() {
+    this.dashboardService
+      .expertsRoleCount()
+      .toPromise()
+      .then((data: any) => {
+        this.expertsCountData = data.nonPrimaryRoleCount;
+      })
+      .catch((error) => {
+        console.error('Error fetching experts role count:', error);
+      });
   }
 
   playAudio(): void {
@@ -257,7 +260,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+      // console.log('The dialog was closed');
     });
   }
 

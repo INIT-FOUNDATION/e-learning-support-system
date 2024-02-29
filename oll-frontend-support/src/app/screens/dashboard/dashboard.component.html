@@ -6,8 +6,9 @@
     <div class="custom-border-bottom"></div
   ></span>
 
-  <div class="d-flex align-items-center flex-wrap mt-3 mt-lg-0">
-    <img
+  <div class="d-flex align-items-center justify-content-between flex-wrap mt-3 mt-lg-0">
+    <div class="d-flex align-items-center me-3">
+      <img
       src="assets/images/userLoginStatus.svg"
       style="width: 0.9rem; padding-top: 0.1rem"
     />
@@ -32,6 +33,11 @@
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked [(ngModel)]="toggleStatus" (ngModelChange)="changeLoginStatus()">
     </div>
+    </div>
+    <div>
+      <span class="fw-500 mx-2"> Experts Count: {{expertsCountData}}</span>
+    </div>
+
   </div>
 </div>
 
@@ -91,7 +97,7 @@
             <div class="custom-border-bottom-collapse"></div
           ></span>
           <span class="fs-30 text-danger fw-500">{{
-            callHistoryList.length
+            requestsHistoryCount 
           }}</span>
         </div>
         <mat-form-field

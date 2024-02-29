@@ -68,7 +68,7 @@ export class AuthService {
     if (token) {
       const headers = new HttpHeaders();
       headers.set('Authorization', `${JSON.parse(token)}`);
-      this.http.post(environment.auth_prefix + '/logout', {}).subscribe();
+      this.http.post(environment.auth_prefix + '/signOut', {}).subscribe();
       this.appPreferences.clearAll();
       this.currentUserSubject.next(null);
       this.dataService.userDetails = null;

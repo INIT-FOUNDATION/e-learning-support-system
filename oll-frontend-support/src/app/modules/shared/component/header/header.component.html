@@ -2,7 +2,11 @@
   *ngIf="utilityService.showHeader$ | async"
   class="d-flex align-items-center justify-content-between custom-padding py-2 shadow position-fixed w-100 bg-white"
 >
-  <a href="https://www.oll.co/" target="_blank" class="rounded-circle overflow-hidden">
+  <a
+    href="https://www.oll.co/"
+    target="_blank"
+    class="rounded-circle overflow-hidden"
+  >
     <img src="assets/images/ollLogo.svg" style="width: 3rem" />
   </a>
 
@@ -27,8 +31,8 @@
       >
         <a class="dropdown-item">Face Authentication</a>
       </li>
-      <li (click)="logout()">
-        <a class="dropdown-item d-flex align-items-center" href="">
+      <li (click)="logout()" class="cursor-pointer">
+        <a class="dropdown-item d-flex align-items-center">
           <i
             class="fa-solid fa-right-from-bracket text-danger me-2 cursor-pointer"
           ></i

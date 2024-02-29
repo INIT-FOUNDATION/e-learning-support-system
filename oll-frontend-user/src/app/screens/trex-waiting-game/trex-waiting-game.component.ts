@@ -59,10 +59,6 @@ export class TrexWaitingGameComponent
     if (this.requestDetails) {
       this.websocketService.connect();
       this.startTimer();
-      this.websocketService.emit(
-        'lss_user_requests',
-        this.requestDetails?.requestId
-      );
       this.joinsupportSubscription = this.websocketService
         .listen('request_status')
         .pipe(
@@ -96,6 +92,15 @@ export class TrexWaitingGameComponent
             this.router.navigate(['/support'], navigationExtras);
           }
         });
+
+      this.websocketService.listen('connect').subscribe(res => {
+        console.log('Websocket Connected');
+        this.websocketService.emit('lss_user_requests', this.requestDetails?.requestId);
+      });
+
+      this.websocketService.listen('disconnect').subscribe(res => {
+        console.log('Websocket Disconnected');
+      });
     }
   }
 

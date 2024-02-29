@@ -73,10 +73,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.notificationService.requestPermission();
     const userToken = this.appPreferences.getValue('user_token');
     this.userDetails = this.dataService.userDetails;
-    this.websocketService.emit(
-      'lss_support_availability',
-      JSON.parse(userToken)
-    );
+    // this.websocketService.emit('lss_support_availability', JSON.parse(userToken));
     this.websocketService
       .listen('lss_user_availability_status')
       .subscribe((res: any) => {
@@ -138,6 +135,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       }
     });
 
+    this.websocketService.listen('connect').subscribe((res) => {
+      console.log('Websocket Connected');
+      this.websocketService.emit(
+        'lss_support_availability',
+        JSON.parse(userToken)
+      );
+    });
+
+    this.websocketService.listen('disconnect').subscribe((res) => {
+      console.log('Websocket Disconnected');
+    });
     this.meetingHistory();
     this.changeLoginStatus();
     this.expertsCount();

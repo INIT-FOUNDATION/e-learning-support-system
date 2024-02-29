@@ -72,8 +72,6 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.authService.getMeetingCode);
-
     setTimeout(() => {
       google.accounts.id.initialize({
         client_id: environment.googleSignIn.client_id,
@@ -99,9 +97,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                   redirect: false,
                 });
                 if (this.authService.getMeetingCode) {
-                  this.router.navigate([
-                    `${environment.lss_web_url}${this.authService.getMeetingCode}`,
-                  ]);
+                  this.router.navigate([`${this.authService.getMeetingCode}`]);
                 } else {
                   this.router.navigate(['/dashboard']);
                 }
@@ -243,9 +239,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                 redirect: false,
               });
               if (this.authService.getMeetingCode) {
-                this.router.navigate([
-                  `${environment.lss_web_url}${this.authService.getMeetingCode}`,
-                ]);
+                this.router.navigate([`${this.authService.getMeetingCode}`]);
               } else {
                 this.router.navigate(['/dashboard']);
               }

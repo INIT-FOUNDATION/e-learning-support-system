@@ -54,7 +54,9 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
     if (state) {
-      this.meetingLink = state.backend_server_url;
+      // this.meetingLink = state.backend_server_url;
+      this.meetingLink = 'jitsi.aieze.ai';
+
       this.meeting_details = state;
     } else {
       this.meetingCode = this.route.snapshot.params['meetingCode'];
@@ -113,7 +115,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'microphone',
       'raisehand',
       'tileview',
-      'desktop'
+      'desktop',
     ];
     if (this.auth.currentUserValue?.token) {
       toolbarButtons.push('recording');
@@ -214,8 +216,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   handleVideoConferenceJoined = async (participant) => {
     this.api.executeCommand('toggleTileView');
     this.api.executeCommand('startRecording', {
-      mode: 'local'
-  });
+      mode: 'local',
+    });
     let data: any = await this.getParticipants();
   };
 

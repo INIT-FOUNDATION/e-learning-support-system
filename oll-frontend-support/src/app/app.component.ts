@@ -1,6 +1,6 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AuthService } from './screens/auth/services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppPreferencesService } from './modules/shared/services/app-preferences.service';
 import { DataService } from './modules/shared/services/data.service';
 import { Location } from '@angular/common';
@@ -18,7 +18,8 @@ export class AppComponent implements OnInit {
     private appPreferences: AppPreferencesService,
     private dataService: DataService,
     private location: Location,
-    public utilityService: UtilityService
+    public utilityService: UtilityService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +52,7 @@ export class AppComponent implements OnInit {
         if (allowedUrlsBeforeLogin.indexOf(url) != -1) {
           this.router.navigate([url]);
         } else {
+          this.authService.setMeetingCode = url;
           this.router.navigate(['/login']);
         }
       }

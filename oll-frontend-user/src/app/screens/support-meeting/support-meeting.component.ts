@@ -54,7 +54,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
     if (state) {
-      this.meetingLink = state.backend_server_url;
+      // this.meetingLink = state.backend_server_url;
+      this.meetingLink = 'jitsi.aieze.ai';
       this.meeting_details = state;
     } else {
       this.meetingCode = this.route.snapshot.params['meetingCode'];
@@ -89,7 +90,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     this.location.onPopState(() => {
       history.pushState(null, null, window.location.href);
     });
-
   }
 
   async ngAfterViewInit() {
@@ -121,7 +121,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'microphone',
       'raisehand',
       'tileview',
-      'desktop'
+      'desktop',
     ];
     // if (this.auth.currentUserValue?.token) {
     //   toolbarButtons.push('recording');
@@ -193,13 +193,14 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   closeRequestAndRoute = () => {
     this.router.navigate(['/home']);
     Swal.fire({
-      title: "Thank you for connecting. We hope it was helpful for you. Your feedback is valuable to us.",
-      input: "text",
+      title:
+        'Thank you for connecting. We hope it was helpful for you. Your feedback is valuable to us.',
+      input: 'text',
       inputAttributes: {
-        autocapitalize: "off"
+        autocapitalize: 'off',
       },
       showCancelButton: true,
-      confirmButtonText: "Submit",
+      confirmButtonText: 'Submit',
       confirmButtonColor: '#da2128',
       showLoaderOnConfirm: true,
       allowOutsideClick: false,
@@ -216,10 +217,10 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
               'style',
               'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
             );
-            cancelButton.setAttribute(
-              'style',
-              'border-radius: 18px; width: 100px; background-color: #fff; color: #da2128; border: 1px solid #da2128; padding:8px 10px;'
-            );
+          cancelButton.setAttribute(
+            'style',
+            'border-radius: 18px; width: 100px; background-color: #fff; color: #da2128; border: 1px solid #da2128; padding:8px 10px;'
+          );
           text.setAttribute(
             'style',
             'color: #000; margin: 10px 0; display: flex; justify-content: center; align-items: center'
@@ -232,12 +233,12 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         let payload = {
           requestId: 'requestId',
           feedback: feedbackText,
-          ratings: 5
+          ratings: 5,
         };
         this.supportMeetingService
           .userFeedback(payload)
           .subscribe((res: any) => {
-           console.log(res)
+            console.log(res);
           });
       }
     });

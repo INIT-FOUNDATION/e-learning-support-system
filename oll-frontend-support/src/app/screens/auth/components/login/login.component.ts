@@ -72,6 +72,8 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    console.log(this.authService.getMeetingCode);
+
     setTimeout(() => {
       google.accounts.id.initialize({
         client_id: environment.googleSignIn.client_id,
@@ -96,7 +98,13 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                   token: res.token,
                   redirect: false,
                 });
-                this.router.navigate(['/dashboard']);
+                if (this.authService.getMeetingCode) {
+                  this.router.navigate([
+                    `${environment.lss_web_url}${this.authService.getMeetingCode}`,
+                  ]);
+                } else {
+                  this.router.navigate(['/dashboard']);
+                }
               } else {
                 this.router.navigate(['/registration'], navigationExtras);
               }
@@ -234,7 +242,13 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                 token: res.token,
                 redirect: false,
               });
-              this.router.navigate(['/dashboard']);
+              if (this.authService.getMeetingCode) {
+                this.router.navigate([
+                  `${environment.lss_web_url}${this.authService.getMeetingCode}`,
+                ]);
+              } else {
+                this.router.navigate(['/dashboard']);
+              }
             } else {
               if (this.subscription.length == 3) {
                 this.stopFaceAuth();

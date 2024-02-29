@@ -1,7 +1,12 @@
-const BASE_URL = 'https://apilss.aieze.in';
-const DIRECT_BASE_URL = 'https://apilss.aieze.in';
+const BASE_URL = 'https://apilss.dev.aieze.in';
+const DIRECT_BASE_URL = 'https://apilss.dev.aieze.in';
 const support_system_port = '';
 const auth_port = '';
+
+// const BASE_URL = 'https://apilss.aieze.in';
+// const DIRECT_BASE_URL = 'https://apilss.aieze.in';
+// const support_system_port = '';
+// const auth_port = '';
 
 // const BASE_URL = 'http://localhost';
 // const DIRECT_BASE_URL = 'http://localhost';
@@ -28,5 +33,5 @@ export const environment = {
   waiting_timer: 60,
   lss_web_url: `http://localhost:4200`,
   enable_no_support: false,
-  client_id: 'OLL'
+  client_id: 'OLL',
 };

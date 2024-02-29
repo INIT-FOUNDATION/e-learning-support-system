@@ -3,6 +3,8 @@ import { AuthService } from 'src/app/screens/auth/services/auth.service';
 import { DataService } from '../../services/data.service';
 import { Router } from '@angular/router';
 import { UtilityService } from '../../services/utility.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileComponent } from '../profile/profile.component';
 
 @Component({
   selector: 'app-header',
@@ -14,10 +16,14 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     public dataService: DataService,
     private router: Router,
-    public utilityService: UtilityService
+    public utilityService: UtilityService,
+    private dialog: MatDialog
   ) {}
+
   userDetails: any = [];
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.dataService.userData);
+  }
 
   goToFaceAuthentication() {
     this.router.navigate(['/face-recognization']);
@@ -25,5 +31,18 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+  }
+
+  profileDialog() {
+    let dialogRef = this.dialog.open(ProfileComponent, {
+      width: '35%',
+      panelClass: [
+        'animate__animated',
+        'animate__slideInRight',
+        'breakoutRoomPanel',
+      ],
+      position: { right: '0px', top: '0px', bottom: '0px' },
+      disableClose: false,
+    });
   }
 }

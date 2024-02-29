@@ -39,7 +39,7 @@ export class TrexWaitingGameComponent
     private websocketService: WebsocketService,
     // private trexGameService: TrexGameService,
     private supportMeetingService: SupportMeetingService,
-    private customerSupportService: CustomerSupportModalService
+    private customerSupportService: CustomerSupportModalService,
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
@@ -51,6 +51,7 @@ export class TrexWaitingGameComponent
     }
   }
   redirectionModalOpen: boolean = false;
+
 
   ngOnInit(): void {
     this.supportMeetingService.requestAccepted$.subscribe((res) => {
@@ -94,6 +95,7 @@ export class TrexWaitingGameComponent
               },
             };
             this.router.navigate(['/support'], navigationExtras);
+            console.log(navigationExtras)
           }
         });
     }

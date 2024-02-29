@@ -17,6 +17,8 @@ import { NotificationService } from 'src/app/modules/shared/services/notificatio
 import { MatSelectChange } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { RecordingModalComponent } from 'src/app/modules/shared/modal/recording-modal/recording-modal.component';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -46,6 +48,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   toggleStatus: boolean = true; 
   supportStatus: any = 1; 
   previousQueueWaitingList = [];
+
   @ViewChild('popover') popover: ElementRef;
 
   loginStatus: any = [
@@ -61,6 +64,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   currentPage = 1;
   pageSize = 5;
   scrollReachedBottom = false;
+  requestsHistoryCount: number = 0;
+  expertsCountData: number = 0;
+
   ngOnInit(): void {
     this.utilityService.showHeaderSet = true;
     this.utilityService.showFooterSet = true;
@@ -134,6 +140,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     this.meetingHistory();
     this.changeLoginStatus();
+    this.expertsCount()
+    
+  }
+
+  expertsCount(){
+    this.dashboardService.expertsRoleCount().toPromise().then((data: any) => {
+      this.expertsCountData = data.nonPrimaryRoleCount;
+    }).catch(error => {
+      console.error('Error fetching experts role count:', error);
+    });
   }
 
   playAudio(): void {
@@ -171,7 +187,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   changeLoginStatus() {
     this.supportStatus = this.toggleStatus ? 1 : 0;
-    console.log(this.supportStatus)
     // this.hideMatLabel = true;
     this.dashboardService
       .updateLoginStatus({ availability_status: this.supportStatus })
@@ -203,62 +218,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     this.dashboardService.requestHistory(payload).subscribe(
       (res: any) => {
-        // res.requestsHistory = [
-        //   {
-        //     requestId: '08da5203-97f1-4ae0-a952-e02a8ecbb6d5',
-        //     requestedByUser: 'GUEST | 195519022024',
-        //     requestedAt: '2024-02-19T08:55:10.883Z',
-        //     status: 5,
-        //     requestAttendedBy: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     averageResponseTime: null,
-        //     requestAssignedTo: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     requestAttendedAt: '2024-02-19T08:55:15.229Z',
-        //     averageInCallTime: null,
-        //     feedback: null,
-        //     recordingUrl: null,
-        //     requestedUserDeviceInfo:
-        //       '{"uo-device-type":"desktop","uo-os":"Linux","uo-os-version":"unknown","uo-is-mobile":"false","uo-is-tablet":"false","uo-is-desktop":"true","uo-browser-version":"121.0.0.0","uo-browser":"Chrome"}',
-        //     requestClosedAt: '2024-02-19T19:16:46.883Z',
-        //     requestAssignedAt: '2024-02-19T08:55:10.915Z',
-        //     meetingCode: 'WU860U',
-        //   },
-        //   {
-        //     requestId: '08da5203-97f1-4ae0-a952-e02a8ecbb6d5',
-        //     requestedByUser: 'GUEST | 195519022024',
-        //     requestedAt: '2024-02-19T08:55:10.883Z',
-        //     status: 5,
-        //     requestAttendedBy: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     averageResponseTime: null,
-        //     requestAssignedTo: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     requestAttendedAt: '2024-02-19T08:55:15.229Z',
-        //     averageInCallTime: null,
-        //     feedback: null,
-        //     recordingUrl: null,
-        //     requestedUserDeviceInfo:
-        //       '{"uo-device-type":"desktop","uo-os":"Windows","uo-os-version":"unknown","uo-is-mobile":"false","uo-is-tablet":"false","uo-is-desktop":"true","uo-browser-version":"121.0.0.0","uo-browser":"Chrome"}',
-        //     requestClosedAt: '2024-02-19T19:16:46.883Z',
-        //     requestAssignedAt: '2024-02-19T08:55:10.915Z',
-        //     meetingCode: 'WU860U',
-        //   },
-        //   {
-        //     requestId: '08da5203-97f1-4ae0-a952-e02a8ecbb6d5',
-        //     requestedByUser: 'GUEST | 195519022024',
-        //     requestedAt: '2024-02-19T08:55:10.883Z',
-        //     status: 5,
-        //     requestAttendedBy: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     averageResponseTime: null,
-        //     requestAssignedTo: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     requestAttendedAt: '2024-02-19T08:55:15.229Z',
-        //     averageInCallTime: null,
-        //     feedback: null,
-        //     recordingUrl: null,
-        //     requestedUserDeviceInfo:
-        //       '{"uo-device-type":"desktop","uo-os":"Linux","uo-os-version":"unknown","uo-is-mobile":"false","uo-is-tablet":"false","uo-is-desktop":"true","uo-browser-version":"121.0.0.0","uo-browser":"Chrome"}',
-        //     requestClosedAt: '2024-02-19T19:16:46.883Z',
-        //     requestAssignedAt: '2024-02-19T08:55:10.915Z',
-        //     meetingCode: 'WU860U',
-        //   },
-        // ];
         if (res && res.requestsHistory && res.requestsHistory.length) {
           res.requestsHistory.forEach((reqHistory) => {
             reqHistory.requestedUserDeviceInfo = JSON.parse(
@@ -275,6 +234,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             this.currentPage -= 1;
           }
         }
+
+        this.requestsHistoryCount = res.requestsHistoryCount;
         this.resetScrollBottomLoader();
       },
       (err) => {

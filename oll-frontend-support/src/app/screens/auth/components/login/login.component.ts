@@ -96,7 +96,11 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                   token: res.token,
                   redirect: false,
                 });
-                this.router.navigate(['/dashboard']);
+                if (this.authService.getMeetingCode) {
+                  this.router.navigate([`${this.authService.getMeetingCode}`]);
+                } else {
+                  this.router.navigate(['/dashboard']);
+                }
               } else {
                 this.router.navigate(['/registration'], navigationExtras);
               }
@@ -217,7 +221,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
 
   confirmFaceAuth() {
     try {
-      let onlyBase64 = this.captures.replace('data:image/png;base64,', '');
+      let onlyBase64 = this.zoomImage.replace('data:image/png;base64,', '');
       let blob = this.utilityService.b64toBlob(onlyBase64, 'image/png');
 
       const formData = new FormData();
@@ -234,7 +238,11 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                 token: res.token,
                 redirect: false,
               });
-              this.router.navigate(['/dashboard']);
+              if (this.authService.getMeetingCode) {
+                this.router.navigate([`${this.authService.getMeetingCode}`]);
+              } else {
+                this.router.navigate(['/dashboard']);
+              }
             } else {
               if (this.subscription.length == 3) {
                 this.stopFaceAuth();

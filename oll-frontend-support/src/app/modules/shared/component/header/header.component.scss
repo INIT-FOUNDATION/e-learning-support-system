@@ -22,3 +22,7 @@
     border-radius: 50%;
   }
 }
+
+::ng-deep.dropdown-menu {
+  transform: translate(50px, 40px) !important;
+}

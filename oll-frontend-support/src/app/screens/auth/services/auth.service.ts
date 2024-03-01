@@ -72,11 +72,13 @@ export class AuthService {
       this.appPreferences.clearAll();
       this.currentUserSubject.next(null);
       this.dataService.userDetails = null;
+      this.dataService.userData = null;
       this.router.navigate(['/login']);
       return false;
     } else {
       this.appPreferences.clearAll();
       this.currentUserSubject.next(null);
+      this.dataService.userData = null;
       this.dataService.userDetails = null;
       this.router.navigate(['/login']);
       return false;

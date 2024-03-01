@@ -32,7 +32,7 @@
           <div class="uploadProfilePic mb-2">
             <img
               [src]="
-                userDetails.profile_pic_url ||
+                (dataService.userData | async)?.profile_pic_url ||
                 '../../../assets/images/profile.svg'
               "
               alt=""

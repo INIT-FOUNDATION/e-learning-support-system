@@ -148,15 +148,14 @@ export class ProfileComponent implements OnInit {
     if (this.croppedImage) {
       let onlyBase64 = this.croppedImage.replace('data:image/png;base64,', '');
       let blob = this.utilService.b64toBlob(onlyBase64, 'image/png');
-      const blobUrl = URL.createObjectURL(blob);
-      window.open(blobUrl, '__blank');
-      this.dialogRef.close({
-        image_blob: blob,
-        type: 'confirm',
-        base64: this.croppedImage,
-      });
+      // const blobUrl = URL.createObjectURL(blob);
+      // this.dialogRef.close({
+      //   image_blob: blob,
+      //   type: 'confirm',
+      //   base64: this.croppedImage,
+      // });
       const formData = new FormData();
-      formData.append('file', blob, 'profile_pic_url.png');
+      formData.append('file', blob, 'profile_pic.png');
       this.profileService.uploadProfilePic(formData).subscribe({
         next: async (res) => {
           if (res) {

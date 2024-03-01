@@ -21,9 +21,7 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   userDetails: any = [];
-  ngOnInit(): void {
-    console.log(this.dataService.userData);
-  }
+  ngOnInit(): void {}
 
   goToFaceAuthentication() {
     this.router.navigate(['/face-recognization']);

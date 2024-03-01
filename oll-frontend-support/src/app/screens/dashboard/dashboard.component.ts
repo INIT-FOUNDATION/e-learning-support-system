@@ -45,8 +45,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   callHistoryList: any = [];
   deviceInfo: any;
   onInit = true;
-  toggleStatus: boolean = true; 
-  supportStatus: any = 1; 
+  toggleStatus: boolean = true;
+  supportStatus: any = 1;
   previousQueueWaitingList = [];
 
   @ViewChild('popover') popover: ElementRef;
@@ -73,10 +73,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.notificationService.requestPermission();
     const userToken = this.appPreferences.getValue('user_token');
     this.userDetails = this.dataService.userDetails;
-    this.websocketService.emit(
-      'lss_support_availability',
-      JSON.parse(userToken)
-    );
+    // this.websocketService.emit('lss_support_availability', JSON.parse(userToken));
     this.websocketService
       .listen('lss_user_availability_status')
       .subscribe((res: any) => {
@@ -138,18 +135,32 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       }
     });
 
+    this.websocketService.listen('connect').subscribe((res) => {
+      console.log('Websocket Connected');
+      this.websocketService.emit(
+        'lss_support_availability',
+        JSON.parse(userToken)
+      );
+    });
+
+    this.websocketService.listen('disconnect').subscribe((res) => {
+      console.log('Websocket Disconnected');
+    });
     this.meetingHistory();
     this.changeLoginStatus();
-    this.expertsCount()
-    
+    this.expertsCount();
   }
 
-  expertsCount(){
-    this.dashboardService.expertsRoleCount().toPromise().then((data: any) => {
-      this.expertsCountData = data.nonPrimaryRoleCount;
-    }).catch(error => {
-      console.error('Error fetching experts role count:', error);
-    });
+  expertsCount() {
+    this.dashboardService
+      .expertsRoleCount()
+      .toPromise()
+      .then((data: any) => {
+        this.expertsCountData = data.nonPrimaryRoleCount;
+      })
+      .catch((error) => {
+        console.error('Error fetching experts role count:', error);
+      });
   }
 
   playAudio(): void {
@@ -257,7 +268,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+      // console.log('The dialog was closed');
     });
   }
 

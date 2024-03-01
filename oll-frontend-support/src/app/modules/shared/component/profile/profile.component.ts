@@ -123,7 +123,7 @@ export class ProfileComponent implements OnInit {
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.blob;
+    this.croppedImage = event.base64;
   }
 
   imageLoaded(image: LoadedImage) {
@@ -146,16 +146,15 @@ export class ProfileComponent implements OnInit {
 
   confirmFileUpload() {
     if (this.croppedImage) {
-      let blob = this.croppedImage;
-      // let onlyBase64 = this.croppedImage.replace('data:image/png;base64,', '');
-      // let blob = this.utilService.b64toBlob(onlyBase64, 'image/png');
-      // const blobUrl = URL.createObjectURL(blob);
-      // window.open(blobUrl, '__blank');
-      // this.dialogRef.close({
-      //   image_blob: blob,
-      //   type: 'confirm',
-      //   base64: this.croppedImage
-      // })
+      let onlyBase64 = this.croppedImage.replace('data:image/png;base64,', '');
+      let blob = this.utilService.b64toBlob(onlyBase64, 'image/png');
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, '__blank');
+      this.dialogRef.close({
+        image_blob: blob,
+        type: 'confirm',
+        base64: this.croppedImage,
+      });
       const formData = new FormData();
       formData.append('file', blob, 'profile_pic_url.png');
       this.profileService.uploadProfilePic(formData).subscribe({

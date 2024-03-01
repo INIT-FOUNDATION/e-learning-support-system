@@ -39,7 +39,7 @@ export class TrexWaitingGameComponent
     private websocketService: WebsocketService,
     // private trexGameService: TrexGameService,
     private supportMeetingService: SupportMeetingService,
-    private customerSupportService: CustomerSupportModalService,
+    private customerSupportService: CustomerSupportModalService
   ) {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
@@ -52,7 +52,6 @@ export class TrexWaitingGameComponent
   }
   redirectionModalOpen: boolean = false;
 
-
   ngOnInit(): void {
     this.supportMeetingService.requestAccepted$.subscribe((res) => {
       this.requestAccepted = res;
@@ -60,10 +59,6 @@ export class TrexWaitingGameComponent
     if (this.requestDetails) {
       this.websocketService.connect();
       this.startTimer();
-      this.websocketService.emit(
-        'lss_user_requests',
-        this.requestDetails?.requestId
-      );
       this.joinsupportSubscription = this.websocketService
         .listen('request_status')
         .pipe(
@@ -95,9 +90,17 @@ export class TrexWaitingGameComponent
               },
             };
             this.router.navigate(['/support'], navigationExtras);
-            console.log(navigationExtras)
           }
         });
+
+      this.websocketService.listen('connect').subscribe(res => {
+        console.log('Websocket Connected');
+        this.websocketService.emit('lss_user_requests', this.requestDetails?.requestId);
+      });
+
+      this.websocketService.listen('disconnect').subscribe(res => {
+        console.log('Websocket Disconnected');
+      });
     }
   }
 
@@ -129,7 +132,8 @@ export class TrexWaitingGameComponent
 
   showConfirmationDialog() {
     Swal.fire({
-      title: 'All customer support executives are currently occupied. Please request again later.',
+      title:
+        'All customer support executives are currently occupied. Please request again later.',
       showCancelButton: false,
       confirmButtonText: 'Okay',
       confirmButtonColor: '#da2128',
@@ -166,10 +170,10 @@ export class TrexWaitingGameComponent
             .deniedWaiting(payload)
             .subscribe((res: any) => {
               this.router.navigate(['/home']).then(() => {
-                        location.reload();
-                      });
+                location.reload();
+              });
             });
-        } 
+        }
       }
     });
   }

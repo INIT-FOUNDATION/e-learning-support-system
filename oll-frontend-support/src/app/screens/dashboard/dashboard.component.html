@@ -14,25 +14,11 @@
     />
     <span class="fw-500 mx-2"> Login Status:</span>
 
-    <!-- <mat-form-field class="login-status" appearance="outline" class="me-1">
-      <mat-select
-        class="fs-08"
-        [value]="availabilityStatus.availability_status"
-      >
-        <mat-option
-          (click)="changeLoginStatus(item?.availability_status)"
-          class="fs-08 py-1 custom-min-height"
-          *ngFor="let item of loginStatus"
-          [value]="item?.availability_status"
-        >
-          {{ item?.label }}</mat-option
-        >
-      </mat-select>
-    </mat-form-field> -->
-
-    <div class="form-check form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked [(ngModel)]="toggleStatus" (ngModelChange)="changeLoginStatus()">
+    <div class="toggle-switch">
+      <input class="toggle-input" id="toggle" type="checkbox" checked [(ngModel)]="toggleStatus" (ngModelChange)="changeLoginStatus()">
+      <label class="toggle-label" for="toggle"></label>
     </div>
+
     </div>
     <div>
       <span class="fw-500 mx-2"> Experts Count: {{expertsCountData}}</span>

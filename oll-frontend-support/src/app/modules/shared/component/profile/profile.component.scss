@@ -27,7 +27,14 @@
 
 .editBtn{
     position: absolute;
-    bottom: 24px;
+    bottom: 5rem;
+    left: 0;
+    right: 0;
+}
+
+.authBtn{
+  position: absolute;
+    bottom: 1rem;
     left: 0;
     right: 0;
 }
@@ -94,3 +101,4 @@
   padding: 0.6rem 0.75rem !important;
   border-radius: 0.25rem 0rem 0rem 0.25rem !important;
 }
+

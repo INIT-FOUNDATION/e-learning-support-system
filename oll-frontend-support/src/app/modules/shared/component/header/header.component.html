@@ -14,41 +14,51 @@
     <span></span>
   </div>
 
-  <div class="dropdown" *ngIf="dataService.userData | async">
-    <button
-      class="btn btn-transparent dropdown-toggle"
-      type="button"
-      id="dropdownMenuButton1"
-      data-bs-toggle="dropdown"
-    >
-      {{ (dataService.userData | async)?.first_name }}
-      {{ (dataService.userData | async)?.last_name }}
-    </button>
-    <ul class="dropdown-menu fs-09">
-      <li
-        class="border-bottom pb-2 mb-2 cursor-pointer"
-        (click)="goToFaceAuthentication()"
+  <div class="dropdown d-flex" *ngIf="dataService.userData | async">
+    <div class="userImg d-flex align-items-center justify-content-end">
+      <img
+        [src]="
+          (dataService.userData | async)?.profile_pic_url ||
+          '../../../assets/images/profile.svg'
+        "
+        alt=""
+      />
+    </div>
+    <div>
+      <button
+        class="btn btn-transparent dropdown-toggle"
+        type="button"
+        id="dropdownMenuButton1"
+        data-bs-toggle="dropdown"
       >
+        {{ (dataService.userData | async)?.first_name }}
+        {{ (dataService.userData | async)?.last_name }}
+      </button>
+      <ul class="dropdown-menu fs-09">
+        <!-- <li
+        class="border-bottom pb-2 mb-2 cursor-pointer"
+        (click)="goToFaceAuthentication()">
         <a class="dropdown-item">Face Authentication</a>
-      </li>
+        </li> -->
 
-      <!-- <li class="border-bottom pb-2 mb-2 cursor-pointer">
-        <a
-          class="dropdown-item d-flex align-items-center"
+        <li
           (click)="profileDialog()"
+          class="border-bottom pb-2 mb-2 cursor-pointer"
         >
-          <i class="fa-solid fa-user text-danger me-2"></i>Profile</a
-        >
-      </li> -->
+          <a class="dropdown-item d-flex align-items-center">
+            <i class="fa-solid fa-user text-danger me-2"></i>Profile</a
+          >
+        </li>
 
-      <li (click)="logout()" class="cursor-pointer">
-        <a class="dropdown-item d-flex align-items-center">
-          <i
-            class="fa-solid fa-right-from-bracket text-danger me-2 cursor-pointer"
-          ></i
-          >Logout</a
-        >
-      </li>
-    </ul>
+        <li (click)="logout()" class="cursor-pointer">
+          <a class="dropdown-item d-flex align-items-center">
+            <i
+              class="fa-solid fa-right-from-bracket text-danger me-2 cursor-pointer"
+            ></i
+            >Logout</a
+          >
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

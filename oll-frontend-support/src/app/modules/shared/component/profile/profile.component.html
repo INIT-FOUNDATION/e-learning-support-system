@@ -32,7 +32,8 @@
           <div class="uploadProfilePic mb-2">
             <img
               [src]="
-                'userDetails.profile_pic_url  ||../../../assets/images/profile.svg'
+                (dataService.userData | async)?.profile_pic_url ||
+                '../../../assets/images/profile.svg'
               "
               alt=""
             />
@@ -74,7 +75,17 @@
           class="w-75 rounded-pill p-3 bg-danger text-white border-0 fs-6"
           (click)="changeScreen('edit_profile')"
         >
+          <i class="fa-solid fa-pen-to-square fs-6" style="color: #ffffff"></i>
           Edit Profile
+        </button>
+      </div>
+
+      <div class="d-flex justify-content-center authBtn">
+        <button
+          class="w-75 rounded-pill p-3 bg-danger text-white border-0 fs-6"
+          (click)="goToFaceAuthentication()"
+        >
+          Face Authentication
         </button>
       </div>
     </ng-container>
@@ -291,19 +302,6 @@
           </div>
         </div>
 
-        <!-- <h3 class="headingSection">
-          You can use avatars instead of profile pic
-        </h3>
-        <div class="avatarSection">
-          <ng-container *ngFor="let avatar of avatarUrls; let i = index">
-            <div class="avatarImgInfo" (click)="selectAvatar(i)">
-              <img [src]="'../../../../../' + avatar" class="w-100" />
-              <span class="checkSection" *ngIf="i === selectedAvatarIdx">
-                <mat-icon class="custom-checkIcon"></mat-icon>
-              </span>
-            </div>
-          </ng-container>
-        </div> -->
         <div
           class="d-flex align-items-center justify-content-center upoadBtns mt-5"
         >

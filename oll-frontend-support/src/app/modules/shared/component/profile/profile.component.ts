@@ -96,6 +96,7 @@ export class ProfileComponent implements OnInit {
       }
       this.commonService.getUserDetails();
       this.utilService.showSuccessMessage('Profile updated successfully');
+      this.activeScreen = 'view_profile';
     });
   }
 
@@ -156,7 +157,7 @@ export class ProfileComponent implements OnInit {
       //   base64: this.croppedImage
       // })
       const formData = new FormData();
-      formData.append('file', blob, 'profile_pic.png');
+      formData.append('file', blob, 'profile_pic_url.png');
       this.profileService.uploadProfilePic(formData).subscribe({
         next: async (res) => {
           if (res) {
@@ -207,5 +208,10 @@ export class ProfileComponent implements OnInit {
 
   togglePasswordVisibilitySecond(): void {
     this.passwordVisibleSecond = !this.passwordVisibleSecond;
+  }
+
+  goToFaceAuthentication() {
+    this.router.navigate(['/face-recognization']);
+    this.dialogRef.close();
   }
 }

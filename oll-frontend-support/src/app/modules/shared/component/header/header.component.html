@@ -25,21 +25,21 @@
       {{ (dataService.userData | async)?.last_name }}
     </button>
     <ul class="dropdown-menu fs-09">
-      <li
+      <!-- <li
         class="border-bottom pb-2 mb-2 cursor-pointer"
         (click)="goToFaceAuthentication()"
       >
         <a class="dropdown-item">Face Authentication</a>
-      </li>
+      </li> -->
 
-      <!-- <li class="border-bottom pb-2 mb-2 cursor-pointer">
+      <li class="border-bottom pb-2 mb-2 cursor-pointer">
         <a
           class="dropdown-item d-flex align-items-center"
           (click)="profileDialog()"
         >
           <i class="fa-solid fa-user text-danger me-2"></i>Profile</a
         >
-      </li> -->
+      </li>
 
       <li (click)="logout()" class="cursor-pointer">
         <a class="dropdown-item d-flex align-items-center">

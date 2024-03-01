@@ -138,7 +138,7 @@ export class TrexWaitingGameComponent
       confirmButtonText: 'Okay',
       confirmButtonColor: '#da2128',
       reverseButtons: true,
-      buttonsStyling: false,
+      buttonsStyling: false, 
       allowOutsideClick: false,
       allowEscapeKey: false,
       didOpen: () => {
@@ -160,7 +160,6 @@ export class TrexWaitingGameComponent
         }
       },
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (!this.requestAccepted) {
         if (result.isConfirmed) {
           let payload = {

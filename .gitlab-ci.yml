@@ -1,7 +1,7 @@
 stages:
   - prebuild
   - build
-  - configuration_changes
+  - configure_changes
   - deploy
   - restart_haproxy
 

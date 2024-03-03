@@ -17,7 +17,8 @@ variables:
   ENVIRONMENT:
     value: "prod"
     description: "Environment to deploy services. Possible Values (prod)"
-  DEPLOYMENT_PROJECT_BRANCH: "prod_release"
+  DEPLOYMENTS_PROJECT_BRANCH: "prod_release"
+  BUILD_ENV: "production"
   STACK_WEBHOOK: "https://portainer.aieze.in:9443/api/stacks/webhooks/be2407d9-f597-4559-9e67-c92e967e19fb"
 
 prebuild:
@@ -98,7 +99,7 @@ build:
         cd $project_dir;
         cd $service;
 
-        sed -i "s/configuration=[^ ]*/configuration=$ENVIRONMENT/g" Dockerfile
+        sed -i "s/configuration=[^ ]*/configuration=$BUILD_ENV/g" Dockerfile
 
         image="${CONTAINER_REGISTRY}/${service}:${CI_COMMIT_SHORT_SHA}-${CI_COMMIT_REF_NAME//[_\/]/-}-${ENVIRONMENT}"
 
@@ -162,7 +163,7 @@ configure_changes:
           
       git commit -m "Deploying Services ${commited_services} for $CI_COMMIT_MESSAGE"
                     
-      git push origin "${DEPLOYMENT_PROJECT_BRANCH}"
+      git push origin "$DEPLOYMENTS_PROJECT_BRANCH"
 
 deploy:
   stage: deploy

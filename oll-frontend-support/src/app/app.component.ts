@@ -5,6 +5,8 @@ import { AppPreferencesService } from './modules/shared/services/app-preferences
 import { DataService } from './modules/shared/services/data.service';
 import { Location } from '@angular/common';
 import { UtilityService } from './modules/shared/services/utility.service';
+import { debounceTime, fromEvent, merge, of, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,6 +14,7 @@ import { UtilityService } from './modules/shared/services/utility.service';
 })
 export class AppComponent implements OnInit {
   title = 'lss-frontend-admin';
+  inactiveTime = environment.session_inactive_time
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -25,6 +28,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.authService.currentUser.subscribe(async (r) => {
       if (r && r.token) {
+        // this.trackInactivityOfUser();
         let userDetails: any = await this.authService
           .getUserDetails()
           .toPromise();
@@ -57,5 +61,23 @@ export class AppComponent implements OnInit {
         }
       }
     });
+  }
+
+  trackInactivityOfUser() {
+    merge(
+      fromEvent(window, 'mousemove'),
+      fromEvent(window, 'keypress'),
+      fromEvent(window, 'touchstart'),
+      fromEvent(window, 'blur'), //when you switch browser tab
+      of('load') //onload
+    ).pipe(
+        tap((event: any) => {
+          console.log('Event triggered');
+        }),
+        debounceTime(this.inactiveTime),
+        tap((event) => {
+          console.log(`User Inactive:: ${this.inactiveTime} ms`);
+        })
+    ).subscribe();
   }
 }

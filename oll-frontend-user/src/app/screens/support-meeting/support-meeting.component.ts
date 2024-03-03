@@ -291,7 +291,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
             .subscribe((res: any) => {
               if (res) {
                 this.utilityService.showSuccessMessage(
-                  'User Created Successfully!'
+                  'Feedback submitted successfully!'
                 );
               }
             });

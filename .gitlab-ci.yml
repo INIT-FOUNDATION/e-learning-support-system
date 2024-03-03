@@ -24,7 +24,7 @@ variables:
 prebuild:
   stage: prebuild
   tags:
-    - production-deployment
+    - prod-deployment
   only:
     - web
   script:
@@ -178,7 +178,7 @@ deploy:
 restart_haproxy:
   stage: restart_haproxy
   tags:
-    - -deployment
+    - prod-deployment
   only:
     - web
   script:

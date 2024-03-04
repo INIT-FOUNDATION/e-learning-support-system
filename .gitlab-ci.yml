@@ -139,7 +139,7 @@ configure_changes:
     - |
       echo "Cloning Deployment Repository"
 
-      git clone --single-branch https://${GITLAB_USERNAME}:${GITLAB_ACCESS_TOKEN}@${DEPLOYMENTS_PROJECT} --branch "${ENVIRONMENT}_release" 
+      git clone --single-branch https://${GITLAB_USERNAME}:${GITLAB_ACCESS_TOKEN}@${DEPLOYMENTS_PROJECT} --branch "$DEPLOYMENTS_PROJECT_BRANCH" 
 
       IFS=',' read -ra SERVICES_ARRAY <<< "$([ -n "$MICRO_SERVICES" ] && [ -n "$FRONTEND_SERVICES" ] && echo "$MICRO_SERVICES," || echo "$MICRO_SERVICES")$FRONTEND_SERVICES"
 

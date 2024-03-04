@@ -212,22 +212,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       showLoaderOnConfirm: true,
       allowOutsideClick: false,
       allowEscapeKey: false,
-      didRender: () => {
-        const confirmButton = document.querySelector(
-          '.swal2-confirm'
-        ) as HTMLButtonElement;
-        const feedbackInput = document.getElementById(
-          'swal-input'
-        ) as HTMLInputElement;
 
-        confirmButton.disabled = true;
-
-        feedbackInput.addEventListener('input', () => {
-          confirmButton.disabled = !(
-            feedbackInput.value != '' && this.selectedRating
-          );
-        });
-      },
       didOpen: () => {
         const text = document.querySelector('.swal2-title');
         const btnContainer = document.querySelector('.swal2-actions');
@@ -256,19 +241,19 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
           document
             .getElementById('star1')
-            .addEventListener('click', () => this.countStar(1));
+            .addEventListener('click', () => this.countStar(1, confirmButtonElement));
           document
             .getElementById('star2')
-            .addEventListener('click', () => this.countStar(2));
+            .addEventListener('click', () => this.countStar(2, confirmButtonElement));
           document
             .getElementById('star3')
-            .addEventListener('click', () => this.countStar(3));
+            .addEventListener('click', () => this.countStar(3, confirmButtonElement));
           document
             .getElementById('star4')
-            .addEventListener('click', () => this.countStar(4));
+            .addEventListener('click', () => this.countStar(4, confirmButtonElement));
           document
             .getElementById('star5')
-            .addEventListener('click', () => this.countStar(5));
+            .addEventListener('click', () => this.countStar(5, confirmButtonElement));
         }
       },
     }).then((result) => {
@@ -300,7 +285,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     });
   };
 
-  countStar(star) {
+  countStar(star, confirmButton) {
     this.selectedRating = star;
     const stars = document.querySelectorAll('.star i');
     stars.forEach(
@@ -317,13 +302,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       }
     }
 
-    const feedbackInput = (
-      document.getElementById('swal-input') as HTMLInputElement
-    ).value;
-    const confirmButton = document.querySelector(
-      '.swal2-confirm'
-    ) as HTMLButtonElement;
-    confirmButton.disabled = !(feedbackInput != '' && this.selectedRating);
+    confirmButton.disabled = false;
   }
 
   handleClose = () => {

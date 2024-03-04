@@ -11,7 +11,8 @@ import { LoaderService } from '../modules/shared/services/loader.service';
 import { environment } from 'src/environments/environment';
 
 const noLoaderApis: string | string[] = [
-  `${environment.support_system_prefix}/requestsHistory`
+  `${environment.support_system_prefix}/requestsHistory`,
+  `${environment.support_system_prefix}/updateAvailabilityStatus`
 ];
 const loaderRequireGetApi: string | string[] = [
 ]

@@ -81,6 +81,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           this.availabilityStatus = this.loginStatus.find(
             (it) => it.availability_status == res.availability_status
           );
+          this.toggleStatus = this.availabilityStatus.availability_status == 0 ? false : true;
         }
       });
     this.websocketService.listen('requests').subscribe((res: any) => {

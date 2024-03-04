@@ -130,7 +130,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       cancelButtonText: 'No',
       cancelButtonColor: '#fff',
       confirmButtonText: 'Yes',
-      confirmButtonColor: '#004A86',
+      confirmButtonColor: '#da2128',
       reverseButtons: true,
       buttonsStyling: false,
       allowOutsideClick: false,
@@ -145,11 +145,11 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
           btnContainer.setAttribute('style', 'margin-bottom: 10px;'),
             confirmButton.setAttribute(
               'style',
-              'border-radius: 18px; width: 100px; background-color: #004A86; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
+              'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
             );
           cancelButton.setAttribute(
             'style',
-            'border-radius: 18px; width: 100px; background-color: #fff; color: #004A86; border: 1px solid #004A86; padding:8px 10px;'
+            'border-radius: 18px; width: 100px; background-color: #fff; color: #da2128; border: 1px solid #da2128; padding:8px 10px;'
           );
           text.setAttribute(
             'style',

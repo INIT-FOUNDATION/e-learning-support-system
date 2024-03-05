@@ -63,7 +63,14 @@ export class ErrorHandlerInterceptor {
               }
             } else {
               try {
-                this.utilityService.showErrorMessage(response.error.error);
+                const errorMsg = response.error;
+                if (errorMsg) {
+                  if (errorMsg.errorCode !== 'ERROR0010') {
+                    this.utilityService.showErrorMessage(errorMsg.error);
+                  }
+                } else {
+                  this.utilityService.showErrorMessage('Error occurred');
+                }
               } catch (e) {
                 console.error('Error!!! ', e);
               }

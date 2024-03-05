@@ -22,6 +22,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { FaceAuthenticationModalComponent } from 'src/app/modules/shared/modal/face-authentication-modal/face-authentication-modal/face-authentication-modal.component';
 import { Subscription } from 'rxjs';
 import { CookieService } from 'src/app/modules/shared/services/cookies.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import Swal from 'sweetalert2';
 declare var google: any;
 @Component({
   selector: 'app-login',
@@ -88,24 +90,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
           const payload: any = {
             credentials: response.credential,
           };
-          this.authService
-            .googleSignInValidator(payload)
-            .subscribe((res: any) => {
-              if (res.exists) {
-                this.appPreferences.setValue('user_token', res.token);
-                this.commonService.getUserDetails({
-                  token: res.token,
-                  redirect: false,
-                });
-                if (this.authService.getMeetingCode) {
-                  this.router.navigate([`${this.authService.getMeetingCode}`]);
-                } else {
-                  this.router.navigate(['/dashboard']);
-                }
-              } else {
-                this.router.navigate(['/registration'], navigationExtras);
-              }
-            });
+          this.signInWithGoogle(payload, navigationExtras);
         },
       });
 
@@ -126,6 +111,78 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
         await this.startVideo();
       });
     }, 100);
+  }
+
+  signInWithGoogle(payload, navigationExtras) {
+    this.authService.googleSignInValidator(payload).subscribe(
+      (res: any) => {
+        if (res.exists) {
+          this.appPreferences.setValue('user_token', res.token);
+          this.commonService.getUserDetails({
+            token: res.token,
+            redirect: false,
+          });
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/registration'], navigationExtras);
+        }
+      },
+      (error: HttpErrorResponse) => {
+        if (error.error.errorCode === 'ERROR0010') {
+          this.showMultipleLoginAlert(
+            this.signInWithGoogle.bind(this),
+            { ...payload, continueSession: true },
+            navigationExtras
+          );
+        }
+      }
+    );
+  }
+
+  showMultipleLoginAlert(confirmFunction, ...argumenets) {
+    Swal.fire({
+      title:
+        'You already have an ongoing active session. Do you want to continue here?',
+      showCancelButton: true,
+      cancelButtonText: 'No',
+      cancelButtonColor: '#fff',
+      confirmButtonText: 'Yes',
+      confirmButtonColor: '#da2128',
+      reverseButtons: true,
+      buttonsStyling: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        const text = document.querySelector('.swal2-title');
+        const btnContainer = document.querySelector('.swal2-actions');
+        const confirmButton = document.querySelector('.swal2-confirm');
+        const cancelButton = document.querySelector('.swal2-cancel');
+
+        if (confirmButton && cancelButton) {
+          btnContainer.setAttribute('style', 'margin-bottom: 10px;'),
+            confirmButton.setAttribute(
+              'style',
+              'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
+            );
+          cancelButton.setAttribute(
+            'style',
+            'border-radius: 18px; width: 100px; background-color: #fff; color: #da2128; border: 1px solid #da2128; padding:8px 10px;'
+          );
+          text.setAttribute(
+            'style',
+            'color: #000; margin: 10px 0; display: flex; justify-content: center; align-items: center'
+          );
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        confirmFunction(...argumenets);
+      }
+
+      // else if (result.isDismissed) {
+
+      // }
+    });
   }
 
   async startVideo() {
@@ -220,7 +277,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  confirmFaceAuth() {
+  confirmFaceAuth(payload = { continueSession: false }) {
     try {
       let onlyBase64 = this.zoomImage.replace('data:image/png;base64,', '');
       let blob = this.utilityService.b64toBlob(onlyBase64, 'image/png');
@@ -228,11 +285,11 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       const formData = new FormData();
       formData.append('file', blob, 'face_auth.png');
       formData.append('user_name', this.loginForm.value.emailId);
+      formData.append('continueSession', '' + payload.continueSession);
 
       if (this.subscription.length <= 4) {
-        const subs = this.authService
-          .loginUsingFace(formData)
-          .subscribe((res: any) => {
+        const subs = this.authService.loginUsingFace(formData).subscribe(
+          (res: any) => {
             if (res.token) {
               this.appPreferences.setValue('user_token', res.token);
               this.commonService.getUserDetails({
@@ -263,8 +320,18 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.retakeFaceAuth();
               }
             }
-          });
+          },
+          (error: HttpErrorResponse) => {
+            if (error.error.errorCode === 'ERROR0010') {
+              this.showMultipleLoginAlert(this.confirmFaceAuth.bind(this), {
+                continueSession: true,
+              });
+            }
+          }
+        );
         this.subscription.push(subs);
+      } else {
+        this.loginUsing = 'password';
       }
     } catch (error) {
       console.log(error);
@@ -309,38 +376,40 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     } else if (this.userExists) {
       try {
-        this.authService.signIn(formData).subscribe(
-          (res: any) => {
-            if (res.token) {
-              this.appPreferences.setValue('user_token', res.token);
-              this.commonService.getUserDetails({
-                token: res.token,
-                redirect: false,
-              });
-              this.router.navigate(['/dashboard']);
-            }
-          },
-          (error: any) => {
-            if (error.status === 400) {
-              if (
-                error.status === 400 &&
-                error.error.errorCode === 'ERROR0010'
-              ) {
-                this.loginForm.get('password').setErrors(null);
-              } else {
-                this.loginForm
-                  .get('password')
-                  .setErrors({ invalidPassword: true });
-              }
-            } else {
-              console.error('Error occurred during sign-in:', error);
-            }
-          }
-        );
+        this.signInUsingPassword(formData);
       } catch (error) {
         this.userExists = false;
       }
     }
+  }
+
+  signInUsingPassword(formData) {
+    this.authService.signIn(formData).subscribe(
+      (res: any) => {
+        if (res.token) {
+          this.appPreferences.setValue('user_token', res.token);
+          this.commonService.getUserDetails({
+            token: res.token,
+            redirect: false,
+          });
+          this.router.navigate(['/dashboard']);
+        }
+      },
+      (error: HttpErrorResponse) => {
+        if (error.status === 400) {
+          if (error.error.errorCode === 'ERROR0010') {
+            this.showMultipleLoginAlert(this.signInUsingPassword.bind(this), {
+              ...formData,
+              continueSession: true,
+            });
+          } else {
+            this.loginForm.get('password').setErrors({ invalidPassword: true });
+          }
+        } else {
+          console.error('Error occurred during sign-in:', error);
+        }
+      }
+    );
   }
 
   redirectToRegistration(emailId) {

@@ -1,17 +1,22 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { AuthService } from './screens/auth/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppPreferencesService } from './modules/shared/services/app-preferences.service';
 import { DataService } from './modules/shared/services/data.service';
 import { Location } from '@angular/common';
 import { UtilityService } from './modules/shared/services/utility.service';
+import { Subscription, debounceTime, fromEvent, merge, of, switchMap, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { DashboardService } from './screens/dashboard/services/dashboard.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'lss-frontend-admin';
+  inactiveTime = environment.session_inactive_time
+  userInactivitySub$: Subscription;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -19,12 +24,14 @@ export class AppComponent implements OnInit {
     private dataService: DataService,
     private location: Location,
     public utilityService: UtilityService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dashboardService: DashboardService
   ) {}
 
   ngOnInit(): void {
     this.authService.currentUser.subscribe(async (r) => {
       if (r && r.token) {
+        this.trackInactivityOfUser();
         let userDetails: any = await this.authService
           .getUserDetails()
           .toPromise();
@@ -40,6 +47,9 @@ export class AppComponent implements OnInit {
           }
         }
       } else {
+        if (this.userInactivitySub$) {
+          this.userInactivitySub$.unsubscribe();
+        }
         let url = this.location.path();
 
         let allowedUrlsBeforeLogin = [
@@ -57,5 +67,43 @@ export class AppComponent implements OnInit {
         }
       }
     });
+  }
+
+  unsubscribeInactivity() {
+    if (this.userInactivitySub$) {
+      this.userInactivitySub$.unsubscribe();
+    }
+  }
+
+  trackInactivityOfUser() {
+    this.userInactivitySub$ = merge(
+        fromEvent(window, 'mousemove'),
+        fromEvent(window, 'keypress'),
+        fromEvent(window, 'touchstart'),
+        fromEvent(window, 'blur'), //when you switch browser tab
+        of('load') //onload
+      ).pipe(
+        switchMap((event: any) => {
+            console.log('Event triggered');
+            if (this.authService.currentUserValue?.token) {
+              return this.dashboardService.updateLoginStatus({ availability_status: 1 })
+            } else {
+              return of(null)
+            }
+          }),
+          debounceTime(this.inactiveTime),
+          switchMap((event) => {
+            console.log(`User Inactive:: ${this.inactiveTime} ms`);
+            if (this.authService.currentUserValue?.token) {
+              return this.dashboardService.updateLoginStatus({ availability_status: 0 })
+            } else {
+              return of(null)
+            }
+          })
+      ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeInactivity();
   }
 }

@@ -19,7 +19,7 @@ variables:
     description: "Environment to deploy services. Possible Values (prod)"
   DEPLOYMENTS_PROJECT_BRANCH: "prod_release"
   BUILD_ENV: "production"
-  STACK_WEBHOOK: "https://portainer.aieze.in:9443/api/stacks/webhooks/be2407d9-f597-4559-9e67-c92e967e19fb"
+  STACK_WEBHOOK: "https://portainer.aieze.in:9443/api/stacks/webhooks/46198275-5f9c-4b94-8ea6-a2f593b1097b"
 
 prebuild:
   stage: prebuild

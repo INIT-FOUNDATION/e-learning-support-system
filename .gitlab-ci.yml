@@ -7,7 +7,7 @@ stages:
 
 variables:
   CONTAINER_REGISTRY: "registry.digitalocean.com/aieze"
-  DOCKER_COMPOSE: docker-compose-lss.yaml"
+  DOCKER_COMPOSE: "docker-compose-lss.yaml"
   MICRO_SERVICES:
     value: ""
     description: "List of Micro Services can be deployed"

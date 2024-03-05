@@ -322,9 +322,16 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           (error: any) => {
             if (error.status === 400) {
-              this.loginForm
-                .get('password')
-                .setErrors({ invalidPassword: true });
+              if (
+                error.status === 400 &&
+                error.error.errorCode === 'ERROR0010'
+              ) {
+                this.loginForm.get('password').setErrors(null);
+              } else {
+                this.loginForm
+                  .get('password')
+                  .setErrors({ invalidPassword: true });
+              }
             } else {
               console.error('Error occurred during sign-in:', error);
             }

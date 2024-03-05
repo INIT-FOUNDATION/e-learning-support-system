@@ -156,7 +156,7 @@ configure_changes:
           
           echo "Updating Image ${image} for ${service}"
 
-          echo $(ls -la)
+          echo $(ls -la docker-compose)
           
           sed -i "/^[[:space:]]*${service}:/,/^[^[:space:]]/ s|\(${CONTAINER_REGISTRY}/${service}:\).*\$|${image}|g" docker-compose/$DOCKER_COMPOSE
 

@@ -1,7 +1,7 @@
 stages:
   - prebuild
   - build
-  - configuration_changes
+  - configure_changes
   - deploy
   - restart_haproxy
 
@@ -17,24 +17,26 @@ variables:
   ENVIRONMENT:
     value: "prod"
     description: "Environment to deploy services. Possible Values (prod)"
+  DEPLOYMENTS_PROJECT_BRANCH: "prod_release"
+  BUILD_ENV: "production"
+  STACK_WEBHOOK: "https://portainer.aieze.in:9443/api/stacks/webhooks/be2407d9-f597-4559-9e67-c92e967e19fb"
 
 prebuild:
   stage: prebuild
   tags:
-    - production-deployment
+    - prod-deployment
   only:
     - web
   script:
     - |
       echo "Logging into Container Registry";
-      doctl registry login;
       echo "Cleaning Existing Builds";
       docker system prune -a --force;
 
 build:
   stage: build
   tags:
-    - production-deployment
+    - prod-deployment
   only:
     - web
   script:
@@ -60,15 +62,8 @@ build:
         }
         ' package.json > package-temp.json && mv package-temp.json package.json
 
-        if grep -q "$MICRO_SERVICES_COMMON" "package.json"; then
-             jq --arg common "$MICRO_SERVICES_COMMON" '
-                  .dependencies[$common] = "./\($common)"
-            ' package.json > package-temp.json && mv package-temp.json package.json
-            rm -rf $MICRO_SERVICES_COMMON; cp -a ../$MICRO_SERVICES_COMMON .
-        fi
-
         image="${CONTAINER_REGISTRY}/${service}:${CI_COMMIT_SHORT_SHA}-${CI_COMMIT_REF_NAME//[_\/]/-}-${ENVIRONMENT}"
-        
+
         docker build -t "$image" .
 
         echo "Build created for $service - $image"
@@ -76,6 +71,22 @@ build:
         echo "Pushing Image $image"
 
         docker push $image
+
+        count=$(doctl registry repository list-tags $service | wc -l)
+        
+        if [ $count -gt 5 ]; then
+            
+            tags=$(doctl registry repository list-tags $service | tail -n +7 | awk '{print $8}')
+          
+            if [ -n "$tags" ]; then
+                      
+                echo "Manifests are more than 5 for $service in Container Registry, Deleting Old manifests and making it to 5..."
+
+                doctl registry repository delete-manifest $service $tags -f
+                  
+            fi
+        
+        fi
 
       done
 
@@ -88,11 +99,7 @@ build:
         cd $project_dir;
         cd $service;
 
-        if [ "$ENVIRONMENT" == "prod-beta" ]; then
-            sed -i 's/configuration=[^ ]*/configuration=production_beta/g' Dockerfile
-        elif [ "$ENVIRONMENT" == "prod" ]; then
-            sed -i 's/configuration=[^ ]*/configuration=production/g' Dockerfile
-        fi
+        sed -i "s/configuration=[^ ]*/configuration=$BUILD_ENV/g" Dockerfile
 
         image="${CONTAINER_REGISTRY}/${service}:${CI_COMMIT_SHORT_SHA}-${CI_COMMIT_REF_NAME//[_\/]/-}-${ENVIRONMENT}"
 
@@ -104,59 +111,76 @@ build:
 
         docker push $image
 
+        count=$(doctl registry repository list-tags $service | wc -l)
+        
+        if [ $count -gt 5 ]; then
+            
+            tags=$(doctl registry repository list-tags $service | tail -n +7 | awk '{print $8}')
+          
+            if [ -n "$tags" ]; then
+                      
+                echo "Manifests are more than 5 for $service in Container Registry, Deleting Old manifests and making it to 5..."
+
+                doctl registry repository delete-manifest $service $tags -f
+                  
+            fi
+        
+        fi
+
       done
 
-configuration_changes:
-  stage: configuration_changes
+configure_changes:
+  stage: configure_changes
   tags:
-    - production-deployment
+    - prod-deployment
   only:
     - web
   script:
     - |
+      echo "Cloning Deployment Repository"
+
+      git clone --single-branch https://${GITLAB_USERNAME}:${GITLAB_ACCESS_TOKEN}@${DEPLOYMENTS_PROJECT} --branch "$DEPLOYMENTS_PROJECT_BRANCH" 
+
       IFS=',' read -ra SERVICES_ARRAY <<< "$([ -n "$MICRO_SERVICES" ] && [ -n "$FRONTEND_SERVICES" ] && echo "$MICRO_SERVICES," || echo "$MICRO_SERVICES")$FRONTEND_SERVICES"
 
-      docker_compose=$([[ "$ENVIRONMENT" == "prod" ]] && echo "$DOCKER_COMPOSE_PROD" || echo "$DOCKER_COMPOSE_BETA")
+      cd aieze-deployments;
 
-      echo "Using Docker compose $docker_compose to deploy"
+      git pull;
 
-      echo "Backing Up Existing Docker Compose"
-
-      cp $docker_compose $docker_compose.bak
+      commited_services="$([ -n "$MICRO_SERVICES" ] && [ -n "$FRONTEND_SERVICES" ] && echo "$MICRO_SERVICES," || echo "$MICRO_SERVICES")$FRONTEND_SERVICES"
 
       for service in "${SERVICES_ARRAY[@]}"; do
 
           image="${CONTAINER_REGISTRY}/${service}:${CI_COMMIT_SHORT_SHA}-${CI_COMMIT_REF_NAME//[_\/]/-}-${ENVIRONMENT}"
+          
+          echo "Updating Image ${image} for ${service}"
+          
+          sed -i "/^[[:space:]]*${service}:/,/^[^[:space:]]/ s|\(${CONTAINER_REGISTRY}/${service}:\).*\$|${image}|g" docker-compose/$DOCKER_COMPOSE
 
-          service=$([[ "$ENVIRONMENT" == "prod" ]] && echo "$service" || echo "$service-beta")
-
-          yq eval '.services."'"$service"'".image="'"$image"'"' "$docker_compose" > "$docker_compose.tmp" && mv "$docker_compose.tmp" "$docker_compose"
-
-          echo "Updating Deployment $service with $image"
       done
+
+      git add "docker-compose/${DOCKER_COMPOSE}"
+          
+      git commit -m "Deploying Services ${commited_services} for $CI_COMMIT_MESSAGE"
+                    
+      git push origin "$DEPLOYMENTS_PROJECT_BRANCH"
 
 deploy:
   stage: deploy
   tags:
-    - production-deployment
+    - prod-deployment
   only:
     - web
   script:
-    - |
-      if [ "$ENVIRONMENT" == "prod-beta" ]; then
-            docker-compose -f $DOCKER_COMPOSE_BETA up -d
-      elif [ "$ENVIRONMENT" == "prod" ]; then
-            docker-compose -f $DOCKER_COMPOSE_PROD up -d
-      fi
+    - echo "Triggering Deployment"
+    - curl -X POST --insecure $STACK_WEBHOOK
 
 restart_haproxy:
   stage: restart_haproxy
   tags:
-    - production-deployment
+    - prod-deployment
   only:
     - web
   script:
-    - |
-      echo "Restarting HA Proxy";
-
-      docker restart haproxy
+    - echo "Restarting HAProxy"
+    - docker service update --force haproxy_haproxy

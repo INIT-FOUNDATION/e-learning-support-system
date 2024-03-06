@@ -66,6 +66,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   scrollReachedBottom = false;
   requestsHistoryCount: number = 0;
   expertsCountData: number = 0;
+  queueRequestData: any;
 
   ngOnInit(): void {
     this.utilityService.showHeaderSet = true;
@@ -81,31 +82,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           this.availabilityStatus = this.loginStatus.find(
             (it) => it.availability_status == res.availability_status
           );
-          this.toggleStatus = this.availabilityStatus.availability_status == 0 ? false : true;
+          this.toggleStatus =
+            this.availabilityStatus.availability_status == 0 ? false : true;
         }
       });
     this.websocketService.listen('requests').subscribe((res: any) => {
       if (res && res.length > 0) {
-        this.callQueueWaitingList = [];
-        const tempList = res;
-        const organizedList = [];
-        tempList.forEach((req) => {
-          req = JSON.parse(req);
-          let waitTime: any = moment().diff(req.requestedAt, 'minutes');
-          if (waitTime > 60) {
-            waitTime = `${moment().diff(req.requestedAt, 'hours')} Hour(s)`;
-          } else if (waitTime == 0) {
-            waitTime = `${moment().diff(req.requestedAt, 'seconds')} Second(s)`;
-          } else {
-            waitTime = `${waitTime} Minute(s)`;
-          }
-          req.wait_time = waitTime;
-          req.wait_time_in_sec = moment().diff(req.requestedAt, 'seconds');
-          organizedList.push(req);
-        });
-        organizedList.sort((a, b) => b.wait_time_in_sec - a.wait_time_in_sec);
-        this.callQueueWaitingList = organizedList;
-
+        this.getOrganisedList(res);
         if (!this.onInit) {
           if (this.previousQueueWaitingList) {
             const newRequests = this.findArrayDifference(
@@ -137,19 +120,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
 
     this.websocketService.listen('connect').subscribe((res) => {
-      console.log('Websocket Connected');
       this.websocketService.emit(
         'lss_support_availability',
         JSON.parse(userToken)
       );
     });
 
-    this.websocketService.listen('disconnect').subscribe((res) => {
-      console.log('Websocket Disconnected');
-    });
+    this.websocketService.listen('disconnect').subscribe((res) => {});
     this.meetingHistory();
     this.changeLoginStatus();
     this.expertsCount();
+    this.queueRequest();
   }
 
   expertsCount() {
@@ -162,6 +143,40 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       .catch((error) => {
         console.error('Error fetching experts role count:', error);
       });
+  }
+
+  queueRequest() {
+    this.dashboardService
+      .getQueueRequest()
+      .toPromise()
+      .then((data: any) => {
+        this.getOrganisedList(data.requestQueueData);
+      })
+      .catch((error) => {
+        console.error('Error fetching experts role count:', error);
+      });
+  }
+
+  getOrganisedList(res) {
+    this.callQueueWaitingList = [];
+    const tempList = res;
+    const organizedList = [];
+    tempList.forEach((req) => {
+      req = JSON.parse(req);
+      let waitTime: any = moment().diff(req.requestedAt, 'minutes');
+      if (waitTime > 60) {
+        waitTime = `${moment().diff(req.requestedAt, 'hours')} Hour(s)`;
+      } else if (waitTime == 0) {
+        waitTime = `${moment().diff(req.requestedAt, 'seconds')} Second(s)`;
+      } else {
+        waitTime = `${waitTime} Minute(s)`;
+      }
+      req.wait_time = waitTime;
+      req.wait_time_in_sec = moment().diff(req.requestedAt, 'seconds');
+      organizedList.push(req);
+    });
+    organizedList.sort((a, b) => b.wait_time_in_sec - a.wait_time_in_sec);
+    this.callQueueWaitingList = organizedList;
   }
 
   playAudio(): void {

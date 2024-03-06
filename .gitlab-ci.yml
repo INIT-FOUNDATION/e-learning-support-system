@@ -7,7 +7,7 @@ stages:
 
 variables:
   CONTAINER_REGISTRY: "registry.digitalocean.com/aieze"
-  DOCKER_COMPOSE: docker-compose-lss.yaml"
+  DOCKER_COMPOSE: "docker-compose-lss.yaml"
   MICRO_SERVICES:
     value: ""
     description: "List of Micro Services can be deployed"
@@ -17,6 +17,7 @@ variables:
   ENVIRONMENT:
     value: "prod"
     description: "Environment to deploy services. Possible Values (prod)"
+  DEPLOYMENTS_PROJECT: "gitlab.aieze.in/devops/aieze-deployments.git"
   DEPLOYMENTS_PROJECT_BRANCH: "prod_release"
   BUILD_ENV: "production"
   STACK_WEBHOOK: "https://portainer.aieze.in:9443/api/stacks/webhooks/46198275-5f9c-4b94-8ea6-a2f593b1097b"
@@ -159,7 +160,7 @@ configure_changes:
 
       done
 
-      git add "docker-compose/${DOCKER_COMPOSE}"
+      git add "docker-compose/${DOCKER_COMPOSE}"  
           
       git commit -m "Deploying Services ${commited_services} for $CI_COMMIT_MESSAGE"
                     

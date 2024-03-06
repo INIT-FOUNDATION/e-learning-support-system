@@ -53,4 +53,10 @@ export class DashboardService {
   expertsRoleCount() {
     return this.http.get(`${environment.auth_prefix}/nonPrimaryRoleCount`);
   }
+
+  getQueueRequest() {
+    return this.http.get(
+      `${environment.support_system_prefix}/getRequestsQueue`
+    );
+  }
 }

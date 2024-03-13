@@ -20,7 +20,7 @@ variables:
   DEPLOYMENTS_PROJECT: "gitlab.aieze.in/devops/aieze-deployments.git"
   DEPLOYMENTS_PROJECT_BRANCH: "prod_release"
   BUILD_ENV: "production"
-  STACK_WEBHOOK: "https://portainer.aieze.in:9443/api/stacks/webhooks/46198275-5f9c-4b94-8ea6-a2f593b1097b"
+  STACK_WEBHOOK: "https://portainer.aieze.in:9443/api/stacks/webhooks/cb4d024f-78df-4f25-8021-d618e7e67ab6"
 
 prebuild:
   stage: prebuild
@@ -184,4 +184,4 @@ restart_haproxy:
     - web
   script:
     - echo "Restarting HAProxy"
-    - docker service update --force haproxy_haproxy
+    - docker service update --force haproxy-reverse-proxy_haproxy

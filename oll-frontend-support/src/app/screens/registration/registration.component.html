@@ -7,7 +7,7 @@
     class="example-form mt-3"
     [formGroup]="registrationForm"
     (ngSubmit)="register()"
-    autocomplete="off"
+    autocomplete="new-password"
   >
     <div class="fs-13 fw-500 mb-3">Basic Info</div>
     <div
@@ -20,7 +20,7 @@
           matInput
           formControlName="firstName"
           name="firstName"
-          autocomplete="off"
+          autocomplete="new-password"
         />
       </mat-form-field>
       <span
@@ -64,7 +64,7 @@
           type="text"
           matInput
           formControlName="lastName"
-          autocomplete="off"
+          autocomplete="new-password"
         />
       </mat-form-field>
       <span
@@ -108,7 +108,7 @@
           type="text"
           matInput
           formControlName="emailId"
-          autocomplete="off"
+          autocomplete="new-password"
         />
       </mat-form-field>
       <span
@@ -155,7 +155,7 @@
             formControlName="mobileNumber"
             maxlength="10"
             (keypress)="validateNumber($event)"
-            autocomplete="off"
+            autocomplete="new-password"
           />
         </mat-form-field>
       </div>
@@ -241,7 +241,7 @@
           [type]="hideConfirmPassword ? 'password' : 'text'"
           matInput
           formControlName="confirmPassword"
-          autocomplete="off"
+          autocomplete="new-password"
         />
         <button
           mat-icon-button

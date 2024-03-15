@@ -55,8 +55,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
     if (state) {
-      this.meetingLink = state.backend_server_url;
-      // this.meetingLink = 'jitsi.aieze.ai';
+      // this.meetingLink = state.backend_server_url;
+      this.meetingLink = 'jitsi.aieze.ai';
       this.meeting_details = state;
     } else {
       this.meetingCode = this.route.snapshot.params['meetingCode'];
@@ -241,19 +241,29 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
           document
             .getElementById('star1')
-            .addEventListener('click', () => this.countStar(1, confirmButtonElement));
+            .addEventListener('click', () =>
+              this.countStar(1, confirmButtonElement)
+            );
           document
             .getElementById('star2')
-            .addEventListener('click', () => this.countStar(2, confirmButtonElement));
+            .addEventListener('click', () =>
+              this.countStar(2, confirmButtonElement)
+            );
           document
             .getElementById('star3')
-            .addEventListener('click', () => this.countStar(3, confirmButtonElement));
+            .addEventListener('click', () =>
+              this.countStar(3, confirmButtonElement)
+            );
           document
             .getElementById('star4')
-            .addEventListener('click', () => this.countStar(4, confirmButtonElement));
+            .addEventListener('click', () =>
+              this.countStar(4, confirmButtonElement)
+            );
           document
             .getElementById('star5')
-            .addEventListener('click', () => this.countStar(5, confirmButtonElement));
+            .addEventListener('click', () =>
+              this.countStar(5, confirmButtonElement)
+            );
         }
       },
     }).then((result) => {
@@ -322,6 +332,14 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   };
 
   handleVideoConferenceJoined = async (participant) => {
+    this.api.isVideoMuted().then((muted) => {
+      if (muted) this.api.executeCommand('toggleVideo');
+    });
+
+    this.api.isAudioMuted().then((muted) => {
+      if (muted) this.api.executeCommand('toggleAudio');
+    });
+
     this.api.executeCommand('toggleTileView');
     let data: any = await this.getParticipants();
   };

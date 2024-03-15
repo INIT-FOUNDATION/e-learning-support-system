@@ -1,11 +1,25 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { AuthService } from './screens/auth/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppPreferencesService } from './modules/shared/services/app-preferences.service';
 import { DataService } from './modules/shared/services/data.service';
 import { Location } from '@angular/common';
 import { UtilityService } from './modules/shared/services/utility.service';
-import { Subscription, debounceTime, fromEvent, merge, of, switchMap, tap } from 'rxjs';
+import {
+  Subscription,
+  debounceTime,
+  fromEvent,
+  merge,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { DashboardService } from './screens/dashboard/services/dashboard.service';
 @Component({
@@ -15,8 +29,9 @@ import { DashboardService } from './screens/dashboard/services/dashboard.service
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'lss-frontend-admin';
-  inactiveTime = environment.session_inactive_time
+  inactiveTime = environment.session_inactive_time;
   userInactivitySub$: Subscription;
+  userCurrentStatus: any = 0;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -77,30 +92,41 @@ export class AppComponent implements OnInit, OnDestroy {
 
   trackInactivityOfUser() {
     this.userInactivitySub$ = merge(
-        fromEvent(window, 'mousemove'),
-        fromEvent(window, 'keypress'),
-        fromEvent(window, 'touchstart'),
-        fromEvent(window, 'blur'), //when you switch browser tab
-        of('load') //onload
-      ).pipe(
+      fromEvent(window, 'mousemove'),
+      fromEvent(window, 'keypress'),
+      fromEvent(window, 'touchstart'),
+      fromEvent(window, 'blur'), //when you switch browser tab
+      of('load') //onload
+    )
+      .pipe(
         switchMap((event: any) => {
-            console.log('Event triggered');
-            if (this.authService.currentUserValue?.token) {
-              return this.dashboardService.updateLoginStatus({ availability_status: 1 })
+          if (this.authService.currentUserValue?.token) {
+            if (this.userCurrentStatus != 1) {
+              this.userCurrentStatus = 1;
+              // return this.dashboardService.updateLoginStatus({
+              //   availability_status: 1,
+              // });
+              return of(null);
             } else {
-              return of(null)
+              return of(null);
             }
-          }),
-          debounceTime(this.inactiveTime),
-          switchMap((event) => {
-            console.log(`User Inactive:: ${this.inactiveTime} ms`);
-            if (this.authService.currentUserValue?.token) {
-              return this.dashboardService.updateLoginStatus({ availability_status: 0 })
-            } else {
-              return of(null)
-            }
-          })
-      ).subscribe();
+          } else {
+            return of(null);
+          }
+        }),
+        debounceTime(this.inactiveTime),
+        switchMap((event) => {
+          if (this.authService.currentUserValue?.token) {
+            this.userCurrentStatus = 0;
+            return this.dashboardService.updateLoginStatus({
+              availability_status: 0,
+            });
+          } else {
+            return of(null);
+          }
+        })
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {

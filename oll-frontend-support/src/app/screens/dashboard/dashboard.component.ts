@@ -173,7 +173,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       }
       req.wait_time = waitTime;
       req.wait_time_in_sec = moment().diff(req.requestedAt, 'seconds');
-      organizedList.push(req);
+      let found = organizedList.find((obj) => obj.requestId == req.requestId);
+      if (!found) {
+        organizedList.push(req);
+      }
     });
     organizedList.sort((a, b) => b.wait_time_in_sec - a.wait_time_in_sec);
     this.callQueueWaitingList = organizedList;

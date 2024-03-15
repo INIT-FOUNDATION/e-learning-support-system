@@ -35,8 +35,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   user: any;
   meetingCode;
   // For Custom Controls
-  isAudioMuted = false;
-  isVideoMuted = false;
+  onJoinIsAudioMuted = false;
+  onJoinIsVideoMuted = false;
 
   constructor(
     private router: Router,
@@ -54,8 +54,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
     if (state) {
-      this.meetingLink = state.backend_server_url;
-      // this.meetingLink = 'jitsi.aieze.ai';
+      // this.meetingLink = state.backend_server_url;
+      this.meetingLink = 'jitsi.aieze.ai';
 
       this.meeting_details = state;
     } else {
@@ -214,6 +214,14 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   };
 
   handleVideoConferenceJoined = async (participant) => {
+    this.api.isVideoMuted().then((muted) => {
+      if (muted) this.api.executeCommand('toggleVideo');
+    });
+
+    this.api.isAudioMuted().then((muted) => {
+      if (muted) this.api.executeCommand('toggleAudio');
+    });
+
     this.api.executeCommand('toggleTileView');
     this.api.executeCommand('startRecording', {
       mode: 'local',
@@ -250,11 +258,11 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     this.api.executeCommand(command);
 
     if (command == 'toggleAudio') {
-      this.isAudioMuted = !this.isAudioMuted;
+      this.onJoinIsAudioMuted = !this.onJoinIsAudioMuted;
     }
 
     if (command == 'toggleVideo') {
-      this.isVideoMuted = !this.isVideoMuted;
+      this.onJoinIsVideoMuted = !this.onJoinIsVideoMuted;
     }
   }
 

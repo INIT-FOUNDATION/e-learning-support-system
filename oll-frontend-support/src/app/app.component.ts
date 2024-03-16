@@ -47,21 +47,20 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authService.currentUser.subscribe(async (r) => {
       if (r && r.token) {
         this.trackInactivityOfUser();
-        let userDetails: any = await this.authService
-          .getUserDetails()
-          .toPromise();
-        console.log(userDetails);
-
-        this.appPreferences.setValue(
-          'oll_user_details',
-          JSON.stringify(userDetails.data)
-        );
-        this.dataService.userDetails = userDetails.data;
+        const userDetailsCache = this.appPreferences.getValue('oll_user_details');
+        if (userDetailsCache) {
+          this.dataService.userDetails = JSON.parse(userDetailsCache);
+        } else {
+          let userDetails: any = await this.authService.getUserDetails().toPromise();
+          this.appPreferences.setValue('oll_user_details',userDetails.data);
+          this.dataService.userDetails = userDetails.data;
+        }
+        
         let url = this.location.path();
         if (r.redirect) {
-          if (url.indexOf('login') != -1) {
-            this.router.navigate(['/dashboard']);
-          }
+          // if (url.indexOf('login') != -1) {
+          // }
+          this.router.navigate(['/dashboard']);
         }
       } else {
         if (this.userInactivitySub$) {

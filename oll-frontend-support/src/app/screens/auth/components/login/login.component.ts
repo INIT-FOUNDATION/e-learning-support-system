@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     private utilityService: UtilityService,
     public dialog: MatDialog,
     private cookieService: CookieService
-  ) {}
+  ) { }
   userExists: boolean = false;
   registerUser: boolean = false;
   invalidPassword: boolean = false;
@@ -384,14 +384,10 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   signInUsingPassword(formData) {
-    this.authService.signIn(formData).subscribe(
-      (res: any) => {
+    this.authService.signIn(formData).subscribe(async (res: any) => {
         if (res.token) {
           this.appPreferences.setValue('user_token', res.token);
-          this.commonService.getUserDetails({
-            token: res.token,
-            redirect: false,
-          });
+          await this.commonService.getUserDetails({token: res.token,redirect: false,});
           this.router.navigate(['/dashboard']);
         }
       },

@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -19,13 +20,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { RecordingModalComponent } from 'src/app/modules/shared/modal/recording-modal/recording-modal.component';
 import Swal from 'sweetalert2';
 import { AuthService } from '../auth/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   userDetails: any = [];
   is_admin: boolean = false;
 
@@ -79,17 +81,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   requestsHistoryCount: number = 0;
   expertsCountData: number = 0;
   queueRequestData: any;
-
+  subscription$: Subscription;
   ngOnInit(): void {
     if (this.authService.currentUserValue?.token) {
-      this.dataService?.userData?.subscribe((res: any) => {
-        if (res && res.is_admin_user) {
-          this.is_admin = true;
-          this.getUserList();
-        } else {
-          this.is_admin = false;
-        }
-      });
+      const userDetails = this.dataService.userDetails;
+      if (userDetails.is_admin_user) {
+        this.is_admin = true;
+        this.getUserList();
+      } else {
+        this.is_admin = false;
+      }
+      // this.subscription$ = this.dataService.userData.subscribe((res: any) => {
+      //   if (res && res.is_admin_user) {
+      //     this.is_admin = true;
+      //     this.getUserList();
+      //   } else {
+      //     this.is_admin = false;
+      //   }
+      // });
     }
     this.utilityService.showHeaderSet = true;
     this.utilityService.showFooterSet = true;
@@ -358,6 +367,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       });
     } catch (error) {
       console.log(error);
+    }
+  }
+
+
+  ngOnDestroy(): void {
+    if (this.subscription$) {
+      this.subscription$.unsubscribe();
     }
   }
 }

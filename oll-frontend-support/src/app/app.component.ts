@@ -50,6 +50,8 @@ export class AppComponent implements OnInit, OnDestroy {
         let userDetails: any = await this.authService
           .getUserDetails()
           .toPromise();
+        console.log(userDetails);
+
         this.appPreferences.setValue(
           'oll_user_details',
           JSON.stringify(userDetails.data)

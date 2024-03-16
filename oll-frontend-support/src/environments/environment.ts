@@ -28,11 +28,11 @@ export const environment = {
 
   support_system_prefix: `${BASE_URL}${support_system_port}/api/v1/supportSystem`,
   auth_prefix: `${BASE_URL}${auth_port}/api/v1/auth`,
-  lss_websocket_url: `wss://apilss.aieze.in`,
+  lss_websocket_url: `wss://apilss.dev.aieze.in`,
   // lss_websocket_url: `ws://localhost:5003`,
   waiting_timer: 60,
   lss_web_url: `http://localhost:4200`,
   enable_no_support: false,
   client_id: 'OLL',
-  session_inactive_time: 6000,
+  session_inactive_time: 600000,
 };

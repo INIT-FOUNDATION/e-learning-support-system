@@ -18,6 +18,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { RecordingModalComponent } from 'src/app/modules/shared/modal/recording-modal/recording-modal.component';
 import Swal from 'sweetalert2';
+import { AuthService } from '../auth/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,6 +27,7 @@ import Swal from 'sweetalert2';
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   userDetails: any = [];
+  is_admin: boolean = false;
 
   constructor(
     public dataService: DataService,
@@ -36,12 +38,22 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private utilityService: UtilityService,
     private notificationService: NotificationService,
     private el: ElementRef,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {}
 
   hideMatLabel: boolean = false;
   callQueueWaitingList: any = [];
-
+  expertUsersData: any = {
+    activeCount: 0,
+    totalCount: 0,
+    users: [],
+  };
+  supportUsersData: any = {
+    activeCount: 0,
+    totalCount: 0,
+    users: [],
+  };
   callHistoryList: any = [];
   deviceInfo: any;
   onInit = true;
@@ -69,64 +81,80 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   queueRequestData: any;
 
   ngOnInit(): void {
+    if (this.authService.currentUserValue?.token) {
+      this.dataService?.userData?.subscribe((res: any) => {
+        if (res && res.is_admin_user) {
+          this.is_admin = true;
+          this.getUserList();
+        } else {
+          this.is_admin = false;
+        }
+      });
+    }
     this.utilityService.showHeaderSet = true;
     this.utilityService.showFooterSet = true;
     this.notificationService.requestPermission();
     const userToken = this.appPreferences.getValue('user_token');
     this.userDetails = this.dataService.userDetails;
     // this.websocketService.emit('lss_support_availability', JSON.parse(userToken));
-    this.websocketService
-      .listen('lss_user_availability_status')
-      .subscribe((res: any) => {
-        if (res) {
-          this.availabilityStatus = this.loginStatus.find(
-            (it) => it.availability_status == res.availability_status
-          );
-          this.toggleStatus =
-            this.availabilityStatus.availability_status == 0 ? false : true;
+    if (!this.is_admin) {
+      this.websocketService
+        .listen('lss_user_availability_status')
+        .subscribe((res: any) => {
+          if (res) {
+            this.availabilityStatus = this.loginStatus.find(
+              (it) => it.availability_status == res.availability_status
+            );
+            this.toggleStatus =
+              this.availabilityStatus.availability_status == 0 ? false : true;
+          }
+        });
+      this.websocketService.listen('requests').subscribe((res: any) => {
+        if (res && res.length > 0) {
+          this.getOrganisedList(res);
+          if (!this.onInit) {
+            if (this.previousQueueWaitingList) {
+              const newRequests = this.findArrayDifference(
+                this.previousQueueWaitingList,
+                this.callQueueWaitingList,
+                'requestId'
+              );
+              if (newRequests && newRequests.length > 0) {
+                const request = newRequests[newRequests.length - 1];
+                this.notificationService.showNotification(
+                  'New Support request',
+                  {
+                    body: `${request.requestedByUser} has placed a request`,
+                    icon: 'https://link-prod.blr1.digitaloceanspaces.com/assets/images/oll-logo.png',
+                    data: request,
+                    silent: false,
+                    vibrate: 3,
+                  }
+                );
+                this.playAudio();
+                this.previousQueueWaitingList = this.callQueueWaitingList;
+              }
+            }
+          } else {
+            this.previousQueueWaitingList = this.callQueueWaitingList;
+          }
+
+          this.onInit = false;
+        } else {
+          this.callQueueWaitingList = [];
         }
       });
-    this.websocketService.listen('requests').subscribe((res: any) => {
-      if (res && res.length > 0) {
-        this.getOrganisedList(res);
-        if (!this.onInit) {
-          if (this.previousQueueWaitingList) {
-            const newRequests = this.findArrayDifference(
-              this.previousQueueWaitingList,
-              this.callQueueWaitingList,
-              'requestId'
-            );
-            if (newRequests && newRequests.length > 0) {
-              const request = newRequests[newRequests.length - 1];
-              this.notificationService.showNotification('New Support request', {
-                body: `${request.requestedByUser} has placed a request`,
-                icon: 'https://link-prod.blr1.digitaloceanspaces.com/assets/images/oll-logo.png',
-                data: request,
-                silent: false,
-                vibrate: 3,
-              });
-              this.playAudio();
-              this.previousQueueWaitingList = this.callQueueWaitingList;
-            }
-          }
-        } else {
-          this.previousQueueWaitingList = this.callQueueWaitingList;
-        }
 
-        this.onInit = false;
-      } else {
-        this.callQueueWaitingList = [];
-      }
-    });
+      this.websocketService.listen('connect').subscribe((res) => {
+        this.websocketService.emit(
+          'lss_support_availability',
+          JSON.parse(userToken)
+        );
+      });
 
-    this.websocketService.listen('connect').subscribe((res) => {
-      this.websocketService.emit(
-        'lss_support_availability',
-        JSON.parse(userToken)
-      );
-    });
+      this.websocketService.listen('disconnect').subscribe((res) => {});
+    }
 
-    this.websocketService.listen('disconnect').subscribe((res) => {});
     this.meetingHistory();
     this.changeLoginStatus();
     this.expertsCount();
@@ -313,5 +341,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.currentPage = 1;
     this.callHistoryList = [];
     this.meetingHistory();
+  }
+
+  getUserList() {
+    try {
+      this.dashboardService.getUserList().subscribe((res: any) => {
+        if (res) {
+          this.supportUsersData.users = res.primary.users;
+          this.supportUsersData.activeCount = res.primary.active;
+          this.supportUsersData.totalCount = res.primary.total;
+
+          this.expertUsersData.users = res.nonPrimary.users;
+          this.expertUsersData.activeCount = res.nonPrimary.active;
+          this.expertUsersData.totalCount = res.nonPrimary.total;
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

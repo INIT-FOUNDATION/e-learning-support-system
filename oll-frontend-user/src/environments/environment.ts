@@ -28,5 +28,5 @@ export const environment = {
   waiting_timer: 60,
   lss_web_url: `http://localhost:4200`,
   enable_no_support: false,
-  client_id: 'OLL'
+  client_id: 'OLL',
 };

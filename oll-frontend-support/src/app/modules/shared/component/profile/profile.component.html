@@ -53,16 +53,20 @@
       </div>
 
       <div class="px-4">
-        <h1 class="m-0 mb-3" style="font-size: 1.2rem">
+        <div class="fs-09">
+          <i class="fa-solid fa-user text-danger fs-5 me-3"></i>
           {{ (dataService.userData | async)?.first_name }}
           {{ (dataService.userData | async)?.last_name }}
-        </h1>
-        <p class="profileDetails mb-4 fs-6">
+          <span class="fs-09 fw-500">
+            ({{ (dataService.userData | async)?.role_name }})</span
+          >
+        </div>
+        <p class="profileDetails my-3 fs-09">
           <i class="fa-solid fa-phone text-danger fs-5 me-3"></i>
           {{ (dataService.userData | async)?.mobile_number }}
         </p>
-        <p class="profileDetails mb-4 fs-6">
-          <i class="fa-solid fa-user text-danger fs-5 me-3"></i>
+        <p class="profileDetails fs-09 d-flex align-items-center">
+          <i class="fa-solid fa-envelope text-danger fs-5 me-3"></i>
           {{ (dataService.userData | async)?.user_name }}
         </p>
         <!-- <p class="profileDetails mb-3 fs-5">

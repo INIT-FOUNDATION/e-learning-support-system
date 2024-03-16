@@ -59,4 +59,8 @@ export class DashboardService {
       `${environment.support_system_prefix}/getRequestsQueue`
     );
   }
+
+  getUserList() {
+    return this.http.get(`${environment.auth_prefix}/getUserList`);
+  }
 }

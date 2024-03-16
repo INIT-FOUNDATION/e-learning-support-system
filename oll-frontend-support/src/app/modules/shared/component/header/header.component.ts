@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit {
 
   profileDialog() {
     let dialogRef = this.dialog.open(ProfileComponent, {
-      width: '35%',
+      width: '25rem',
       panelClass: [
         'animate__animated',
         'animate__slideInRight',

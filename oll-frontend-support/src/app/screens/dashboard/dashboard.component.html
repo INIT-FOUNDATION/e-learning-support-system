@@ -37,7 +37,7 @@
     <div class="col-12 col-lg-6 mb-4">
       <div class="btn-light border collapse-rounded pb-3 w-100 px-3">
         <div class="d-flex align-items-center justify-content-between py-4">
-          <span class="fs-08 fw-500">
+          <span class="fs-09 fw-500">
             {{ is_admin ? "Expert's List" : "Call Queue" }}
             <div class="custom-border-bottom-collapse"></div
           ></span>
@@ -97,11 +97,14 @@
                 <span class="rounded-pill bg-danger me-3">
                   <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
                 </span>
-                <span class="fs-09 mb-1"
-                  >{{ item?.first_name }} {{ item?.last_name }}</span
-                >
+                <div class="d-flex flex-column">
+                  <span class="fs-09 mb-1 fw-500"
+                    >{{ item?.first_name }} {{ item?.last_name }}</span
+                  >
+                  <span class="fs-08">{{ item?.user_name }}</span>
+                </div>
               </div>
-              <div *ngIf="item?.is_active">
+              <div *ngIf="item?.is_active" (click)="logoffUser(item)">
                 <i class="fa-solid fa-right-from-bracket text-danger fs-11"></i>
               </div>
             </div>
@@ -113,7 +116,7 @@
     <div class="col-12 col-lg-6 position-relative">
       <div class="btn-light border collapse-rounded pb-3 px-3">
         <div class="d-flex align-items-center justify-content-between py-4">
-          <span class="fs-08 fw-500">
+          <span class="fs-09 fw-500">
             {{ is_admin ? "Support's List" : "Call History - Today" }}
             <div class="custom-border-bottom-collapse"></div
           ></span>
@@ -263,7 +266,7 @@
 
         <ng-template #support_admin_dashboard>
           <div
-            class="custom-scrollbar-queue overflow-auto my-2"
+            class="custom-scrollbar-queue overflow-auto"
             id="requestHistory"
             (scroll)="onScroll($event)"
           >
@@ -276,11 +279,14 @@
                 <span class="rounded-pill bg-danger me-3">
                   <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
                 </span>
-                <span class="fs-09 mb-1"
-                  >{{ item?.first_name }} {{ item?.last_name }}</span
-                >
+                <div class="d-flex flex-column">
+                  <span class="fs-09 mb-1 fw-500"
+                    >{{ item?.first_name }} {{ item?.last_name }}</span
+                  >
+                  <span class="fs-08">{{ item?.user_name }}</span>
+                </div>
               </div>
-              <div *ngIf="item?.is_active">
+              <div *ngIf="item?.is_active" (click)="logoffUser(item)">
                 <i class="fa-solid fa-right-from-bracket text-danger fs-11"></i>
               </div>
             </div>

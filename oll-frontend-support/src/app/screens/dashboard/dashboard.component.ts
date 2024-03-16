@@ -21,6 +21,7 @@ import { RecordingModalComponent } from 'src/app/modules/shared/modal/recording-
 import Swal from 'sweetalert2';
 import { AuthService } from '../auth/services/auth.service';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,7 +42,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     private notificationService: NotificationService,
     private el: ElementRef,
     private dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastrService: ToastrService
   ) {}
 
   hideMatLabel: boolean = false;
@@ -370,6 +372,20 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  logoffUser(userDetails) {
+    const payload: any = {
+      user_id: userDetails?.user_id,
+      user_name: userDetails?.user_name,
+    };
+    this.dashboardService.logoutUserByAdmin(payload).subscribe((res) => {
+      if (res && res.message) {
+        this.getUserList();
+        this.toastrService.success(res?.message);
+      } else {
+        this.toastrService.error('Something went wrong!');
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     if (this.subscription$) {

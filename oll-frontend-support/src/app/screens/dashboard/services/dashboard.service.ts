@@ -63,4 +63,8 @@ export class DashboardService {
   getUserList() {
     return this.http.get(`${environment.auth_prefix}/getUserList`);
   }
+
+  logoutUserByAdmin(postParams: any): Observable<any> {
+    return this.http.post(`${environment.auth_prefix}/logoutUser`, postParams);
+  }
 }

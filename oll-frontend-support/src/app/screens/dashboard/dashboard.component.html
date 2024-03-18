@@ -132,7 +132,7 @@
               </div>
               <div
                 *ngIf="item?.is_active && is_admin"
-                (click)="logoffUser(item)"
+                (click)="showLogOutConfirmation(item)"
               >
                 <i class="fa-solid fa-right-from-bracket text-danger fs-11"></i>
               </div>
@@ -321,7 +321,7 @@
               </div>
               <div
                 *ngIf="item?.is_active && is_admin"
-                (click)="logoffUser(item)"
+                (click)="showLogOutConfirmation(item)"
               >
                 <i class="fa-solid fa-right-from-bracket text-danger fs-11"></i>
               </div>

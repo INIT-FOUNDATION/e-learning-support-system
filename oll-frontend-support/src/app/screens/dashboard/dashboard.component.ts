@@ -401,6 +401,47 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  showLogOutConfirmation(userObj) {
+    Swal.fire({
+      title: `Are you sure you want to logout ${userObj.first_name} ${userObj.last_name}?`,
+      showCancelButton: true,
+      cancelButtonText: 'No',
+      cancelButtonColor: '#fff',
+      confirmButtonText: 'Yes',
+      confirmButtonColor: '#da2128',
+      reverseButtons: true,
+      buttonsStyling: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        const text = document.querySelector('.swal2-title');
+        const btnContainer = document.querySelector('.swal2-actions');
+        const confirmButton = document.querySelector('.swal2-confirm');
+        const cancelButton = document.querySelector('.swal2-cancel');
+
+        if (confirmButton && cancelButton) {
+          btnContainer.setAttribute('style', 'margin-bottom: 10px;'),
+            confirmButton.setAttribute(
+              'style',
+              'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
+            );
+          cancelButton.setAttribute(
+            'style',
+            'border-radius: 18px; width: 100px; background-color: #fff; color: #da2128; border: 1px solid #da2128; padding:8px 10px;'
+          );
+          text.setAttribute(
+            'style',
+            'color: #000; margin: 10px 0; display: flex; justify-content: center; align-items: center'
+          );
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.logoffUser(userObj);
+      }
+    });
+  }
+
   ngOnDestroy(): void {
     if (this.subscription$) {
       this.subscription$.unsubscribe();

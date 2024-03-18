@@ -31,6 +31,7 @@ import { ToastrService } from 'ngx-toastr';
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   userDetails: any = [];
   is_admin: boolean = false;
+  roleName: any;
 
   constructor(
     public dataService: DataService,
@@ -62,6 +63,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   deviceInfo: any;
   onInit = true;
   toggleStatus: boolean = true;
+  toggleChangeView: boolean = false;
   supportStatus: any = 1;
   previousQueueWaitingList = [];
 
@@ -89,6 +91,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       const userDetails = this.dataService.userDetails;
       if (userDetails.is_admin_user) {
         this.is_admin = true;
+        this.roleName =  userDetails.role_name
         this.getUserList();
       } else {
         this.is_admin = false;
@@ -385,6 +388,14 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.toastrService.error('Something went wrong!');
       }
     });
+  }
+
+  changeView(event) {
+    this.is_admin = event;
+    this.roleName = 'support';
+    if(this.is_admin){
+      this.getUserList()
+    }
   }
 
   ngOnDestroy(): void {

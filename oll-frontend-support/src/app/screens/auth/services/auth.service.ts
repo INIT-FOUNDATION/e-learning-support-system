@@ -70,16 +70,16 @@ export class AuthService {
       headers.set('Authorization', `${JSON.parse(token)}`);
       this.http.post(environment.auth_prefix + '/signOut', {}).subscribe();
       this.appPreferences.clearAll();
-      this.currentUserSubject.next(null);
       this.dataService.userDetails = null;
       this.dataService.userData = null;
+      this.currentUserSubject.next(null);
       this.router.navigate(['/login']);
       return false;
     } else {
       this.appPreferences.clearAll();
-      this.currentUserSubject.next(null);
       this.dataService.userData = null;
       this.dataService.userDetails = null;
+      this.currentUserSubject.next(null);
       this.router.navigate(['/login']);
       return false;
     }

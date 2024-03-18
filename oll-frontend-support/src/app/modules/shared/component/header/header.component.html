@@ -14,25 +14,18 @@
     <span></span>
   </div>
 
-  <div class="dropdown d-flex" *ngIf="dataService.userData | async">
+  <div class="dropdown d-flex" *ngIf="loggedInUser">
     <div class="userImg d-flex align-items-center justify-content-end">
-      <img
-        [src]="
-          (dataService.userData | async)?.profile_pic_url ||
-          '../../../assets/images/profile.svg'
-        "
-        alt=""
-      />
+      <img [src]="userDetails?.profile_pic_url || '../../../assets/images/profile.svg'" alt=""/>
     </div>
     <div>
-      <button
-        class="btn btn-transparent dropdown-toggle"
+      <button class="btn btn-transparent dropdown-toggle"
         type="button"
         id="dropdownMenuButton1"
         data-bs-toggle="dropdown"
       >
-        {{ (dataService.userData | async)?.first_name }}
-        {{ (dataService.userData | async)?.last_name }}
+        {{ userDetails?.first_name }}
+        {{ userDetails?.last_name }}
       </button>
       <ul class="dropdown-menu fs-09">
         <li

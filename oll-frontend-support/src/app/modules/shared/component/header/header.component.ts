@@ -12,6 +12,8 @@ import { ProfileComponent } from '../profile/profile.component';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  loggedInUser = false;
+  userDetails: any = {};
   constructor(
     private authService: AuthService,
     public dataService: DataService,
@@ -20,8 +22,17 @@ export class HeaderComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
-  userDetails: any = [];
-  ngOnInit(): void {}
+  ngOnInit(): void {
+      this.dataService.userData.subscribe(res => {
+        if (res) {
+          this.userDetails = res;
+          this.loggedInUser = true;
+        } else {
+          this.loggedInUser = false;
+          this.userDetails = {};
+        }
+      })
+  }
 
   goToFaceAuthentication() {
     this.router.navigate(['/face-recognization']);

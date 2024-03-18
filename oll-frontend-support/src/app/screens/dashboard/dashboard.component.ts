@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   userDetails: any = [];
   is_admin: boolean = false;
   roleName: any;
-
+  viewType = 'support'
   constructor(
     public dataService: DataService,
     private dashboardService: DashboardService,
@@ -91,10 +91,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       const userDetails = this.dataService.userDetails;
       if (userDetails.is_admin_user) {
         this.is_admin = true;
-        this.roleName =  userDetails.role_name
+        this.roleName =  userDetails.role_name;
+        this.viewType = 'admin';
         this.getUserList();
       } else {
         this.is_admin = false;
+        this.viewType = 'support';
       }
       // this.subscription$ = this.dataService.userData.subscribe((res: any) => {
       //   if (res && res.is_admin_user) {
@@ -391,10 +393,11 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   changeView(event) {
-    this.is_admin = event;
-    this.roleName = 'support';
-    if(this.is_admin){
+    if (event) {
+      this.viewType = 'admin';
       this.getUserList()
+    } else {
+      this.viewType = 'support';
     }
   }
 

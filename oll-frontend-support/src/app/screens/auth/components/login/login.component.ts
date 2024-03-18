@@ -118,10 +118,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
       (res: any) => {
         if (res.exists) {
           this.appPreferences.setValue('user_token', res.token);
-          this.commonService.getUserDetails({
-            token: res.token,
-            redirect: false,
-          });
+          this.commonService.getUserDetails({token: res.token,redirect: false});
           this.router.navigate(['/dashboard']);
         } else {
           this.router.navigate(['/registration'], navigationExtras);

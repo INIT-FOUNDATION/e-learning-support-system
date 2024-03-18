@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -17,14 +18,21 @@ import { NotificationService } from 'src/app/modules/shared/services/notificatio
 import { MatSelectChange } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { RecordingModalComponent } from 'src/app/modules/shared/modal/recording-modal/recording-modal.component';
+import Swal from 'sweetalert2';
+import { AuthService } from '../auth/services/auth.service';
+import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   userDetails: any = [];
-
+  is_admin: boolean = false;
+  roleName: any;
+  viewType = 'support'
   constructor(
     public dataService: DataService,
     private dashboardService: DashboardService,
@@ -34,24 +42,39 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private utilityService: UtilityService,
     private notificationService: NotificationService,
     private el: ElementRef,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private toastrService: ToastrService
+  ) {}
 
   hideMatLabel: boolean = false;
   callQueueWaitingList: any = [];
-
+  expertUsersData: any = {
+    activeCount: 0,
+    totalCount: 0,
+    users: [],
+  };
+  supportUsersData: any = {
+    activeCount: 0,
+    totalCount: 0,
+    users: [],
+  };
   callHistoryList: any = [];
   deviceInfo: any;
   onInit = true;
+  toggleStatus: boolean = true;
+  toggleChangeView: boolean = false;
+  supportStatus: any = 1;
   previousQueueWaitingList = [];
+
   @ViewChild('popover') popover: ElementRef;
 
   loginStatus: any = [
     { label: 'Offline', availability_status: 0 },
     { label: 'Online', availability_status: 1 },
-    { label: 'Away', availability_status: 2 },
-    { label: 'Do Not Disturb', availability_status: 3 },
-    { label: 'In Meeting', availability_status: 4 },
+    // { label: 'Away', availability_status: 2 },
+    // { label: 'Do Not Disturb', availability_status: 3 },
+    // { label: 'In Meeting', availability_status: 4 },
   ];
 
   availabilityStatus = this.loginStatus[1];
@@ -59,84 +82,148 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   currentPage = 1;
   pageSize = 5;
   scrollReachedBottom = false;
+  requestsHistoryCount: number = 0;
+  expertsCountData: number = 0;
+  queueRequestData: any;
+  subscription$: Subscription;
   ngOnInit(): void {
+    if (this.authService.currentUserValue?.token) {
+      const userDetails = this.dataService.userDetails;
+      if (userDetails.is_admin_user) {
+        this.is_admin = true;
+        this.roleName =  userDetails.role_name;
+        this.viewType = 'admin';
+        this.getUserList();
+      } else {
+        this.is_admin = false;
+        this.viewType = 'support';
+      }
+      // this.subscription$ = this.dataService.userData.subscribe((res: any) => {
+      //   if (res && res.is_admin_user) {
+      //     this.is_admin = true;
+      //     this.getUserList();
+      //   } else {
+      //     this.is_admin = false;
+      //   }
+      // });
+    }
     this.utilityService.showHeaderSet = true;
     this.utilityService.showFooterSet = true;
     this.notificationService.requestPermission();
     const userToken = this.appPreferences.getValue('user_token');
     this.userDetails = this.dataService.userDetails;
     // this.websocketService.emit('lss_support_availability', JSON.parse(userToken));
-    this.websocketService
-      .listen('lss_user_availability_status')
-      .subscribe((res: any) => {
-        if (res) {
-          this.availabilityStatus = this.loginStatus.find(
-            (it) => it.availability_status == res.availability_status
-          );
+    if (!this.is_admin) {
+      this.websocketService
+        .listen('lss_user_availability_status')
+        .subscribe((res: any) => {
+          if (res) {
+            this.availabilityStatus = this.loginStatus.find(
+              (it) => it.availability_status == res.availability_status
+            );
+            this.toggleStatus =
+              this.availabilityStatus.availability_status == 0 ? false : true;
+          }
+        });
+      this.websocketService.listen('requests').subscribe((res: any) => {
+        if (res && res.length > 0) {
+          this.getOrganisedList(res);
+          if (!this.onInit) {
+            if (this.previousQueueWaitingList) {
+              const newRequests = this.findArrayDifference(
+                this.previousQueueWaitingList,
+                this.callQueueWaitingList,
+                'requestId'
+              );
+              if (newRequests && newRequests.length > 0) {
+                const request = newRequests[newRequests.length - 1];
+                this.notificationService.showNotification(
+                  'New Support request',
+                  {
+                    body: `${request.requestedByUser} has placed a request`,
+                    icon: 'https://link-prod.blr1.digitaloceanspaces.com/assets/images/oll-logo.png',
+                    data: request,
+                    silent: false,
+                    vibrate: 3,
+                  }
+                );
+                this.playAudio();
+                this.previousQueueWaitingList = this.callQueueWaitingList;
+              }
+            }
+          } else {
+            this.previousQueueWaitingList = this.callQueueWaitingList;
+          }
+
+          this.onInit = false;
+        } else {
+          this.callQueueWaitingList = [];
         }
       });
-    this.websocketService.listen('requests').subscribe((res: any) => {
-      if (res && res.length > 0) {
-        this.callQueueWaitingList = [];
-        const tempList = res;
-        const organizedList = [];
-        tempList.forEach((req) => {
-          req = JSON.parse(req);
-          let waitTime: any = moment().diff(req.requestedAt, 'minutes');
-          if (waitTime > 60) {
-            waitTime = `${moment().diff(req.requestedAt, 'hours')} Hour(s)`;
-          } else if (waitTime == 0) {
-            waitTime = `${moment().diff(req.requestedAt, 'seconds')} Second(s)`;
-          } else {
-            waitTime = `${waitTime} Minute(s)`;
-          }
-          req.wait_time = waitTime;
-          req.wait_time_in_sec = moment().diff(req.requestedAt, 'seconds');
-          organizedList.push(req);
-        });
-        organizedList.sort((a, b) => b.wait_time_in_sec - a.wait_time_in_sec);
-        this.callQueueWaitingList = organizedList;
 
-        if (!this.onInit) {
-          if (this.previousQueueWaitingList) {
-            const newRequests = this.findArrayDifference(
-              this.previousQueueWaitingList,
-              this.callQueueWaitingList,
-              'requestId'
-            );
-            if (newRequests && newRequests.length > 0) {
-              const request = newRequests[newRequests.length - 1];
-              this.notificationService.showNotification('New Support request', {
-                body: `${request.requestedByUser} has placed a request`,
-                icon: 'https://link-prod.blr1.digitaloceanspaces.com/assets/images/oll-logo.png',
-                data: request,
-                silent: false,
-                vibrate: 3,
-              });
-              this.playAudio();
-              this.previousQueueWaitingList = this.callQueueWaitingList;
-            }
-          }
-        } else {
-          this.previousQueueWaitingList = this.callQueueWaitingList;
-        }
+      this.websocketService.listen('connect').subscribe((res) => {
+        this.websocketService.emit(
+          'lss_support_availability',
+          JSON.parse(userToken)
+        );
+      });
 
-        this.onInit = false;
+      this.websocketService.listen('disconnect').subscribe((res) => {});
+    }
+
+    this.meetingHistory();
+    this.changeLoginStatus();
+    this.expertsCount();
+    this.queueRequest();
+  }
+
+  expertsCount() {
+    this.dashboardService
+      .expertsRoleCount()
+      .toPromise()
+      .then((data: any) => {
+        this.expertsCountData = data.nonPrimaryRoleCount;
+      })
+      .catch((error) => {
+        console.error('Error fetching experts role count:', error);
+      });
+  }
+
+  queueRequest() {
+    this.dashboardService
+      .getQueueRequest()
+      .toPromise()
+      .then((data: any) => {
+        this.getOrganisedList(data.requestQueueData);
+      })
+      .catch((error) => {
+        console.error('Error fetching experts role count:', error);
+      });
+  }
+
+  getOrganisedList(res) {
+    this.callQueueWaitingList = [];
+    const tempList = res;
+    const organizedList = [];
+    tempList.forEach((req) => {
+      req = JSON.parse(req);
+      let waitTime: any = moment().diff(req.requestedAt, 'minutes');
+      if (waitTime > 60) {
+        waitTime = `${moment().diff(req.requestedAt, 'hours')} Hour(s)`;
+      } else if (waitTime == 0) {
+        waitTime = `${moment().diff(req.requestedAt, 'seconds')} Second(s)`;
       } else {
-        this.callQueueWaitingList = [];
+        waitTime = `${waitTime} Minute(s)`;
+      }
+      req.wait_time = waitTime;
+      req.wait_time_in_sec = moment().diff(req.requestedAt, 'seconds');
+      let found = organizedList.find((obj) => obj.requestId == req.requestId);
+      if (!found) {
+        organizedList.push(req);
       }
     });
-
-
-    this.websocketService.listen('connect').subscribe(res => {
-      console.log('Websocket Connected');
-      this.websocketService.emit('lss_support_availability', JSON.parse(userToken));
-    });
-
-    this.websocketService.listen('disconnect').subscribe(res => {
-      console.log('Websocket Disconnected');
-    });
-    this.meetingHistory();
+    organizedList.sort((a, b) => b.wait_time_in_sec - a.wait_time_in_sec);
+    this.callQueueWaitingList = organizedList;
   }
 
   playAudio(): void {
@@ -172,11 +259,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     { id: 5, label: 'All' },
   ];
 
-  changeLoginStatus(value: any) {
-    this.hideMatLabel = true;
+  changeLoginStatus() {
+    this.supportStatus = this.toggleStatus ? 1 : 0;
+    // this.hideMatLabel = true;
     this.dashboardService
-      .updateLoginStatus({ availability_status: value })
-      .subscribe((res: any) => { });
+      .updateLoginStatus({ availability_status: this.supportStatus })
+      .subscribe((res: any) => {});
   }
 
   acceptRequest(requestDetails: any) {
@@ -204,62 +292,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     this.dashboardService.requestHistory(payload).subscribe(
       (res: any) => {
-        // res.requestsHistory = [
-        //   {
-        //     requestId: '08da5203-97f1-4ae0-a952-e02a8ecbb6d5',
-        //     requestedByUser: 'GUEST | 195519022024',
-        //     requestedAt: '2024-02-19T08:55:10.883Z',
-        //     status: 5,
-        //     requestAttendedBy: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     averageResponseTime: null,
-        //     requestAssignedTo: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     requestAttendedAt: '2024-02-19T08:55:15.229Z',
-        //     averageInCallTime: null,
-        //     feedback: null,
-        //     recordingUrl: null,
-        //     requestedUserDeviceInfo:
-        //       '{"uo-device-type":"desktop","uo-os":"Linux","uo-os-version":"unknown","uo-is-mobile":"false","uo-is-tablet":"false","uo-is-desktop":"true","uo-browser-version":"121.0.0.0","uo-browser":"Chrome"}',
-        //     requestClosedAt: '2024-02-19T19:16:46.883Z',
-        //     requestAssignedAt: '2024-02-19T08:55:10.915Z',
-        //     meetingCode: 'WU860U',
-        //   },
-        //   {
-        //     requestId: '08da5203-97f1-4ae0-a952-e02a8ecbb6d5',
-        //     requestedByUser: 'GUEST | 195519022024',
-        //     requestedAt: '2024-02-19T08:55:10.883Z',
-        //     status: 5,
-        //     requestAttendedBy: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     averageResponseTime: null,
-        //     requestAssignedTo: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     requestAttendedAt: '2024-02-19T08:55:15.229Z',
-        //     averageInCallTime: null,
-        //     feedback: null,
-        //     recordingUrl: null,
-        //     requestedUserDeviceInfo:
-        //       '{"uo-device-type":"desktop","uo-os":"Windows","uo-os-version":"unknown","uo-is-mobile":"false","uo-is-tablet":"false","uo-is-desktop":"true","uo-browser-version":"121.0.0.0","uo-browser":"Chrome"}',
-        //     requestClosedAt: '2024-02-19T19:16:46.883Z',
-        //     requestAssignedAt: '2024-02-19T08:55:10.915Z',
-        //     meetingCode: 'WU860U',
-        //   },
-        //   {
-        //     requestId: '08da5203-97f1-4ae0-a952-e02a8ecbb6d5',
-        //     requestedByUser: 'GUEST | 195519022024',
-        //     requestedAt: '2024-02-19T08:55:10.883Z',
-        //     status: 5,
-        //     requestAttendedBy: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     averageResponseTime: null,
-        //     requestAssignedTo: '21e8700b-3e14-4bec-b79f-25c80d95c5a0',
-        //     requestAttendedAt: '2024-02-19T08:55:15.229Z',
-        //     averageInCallTime: null,
-        //     feedback: null,
-        //     recordingUrl: null,
-        //     requestedUserDeviceInfo:
-        //       '{"uo-device-type":"desktop","uo-os":"Linux","uo-os-version":"unknown","uo-is-mobile":"false","uo-is-tablet":"false","uo-is-desktop":"true","uo-browser-version":"121.0.0.0","uo-browser":"Chrome"}',
-        //     requestClosedAt: '2024-02-19T19:16:46.883Z',
-        //     requestAssignedAt: '2024-02-19T08:55:10.915Z',
-        //     meetingCode: 'WU860U',
-        //   },
-        // ];
         if (res && res.requestsHistory && res.requestsHistory.length) {
           res.requestsHistory.forEach((reqHistory) => {
             reqHistory.requestedUserDeviceInfo = JSON.parse(
@@ -276,6 +308,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             this.currentPage -= 1;
           }
         }
+
+        this.requestsHistoryCount = res.requestsHistoryCount;
         this.resetScrollBottomLoader();
       },
       (err) => {
@@ -297,7 +331,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
+      // console.log('The dialog was closed');
     });
   }
 
@@ -323,5 +357,94 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.currentPage = 1;
     this.callHistoryList = [];
     this.meetingHistory();
+  }
+
+  getUserList() {
+    try {
+      this.dashboardService.getUserList().subscribe((res: any) => {
+        if (res) {
+          this.supportUsersData.users = res.primary.users;
+          this.supportUsersData.activeCount = res.primary.active;
+          this.supportUsersData.totalCount = res.primary.total;
+
+          this.expertUsersData.users = res.nonPrimary.users;
+          this.expertUsersData.activeCount = res.nonPrimary.active;
+          this.expertUsersData.totalCount = res.nonPrimary.total;
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  logoffUser(userDetails) {
+    const payload: any = {
+      user_id: userDetails?.user_id,
+      user_name: userDetails?.user_name,
+    };
+    this.dashboardService.logoutUserByAdmin(payload).subscribe((res) => {
+      if (res && res.message) {
+        this.getUserList();
+        this.toastrService.success(res?.message);
+      } else {
+        this.toastrService.error('Something went wrong!');
+      }
+    });
+  }
+
+  changeView(event) {
+    if (event) {
+      this.viewType = 'admin';
+      this.getUserList()
+    } else {
+      this.viewType = 'support';
+    }
+  }
+
+  showLogOutConfirmation(userObj) {
+    Swal.fire({
+      title: `Are you sure you want to logout ${userObj.first_name} ${userObj.last_name}?`,
+      showCancelButton: true,
+      cancelButtonText: 'No',
+      cancelButtonColor: '#fff',
+      confirmButtonText: 'Yes',
+      confirmButtonColor: '#da2128',
+      reverseButtons: true,
+      buttonsStyling: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        const text = document.querySelector('.swal2-title');
+        const btnContainer = document.querySelector('.swal2-actions');
+        const confirmButton = document.querySelector('.swal2-confirm');
+        const cancelButton = document.querySelector('.swal2-cancel');
+
+        if (confirmButton && cancelButton) {
+          btnContainer.setAttribute('style', 'margin-bottom: 10px;'),
+            confirmButton.setAttribute(
+              'style',
+              'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
+            );
+          cancelButton.setAttribute(
+            'style',
+            'border-radius: 18px; width: 100px; background-color: #fff; color: #da2128; border: 1px solid #da2128; padding:8px 10px;'
+          );
+          text.setAttribute(
+            'style',
+            'color: #000; margin: 10px 0; display: flex; justify-content: center; align-items: center'
+          );
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.logoffUser(userObj);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription$) {
+      this.subscription$.unsubscribe();
+    }
   }
 }

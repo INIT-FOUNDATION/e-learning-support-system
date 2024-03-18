@@ -13,14 +13,14 @@ export class CommonService {
     private dataService: DataService
   ) {}
 
-  async getUserDetails(res: {token: string, redirect: boolean}) {
-    this.authService.currentUserSubject.next(res);
+  async getUserDetails(res?: { token: string; redirect: boolean }) {
+    if (res) {
+      this.authService.currentUserSubject.next(res);
+    }
+
     let userDetails: any = await this.authService.getUserDetails().toPromise();
 
-    this.appPreferences.setValue(
-      'oll_user_details',
-      JSON.stringify(userDetails.data)
-    );
+    this.appPreferences.setValue('oll_user_details', userDetails.data);
     this.dataService.userDetails = userDetails.data;
   }
 }

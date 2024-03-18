@@ -6,6 +6,7 @@ import { DataService } from 'src/app/modules/shared/services/data.service';
 import { UtilityService } from 'src/app/modules/shared/services/utility.service';
 import { environment } from 'src/environments/environment';
 import { SupportMeetingService } from './services/support-meeting.service';
+import Swal from 'sweetalert2';
 
 declare var JitsiMeetExternalAPI: any;
 
@@ -36,6 +37,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   // For Custom Controls
   isAudioMuted = false;
   isVideoMuted = false;
+  requestId: string;
+  selectedRating: number;
 
   constructor(
     private router: Router,
@@ -52,7 +55,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
     if (state) {
-      this.meetingLink = state.backend_server_url;
+      // this.meetingLink = state.backend_server_url;
+      this.meetingLink = 'jitsi.aieze.ai';
       this.meeting_details = state;
     } else {
       this.meetingCode = this.route.snapshot.params['meetingCode'];
@@ -118,6 +122,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'microphone',
       'raisehand',
       'tileview',
+      'desktop',
     ];
     // if (this.auth.currentUserValue?.token) {
     //   toolbarButtons.push('recording');
@@ -188,7 +193,127 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   closeRequestAndRoute = () => {
     this.router.navigate(['/home']);
+    const starsHtml = `
+    <div class="rating">
+      <span class="star" id="star1"><i class="fa fa-star"></i></span>
+      <span class="star" id="star2"><i class="fa fa-star"></i></span>
+      <span class="star" id="star3"><i class="fa fa-star"></i></span>
+      <span class="star" id="star4"><i class="fa fa-star"></i></span>
+      <span class="star" id="star5"><i class="fa fa-star"></i></span>
+    </div>`;
+
+    Swal.fire({
+      title:
+        'Thank you for connecting. We hope it was helpful for you. Your feedback is valuable to us.',
+      html: `${starsHtml}<input id="swal-input" class="swal2-input" placeholder="Enter your feedback" type="text">`,
+      showCancelButton: true,
+      confirmButtonText: 'Submit',
+      confirmButtonColor: '#da2128',
+      showLoaderOnConfirm: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+
+      didOpen: () => {
+        const text = document.querySelector('.swal2-title');
+        const btnContainer = document.querySelector('.swal2-actions');
+        const confirmButton = document.querySelector('.swal2-confirm');
+        const cancelButton = document.querySelector('.swal2-cancel');
+
+        if (confirmButton && cancelButton) {
+          btnContainer.setAttribute('style', 'margin-bottom: 10px;'),
+            confirmButton.setAttribute(
+              'style',
+              'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
+            );
+          cancelButton.setAttribute(
+            'style',
+            'border-radius: 18px; width: 100px; background-color: #fff; color: #da2128; border: 1px solid #da2128; padding:8px 10px;'
+          );
+          text.setAttribute(
+            'style',
+            'color: #000; margin: 10px 0; display: flex; justify-content: center; align-items: center'
+          );
+
+          const confirmButtonElement = document.querySelector(
+            '.swal2-confirm'
+          ) as HTMLButtonElement;
+          confirmButtonElement.disabled = true;
+
+          document
+            .getElementById('star1')
+            .addEventListener('click', () =>
+              this.countStar(1, confirmButtonElement)
+            );
+          document
+            .getElementById('star2')
+            .addEventListener('click', () =>
+              this.countStar(2, confirmButtonElement)
+            );
+          document
+            .getElementById('star3')
+            .addEventListener('click', () =>
+              this.countStar(3, confirmButtonElement)
+            );
+          document
+            .getElementById('star4')
+            .addEventListener('click', () =>
+              this.countStar(4, confirmButtonElement)
+            );
+          document
+            .getElementById('star5')
+            .addEventListener('click', () =>
+              this.countStar(5, confirmButtonElement)
+            );
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let feedbackText = (
+          document.getElementById('swal-input') as HTMLInputElement
+        ).value;
+        let rating = this.selectedRating;
+        if (feedbackText === '') {
+          Swal.showValidationMessage('Feedback is required');
+        } else {
+          let payload = {
+            requestId: 'this.meeting_details.requestId',
+            feedback: feedbackText,
+            ratings: rating,
+          };
+
+          this.supportMeetingService
+            .userFeedback(payload)
+            .subscribe((res: any) => {
+              if (res) {
+                this.utilityService.showSuccessMessage(
+                  'Feedback submitted successfully!'
+                );
+              }
+            });
+        }
+      }
+    });
   };
+
+  countStar(star, confirmButton) {
+    this.selectedRating = star;
+    const stars = document.querySelectorAll('.star i');
+    stars.forEach(
+      (starIcon) => ((starIcon.parentNode as HTMLElement).style.color = '')
+    );
+
+    for (let i = 1; i <= star; i++) {
+      const starElement = document.getElementById(`star${i}`);
+      if (starElement) {
+        const starIcon = starElement.querySelector('i');
+        if (starIcon) {
+          (starIcon.parentNode as HTMLElement).style.color = 'gold';
+        }
+      }
+    }
+
+    confirmButton.disabled = false;
+  }
 
   handleClose = () => {
     this.utilityService.showPaddingSet = true;
@@ -207,6 +332,14 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   };
 
   handleVideoConferenceJoined = async (participant) => {
+    this.api.isVideoMuted().then((muted) => {
+      if (muted) this.api.executeCommand('toggleVideo');
+    });
+
+    this.api.isAudioMuted().then((muted) => {
+      if (muted) this.api.executeCommand('toggleAudio');
+    });
+
     this.api.executeCommand('toggleTileView');
     let data: any = await this.getParticipants();
   };

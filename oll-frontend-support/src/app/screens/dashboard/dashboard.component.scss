@@ -1,3 +1,48 @@
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 20px;
+  margin: 10px;
+}
+
+.toggle-switch .toggle-input {
+  display: none;
+}
+
+.toggle-switch .toggle-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45px;
+  height: 20px;
+  background-color: #da2128;
+  border-radius: 34px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-switch .toggle-label::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s;
+}
+
+.toggle-switch .toggle-input:checked + .toggle-label {
+  background-color: #4CAF50;
+}
+
+.toggle-switch .toggle-input:checked + .toggle-label::before {
+  transform: translateX(25px);
+}
+
 select:focus-visible {
   outline: none;
 }
@@ -39,7 +84,7 @@ select:focus-visible {
   min-height: 0rem;
 }
 
-.bg-danger {
+.bg-danger , .bg-success{
   padding: 0.6rem 0.8rem;
 }
 

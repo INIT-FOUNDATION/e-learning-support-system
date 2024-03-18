@@ -18,8 +18,8 @@ export class DataService {
     return this._userDetails;
   }
 
-  set userDetails(userDetails) {
-    this._userDetails = { ...this._userDetails, ...userDetails };
+  set userDetails(a_userDetails) {
+    this._userDetails = a_userDetails;
     this.userDataSubject.next(this._userDetails);
   }
 }

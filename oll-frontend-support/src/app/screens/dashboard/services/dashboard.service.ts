@@ -49,4 +49,22 @@ export class DashboardService {
       postParams
     );
   }
+
+  expertsRoleCount() {
+    return this.http.get(`${environment.auth_prefix}/nonPrimaryRoleCount`);
+  }
+
+  getQueueRequest() {
+    return this.http.get(
+      `${environment.support_system_prefix}/getRequestsQueue`
+    );
+  }
+
+  getUserList() {
+    return this.http.get(`${environment.auth_prefix}/getUserList`);
+  }
+
+  logoutUserByAdmin(postParams: any): Observable<any> {
+    return this.http.post(`${environment.auth_prefix}/logoutUser`, postParams);
+  }
 }

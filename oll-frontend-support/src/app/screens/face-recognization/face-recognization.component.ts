@@ -38,6 +38,7 @@ export class FaceRecognizationComponent implements OnInit, AfterViewInit {
   displaySize: any;
   videoInput: any;
   captures: any = '';
+  zoomImage: any = '';
   disableCaptureButton = true;
   imageCaptured = false;
   ngOnInit() {}
@@ -125,7 +126,7 @@ export class FaceRecognizationComponent implements OnInit, AfterViewInit {
       detections
     );
     if (faceImages && faceImages.length > 0) {
-      this.captures = faceImages[0].toDataURL('image/png');
+      this.zoomImage = faceImages[0].toDataURL('image/png');
       this.imageCaptured = true;
       this.stopVideo();
     }
@@ -138,7 +139,7 @@ export class FaceRecognizationComponent implements OnInit, AfterViewInit {
 
   confirmFaceAuth() {
     try {
-      let onlyBase64 = this.captures.replace('data:image/png;base64,', '');
+      let onlyBase64 = this.zoomImage.replace('data:image/png;base64,', '');
       let blob = this.utilityService.b64toBlob(onlyBase64, 'image/png');
 
       const formData = new FormData();

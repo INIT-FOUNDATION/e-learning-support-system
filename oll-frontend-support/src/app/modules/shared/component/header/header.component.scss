@@ -1,6 +1,6 @@
 .custom-padding {
-  padding-left: clamp(2rem, 10vw, 10rem);
-  padding-right: clamp(2rem, 10vw, 10rem);
+  padding-left: clamp(2rem, 5vw, 10rem);
+  padding-right: clamp(2rem, 5vw, 10rem);
   z-index: 10;
 }
 
@@ -8,4 +8,22 @@
 .dropdown-item:hover {
   color: #000;
   background-color: transparent;
+}
+
+.userImg {
+  width: 40px !important;
+  height: 40px;
+
+  img {
+    // border-radius: 100px;
+    background-color: white;
+    height: 32px;
+    width: 32px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+  }
+}
+
+::ng-deep.dropdown-menu {
+  transform: translate(50px, 40px) !important;
 }

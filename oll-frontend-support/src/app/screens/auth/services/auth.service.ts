@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { log } from '@tensorflow/tfjs-core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AppPreferencesService } from 'src/app/modules/shared/services/app-preferences.service';
 import { DataService } from 'src/app/modules/shared/services/data.service';
@@ -13,6 +14,7 @@ export class AuthService {
   public currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any | null>;
   userDetails: any = [];
+  meetingCode: any;
   constructor(
     private appPreferences: AppPreferencesService,
     private http: HttpClient,
@@ -21,7 +23,10 @@ export class AuthService {
   ) {
     let token: any = this.appPreferences.getValue('user_token');
 
-    this.currentUserSubject = new BehaviorSubject<any>({token: JSON.parse(token), redirect: true});
+    this.currentUserSubject = new BehaviorSubject<any>({
+      token: JSON.parse(token),
+      redirect: true,
+    });
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
@@ -63,18 +68,28 @@ export class AuthService {
     if (token) {
       const headers = new HttpHeaders();
       headers.set('Authorization', `${JSON.parse(token)}`);
-      this.http.post(environment.auth_prefix + '/logout', {}).subscribe();
+      this.http.post(environment.auth_prefix + '/signOut', {}).subscribe();
       this.appPreferences.clearAll();
-      this.currentUserSubject.next(null);
       this.dataService.userDetails = null;
+      this.dataService.userData = null;
+      this.currentUserSubject.next(null);
       this.router.navigate(['/login']);
       return false;
     } else {
       this.appPreferences.clearAll();
-      this.currentUserSubject.next(null);
+      this.dataService.userData = null;
       this.dataService.userDetails = null;
+      this.currentUserSubject.next(null);
       this.router.navigate(['/login']);
       return false;
     }
+  }
+
+  set setMeetingCode(flag) {
+    this.meetingCode = flag;
+  }
+
+  get getMeetingCode() {
+    return this.meetingCode;
   }
 }

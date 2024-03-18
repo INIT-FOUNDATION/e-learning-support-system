@@ -57,6 +57,13 @@ export class SupportMeetingService {
     );
   }
 
+  userFeedback(postParams: any): Observable<any> {
+    return this.http.post(
+      `${environment.support_system_prefix}/addFeedback`,
+      postParams
+    );
+  }
+
   getRoles(): Observable<any> {
     return this.http.get(`${environment.auth_prefix}/listRoles`);
   }

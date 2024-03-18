@@ -160,7 +160,7 @@ configure_changes:
 
       done
 
-      git add "docker-compose/${DOCKER_COMPOSE}"
+      git add "docker-compose/${DOCKER_COMPOSE}"  
           
       git commit -m "Deploying Services ${commited_services} for $CI_COMMIT_MESSAGE"
                     

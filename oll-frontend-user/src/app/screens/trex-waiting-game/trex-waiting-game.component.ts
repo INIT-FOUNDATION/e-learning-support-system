@@ -132,32 +132,27 @@ export class TrexWaitingGameComponent
 
   showConfirmationDialog() {
     Swal.fire({
-      title: 'Do you want to continue waiting?',
-      showCancelButton: true,
-      cancelButtonText: 'No',
-      cancelButtonColor: '#fff',
-      confirmButtonText: 'Yes',
+      title:
+        'All customer support executives are currently occupied. Please request again later.',
+      showCancelButton: false,
+      confirmButtonText: 'Okay',
       confirmButtonColor: '#da2128',
       reverseButtons: true,
-      buttonsStyling: false,
+      buttonsStyling: false, 
       allowOutsideClick: false,
       allowEscapeKey: false,
       didOpen: () => {
         const text = document.querySelector('.swal2-title');
         const btnContainer = document.querySelector('.swal2-actions');
         const confirmButton = document.querySelector('.swal2-confirm');
-        const cancelButton = document.querySelector('.swal2-cancel');
 
-        if (confirmButton && cancelButton) {
+        if (confirmButton) {
           btnContainer.setAttribute('style', 'margin-bottom: 10px;'),
             confirmButton.setAttribute(
               'style',
               'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
             );
-          cancelButton.setAttribute(
-            'style',
-            'border-radius: 18px; width: 100px; background-color: #fff; color: #da2128; border: 1px solid #da2128; padding:8px 10px;'
-          );
+
           text.setAttribute(
             'style',
             'color: #000; margin: 10px 0; display: flex; justify-content: center; align-items: center'
@@ -165,61 +160,59 @@ export class TrexWaitingGameComponent
         }
       },
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
       if (!this.requestAccepted) {
         if (result.isConfirmed) {
-          Runner('.interstitial-wrapper').play();
-          this.resetTimer();
-        } else if (result.isDismissed) {
           let payload = {
             requestId: this.requestDetails?.requestId,
           };
           this.customerSupportService
             .deniedWaiting(payload)
             .subscribe((res: any) => {
-              this.showRegretAlert();
+              this.router.navigate(['/home']).then(() => {
+                location.reload();
+              });
             });
         }
       }
     });
   }
 
-  showRegretAlert() {
-    Swal.fire({
-      title: `Sorry to make you wait. All our lines are busy at the moment. Please try again in some time.`,
-      // timer: 5000,
-      // timerProgressBar: true,
-      willClose: () => {
-        this.router.navigate(['/home']).then(() => {
-          location.reload();
-        });
-      },
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => {
-        const text = document.querySelector('.swal2-title');
-        const confirmButton = document.querySelector('.swal2-confirm');
+  // showRegretAlert() {
+  //   Swal.fire({
+  //     title: `Sorry to make you wait. All our lines are busy at the moment. Please try again in some time.`,
+  //     timer: 5000,
+  //     timerProgressBar: true,
+  //     willClose: () => {
+  //       this.router.navigate(['/home']).then(() => {
+  //         location.reload();
+  //       });
+  //     },
+  //     allowOutsideClick: false,
+  //     allowEscapeKey: false,
+  //     didOpen: () => {
+  //       const text = document.querySelector('.swal2-title');
+  //       const confirmButton = document.querySelector('.swal2-confirm');
 
-        if (confirmButton) {
-          confirmButton.setAttribute(
-            'style',
-            'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 10px;'
-          );
-          text.setAttribute(
-            'style',
-            'color: #000; margin: 0; display: flex; justify-content: center; align-items: center; font-size: 1.2rem;'
-          );
-        }
-      },
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.dismiss === Swal.DismissReason.timer) {
-        this.router.navigate(['/home']).then(() => {
-          location.reload();
-        });
-      }
-    });
-  }
+  //       if (confirmButton) {
+  //         confirmButton.setAttribute(
+  //           'style',
+  //           'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 10px;'
+  //         );
+  //         text.setAttribute(
+  //           'style',
+  //           'color: #000; margin: 0; display: flex; justify-content: center; align-items: center; font-size: 1.2rem;'
+  //         );
+  //       }
+  //     },
+  //   }).then((result) => {
+  //     /* Read more about isConfirmed, isDenied below */
+  //     if (result.dismiss === Swal.DismissReason.timer) {
+  //       this.router.navigate(['/home']).then(() => {
+  //         location.reload();
+  //       });
+  //     }
+  //   });
+  // }
 
   resetTimer(): void {
     this.remainingTime = environment.waiting_timer;

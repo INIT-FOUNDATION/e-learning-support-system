@@ -126,7 +126,10 @@
                   <span class="fs-08">{{ item?.user_name }}</span>
                 </div>
               </div>
-              <div *ngIf="item?.is_active" (click)="logoffUser(item)">
+              <div
+                *ngIf="item?.is_active && roleName == 'Admin'"
+                (click)="logoffUser(item)"
+              >
                 <i class="fa-solid fa-right-from-bracket text-danger fs-11"></i>
               </div>
             </div>
@@ -308,7 +311,10 @@
                   <span class="fs-08">{{ item?.user_name }}</span>
                 </div>
               </div>
-              <div *ngIf="item?.is_active" (click)="logoffUser(item)">
+              <div
+                *ngIf="item?.is_active && roleName == 'Admin'"
+                (click)="logoffUser(item)"
+              >
                 <i class="fa-solid fa-right-from-bracket text-danger fs-11"></i>
               </div>
             </div>

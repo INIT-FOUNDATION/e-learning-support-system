@@ -8,7 +8,7 @@ on:
         required: false
       oll-frontend-user:
         type: boolean
-        required: false      
+        required: false
 
 jobs:
   build-and-push:
@@ -63,7 +63,7 @@ jobs:
 
       - name: Build and Push Backend Services
         env:
-          COMMON_SERVICE_NAME: vc-micro-common
+          COMMON_SERVICE_NAME: lss-micro-common
         run: |
           IFS=',' read -ra services <<< "${{ steps.micro-services.outputs.backend }}"
 

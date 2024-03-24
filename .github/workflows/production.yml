@@ -3,22 +3,13 @@ name: Prod Deployment
 on:
   workflow_dispatch:
     inputs:
-      lss-frontend-support:
+      oll-frontend-support:
         type: boolean
         required: false
-      lss-micro-auth:
+      oll-frontend-user:
         type: boolean
         required: false
-      lss-micro-websocket:
-        type: boolean
-        required: false
-      lss-frontend-user:
-        type: boolean
-        required: false
-      lss-micro-suport-system:
-        type: boolean
-        required: false
-      
+
 jobs:
   build-and-push:
     name: Build and Push Services
@@ -72,7 +63,7 @@ jobs:
 
       - name: Build and Push Backend Services
         env:
-          COMMON_SERVICE_NAME: vc-micro-common
+          COMMON_SERVICE_NAME: lss-micro-common
         run: |
           IFS=',' read -ra services <<< "${{ steps.micro-services.outputs.backend }}"
 
@@ -169,5 +160,3 @@ jobs:
 
                     
           git push origin "$DEPLOYMENTS_PROJECT_BRANCH"
-
-      

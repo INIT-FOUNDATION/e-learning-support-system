@@ -13,7 +13,7 @@ export const environment = {
     client_secret: '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',
     javascript_origins: [
       'http://localhost:4200',
-      'https://apilss.dev.aieze.in',
+      'https://apilss.letslink.ai',
     ],
   },
 

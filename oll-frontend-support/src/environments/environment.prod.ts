@@ -1,5 +1,5 @@
-const BASE_URL = 'https://apilss.aieze.in';
-const DIRECT_BASE_URL = 'https://apilss.aieze.in';
+const BASE_URL = 'https://apilss.letslink.ai';
+const DIRECT_BASE_URL = 'https://apilss.letslink.ai';
 
 export const environment = {
   production: true,
@@ -19,7 +19,7 @@ export const environment = {
 
   support_system_prefix: `${BASE_URL}/api/v1/supportSystem`,
   auth_prefix: `${BASE_URL}/api/v1/auth`,
-  lss_websocket_url: `wss://apilss.aieze.in`,
+  lss_websocket_url: `wss://apilss.letslink.ai`,
   waiting_timer: 120,
   lss_web_url: `https://support.188188.live`,
   enable_no_support: false,

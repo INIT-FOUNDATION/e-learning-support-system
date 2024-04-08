@@ -1,0 +1,26 @@
+.accordion-collapse {
+  height: 10rem;
+  overflow-y: auto;
+}
+
+.accordion-button:not(.collapsed) {
+  color: unset;
+  background-color: unset;
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  margin-left: 0rem;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+.accordian-after-icon::after {
+  background-image: none !important;
+}

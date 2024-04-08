@@ -32,7 +32,7 @@
           <div class="uploadProfilePic mb-2">
             <img
               [src]="
-                (dataService.userData | async)?.profile_pic_url ||
+                userDetails?.profile_pic_url ||
                 '../../../assets/images/profile.svg'
               "
               alt=""
@@ -55,19 +55,17 @@
       <div class="px-4">
         <div class="fs-09">
           <i class="fa-solid fa-user text-danger fs-5 me-3"></i>
-          {{ (dataService.userData | async)?.first_name }}
-          {{ (dataService.userData | async)?.last_name }}
-          <span class="fs-09 fw-500">
-            ({{ (dataService.userData | async)?.role_name }})</span
-          >
+          {{ userDetails?.first_name }}
+          {{ userDetails?.last_name }}
+          <span class="fs-09 fw-500"> ({{ userDetails?.role_name }})</span>
         </div>
         <p class="profileDetails my-3 fs-09">
           <i class="fa-solid fa-phone text-danger fs-5 me-3"></i>
-          {{ (dataService.userData | async)?.mobile_number }}
+          {{ userDetails?.mobile_number }}
         </p>
         <p class="profileDetails fs-09 d-flex align-items-center">
           <i class="fa-solid fa-envelope text-danger fs-5 me-3"></i>
-          {{ (dataService.userData | async)?.user_name }}
+          {{ userDetails?.user_name }}
         </p>
         <!-- <p class="profileDetails mb-3 fs-5">
           <i class="fa-solid fa-lock text-danger fs-5 me-3"></i>

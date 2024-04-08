@@ -222,7 +222,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       if (muted) this.api.executeCommand('toggleAudio');
     });
 
-    this.api.executeCommand('toggleTileView');
+    // this.api.executeCommand('toggleTileView');
     this.dashboardService.startRecording({meeting_code: this.room}).subscribe((res) => {console.log(res);});
     let data: any = await this.getParticipants();
   };

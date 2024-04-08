@@ -36,7 +36,7 @@
 }
 
 .toggle-switch .toggle-input:checked + .toggle-label {
-  background-color: #4CAF50;
+  background-color: #4caf50;
 }
 
 .toggle-switch .toggle-input:checked + .toggle-label::before {
@@ -51,6 +51,7 @@ select:focus-visible {
   border: 5px solid #da2128;
   border-radius: 1rem;
   width: 2.5rem;
+  left: 0.2rem;
 }
 
 .custom-border-bottom-collapse {
@@ -84,12 +85,9 @@ select:focus-visible {
   min-height: 0rem;
 }
 
-.bg-danger , .bg-success{
+.bg-danger,
+.bg-success {
   padding: 0.6rem 0.8rem;
-}
-
-::ng-deep .mat-mdc-form-field-subscript-wrapper {
-  display: none;
 }
 
 ::ng-deep .mat-mdc-form-field-infix {

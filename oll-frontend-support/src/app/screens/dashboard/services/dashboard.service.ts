@@ -55,8 +55,8 @@ export class DashboardService {
   }
 
   getQueueRequest() {
-    return this.http.get(
-      `${environment.support_system_prefix}/getRequestsQueue`
+    return this.http.post(
+      `${environment.support_system_prefix}/getRequestsQueue`, {}
     );
   }
 
@@ -66,5 +66,9 @@ export class DashboardService {
 
   logoutUserByAdmin(postParams: any): Observable<any> {
     return this.http.post(`${environment.auth_prefix}/logoutUser`, postParams);
+  }
+
+  startRecording(payload) {
+    return this.http.post(environment.startRecording, payload);
   }
 }

@@ -321,15 +321,17 @@ export class SupportDashboardComponent implements OnInit, OnChanges {
     }, 500);
   }
 
-  playRecording(recordingUrl) {
-    const dialogRef = this.dialog.open(RecordingModalComponent, {
-      width: '400px',
-      data: { recordingUrl: recordingUrl },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      // console.log('The dialog was closed');
-    });
+  playRecording(recordings) {
+    if (recordings && recordings.length > 0) {
+      const dialogRef = this.dialog.open(RecordingModalComponent, {
+        width: '400px',
+        data: { recordingUrl: recordings[0].recording_url },
+      });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        // console.log('The dialog was closed');
+      });
+    }
   }
 
   onScroll(event: any): void {

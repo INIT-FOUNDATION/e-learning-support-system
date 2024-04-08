@@ -123,14 +123,14 @@
               <img
                 src="assets/images/hour-glass.svg"
                 title="Recording Processing In Progress"
-                *ngIf="!item.recordingUrl"
+                *ngIf="!(item.recordings && item.recordings.length > 0)"
                 style="width: 1.5rem"
               />
               <img
                 src="assets/images/viewRecording.svg"
-                *ngIf="item.recordingUrl"
+                *ngIf="(item.recordings && item.recordings.length > 0)"
                 style="width: 2rem"
-                (click)="playRecording(item.recordingUrl)"
+                (click)="playRecording(item.recordings)"
               />
             </div>
             <ng-template #popTemplate>

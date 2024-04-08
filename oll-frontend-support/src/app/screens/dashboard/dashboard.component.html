@@ -5,7 +5,7 @@
     <i
       class="fa-solid fa-arrow-left fs-15 mx-3 cursor-pointer"
       (click)="goBack(true)"
-      *ngIf="is_admin"
+      *ngIf="is_admin && viewType !== 'admin'"
       style="color: #da2128"
     ></i>
     <span class="fw-600 fs-12 lh-base position-relative">

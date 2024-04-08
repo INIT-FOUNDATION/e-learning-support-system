@@ -118,7 +118,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'desktop',
     ];
     if (this.auth.currentUserValue?.token) {
-      toolbarButtons.push('recording');
+      // toolbarButtons.push('recording');
       toolbarButtons.push('invite');
     }
     this.options = {

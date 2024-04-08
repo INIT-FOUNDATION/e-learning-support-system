@@ -128,7 +128,6 @@ export class ProfileComponent implements OnInit {
 
   imageLoaded(image: LoadedImage) {
     // show cropper
-    // console.log(image);
   }
 
   cropperReady() {

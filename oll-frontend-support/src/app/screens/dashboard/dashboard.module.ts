@@ -4,9 +4,11 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { SupportDashboardComponent } from './component/support-dashboard/support-dashboard.component';
+import { AdminDashboardComponent } from './component/admin-dashboard/admin-dashboard.component';
 
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [DashboardComponent, SupportDashboardComponent, AdminDashboardComponent],
   imports: [CommonModule, DashboardRoutingModule, SharedModule, PopoverModule],
 })
 export class DashboardModule {}

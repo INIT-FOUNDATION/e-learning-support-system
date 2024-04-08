@@ -1,5 +1,5 @@
 const BASE_URL = 'https://apilss.dev.letslink.ai';
-const DIRECT_BASE_URL = 'https://apilss.letslink.ai';
+const DIRECT_BASE_URL = 'https://apilss.dev.letslink.ai';
 const support_system_port = '';
 const auth_port = '';
 
@@ -35,4 +35,5 @@ export const environment = {
   enable_no_support: false,
   client_id: 'OLL',
   session_inactive_time: 600000,
+  startRecording: `https://api.letslink.ai/api/v1/recordingExporter/startRecording`,
 };

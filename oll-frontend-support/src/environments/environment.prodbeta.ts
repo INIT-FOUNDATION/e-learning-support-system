@@ -21,5 +21,6 @@ export const environment = {
   lss_web_url: `https://oll.dev.aieze.in`,
   enable_no_support: false,
   client_id: 'OLL',
-  session_inactive_time: 600000
+  session_inactive_time: 600000,
+  startRecording: `https://api.letslink.ai/api/v1/recordingExporter/startRecording`,
 };

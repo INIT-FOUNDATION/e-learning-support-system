@@ -69,6 +69,10 @@ export class DashboardService {
     return this.http.post(`${environment.auth_prefix}/logoutUser`, postParams);
   }
 
+  startRecording(payload) {
+    return this.http.post(environment.startRecording, payload);
+  }
+
   getAuditByUser(postParams: any): Observable<any> {
     return this.http.post(`${environment.auth_prefix}/auditLogs`, postParams);
   }

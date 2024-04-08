@@ -223,9 +223,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     });
 
     // this.api.executeCommand('toggleTileView');
-    this.api.executeCommand('startRecording', {
-      mode: 'local',
-    });
+    this.dashboardService.startRecording({meeting_code: this.room}).subscribe((res) => {console.log(res);});
     let data: any = await this.getParticipants();
   };
 

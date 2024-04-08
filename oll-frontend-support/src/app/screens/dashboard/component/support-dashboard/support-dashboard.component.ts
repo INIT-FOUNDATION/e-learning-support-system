@@ -116,6 +116,7 @@ export class SupportDashboardComponent implements OnInit, OnChanges {
       } else {
         this.is_admin = false;
         this.viewType = 'support';
+        this.userId = userDetails?.user_id;
       }
     }
     this.utilityService.showHeaderSet = true;

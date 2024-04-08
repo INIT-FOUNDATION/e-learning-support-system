@@ -1,5 +1,5 @@
-const BASE_URL = 'https://apilss.dev.letslink.ai';
-const DIRECT_BASE_URL = 'https://apilss.dev.letslink.ai';
+const BASE_URL = 'https://apilss.letslink.ai';
+const DIRECT_BASE_URL = 'https://apilss.letslink.ai';
 const support_system_port = '';
 const auth_port = '';
 
@@ -28,12 +28,11 @@ export const environment = {
 
   support_system_prefix: `${BASE_URL}${support_system_port}/api/v1/supportSystem`,
   auth_prefix: `${BASE_URL}${auth_port}/api/v1/auth`,
-  lss_websocket_url: `wss://apilss.dev.letslink.ai`,
+  lss_websocket_url: `wss://apilss.letslink.ai`,
   // lss_websocket_url: `ws://localhost:5003`,
   waiting_timer: 60,
   lss_web_url: `http://localhost:4200`,
   enable_no_support: false,
   client_id: 'OLL',
   session_inactive_time: 600000,
-  startRecording: `https://api.letslink.ai/api/v1/recordingExporter/startRecording`,
 };

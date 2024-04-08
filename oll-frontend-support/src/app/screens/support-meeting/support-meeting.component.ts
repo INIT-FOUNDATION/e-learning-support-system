@@ -131,6 +131,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
           hideDisplayName: false,
         },
         inviteBaseUrl: `${environment.lss_web_url}/support`,
+        endMeetingCallBackUrl: `${environment.support_system_prefix}/endMeeting/${this.room}`,
         readOnlyName: false,
         enableUserRolesBasedOnToken: true,
         enableFeaturesBasedOnToken: true,
@@ -223,7 +224,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     });
 
     // this.api.executeCommand('toggleTileView');
-    this.dashboardService.startRecording({meeting_code: this.room}).subscribe((res) => {console.log(res);});
+    this.dashboardService.startRecording({meetingCode: this.room}).subscribe((res) => {console.log(res);});
     let data: any = await this.getParticipants();
   };
 

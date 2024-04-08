@@ -70,7 +70,7 @@ export class DashboardService {
   }
 
   startRecording(payload) {
-    return this.http.post(environment.startRecording, payload);
+    return this.http.post(`${environment.support_system_prefix}/startRecording`, payload);
   }
 
   getAuditByUser(postParams: any): Observable<any> {

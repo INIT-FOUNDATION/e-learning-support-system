@@ -329,6 +329,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   handleParticipantJoined = async (participant) => {
     const data = await this.getParticipants();
+    this.api.executeCommand('toggleTileView');
   };
 
   handleVideoConferenceJoined = async (participant) => {

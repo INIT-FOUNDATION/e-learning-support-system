@@ -1,0 +1,216 @@
+<div class="container-fluid pb-5" *ngIf="expertSupportView">
+  <div class="row justify-content-between">
+    <div class="col-12 col-lg-6 mb-4">
+      <div class="btn-light border collapse-rounded pb-3 w-100 px-3">
+        <div class="d-flex align-items-center justify-content-between py-4">
+          <span class="fs-09 fw-500">
+            Expert's List
+            <div class="custom-border-bottom-collapse"></div
+          ></span>
+          <span class="text-danger fw-500 fs-12">
+            {{ expertUsersData.activeCount + "/" + expertUsersData.totalCount }}
+          </span>
+        </div>
+
+        <div
+          class="custom-scrollbar-queue overflow-auto"
+          id="requestHistory"
+          (scroll)="onScroll($event)"
+        >
+          <div
+            class="pe-2 cursor-pointer"
+            *ngFor="let item of expertUsersData.users; index as i"
+          >
+            <div
+              class="accordion accordion-flush"
+              [ngClass]="{ 'cursor-default': !is_admin }"
+              id="accordionFlushExample"
+              (click)="showUserDetails(item?.user_id)"
+            >
+              <div
+                class="accordion-item px-1 pt-1 mb-2"
+                [ngClass]="{ 'pointer-events-none': !is_admin }"
+              >
+                <span class="accordion-header lh-base" id="heading{{ i }}">
+                  <button
+                    class="accordion-button collapsed p-2"
+                    [ngClass]="{ 'accordian-after-icon': !is_admin }"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    [attr.data-bs-target]="'#collapseExpert' + i"
+                    aria-expanded="false"
+                    attr.aria-controls="collapseExpert{{ i }}"
+                  >
+                    <div class="d-flex align-items-center flex-fill">
+                      <span
+                        class="rounded-pill me-3"
+                        [ngClass]="[
+                          item?.is_active ? 'bg-success' : 'bg-danger'
+                        ]"
+                      >
+                        <i
+                          class="fa-solid fa-user fs-12"
+                          style="color: #fff"
+                        ></i>
+                      </span>
+                      <div class="d-flex flex-column">
+                        <span class="fs-09 mb-1 fw-500"
+                          >{{ item?.first_name }} {{ item?.last_name }}</span
+                        >
+                        <span class="fs-08">{{ item?.user_name }}</span>
+                      </div>
+                    </div>
+                    <div
+                      class="d-flex align-items-center"
+                      *ngIf="item?.is_active && is_admin"
+                    >
+                      <div class="" (click)="changeScreen(item?.user_id)">
+                        <i
+                          class="fa-solid fa-headset text-danger me-3 fs-11"
+                        ></i>
+                      </div>
+                      <div (click)="showLogOutConfirmation(item)">
+                        <i
+                          class="fa-solid fa-right-from-bracket text-danger fs-11 me-3"
+                        ></i>
+                      </div>
+                    </div>
+                  </button>
+                </span>
+                <div
+                  [id]="'collapseExpert' + i"
+                  class="accordion-collapse collapse ps-3"
+                  aria-labelledby="flush-headingOne"
+                  data-bs-parent="#accordionFlushExample"
+                >
+                  <div
+                    class="accordion-body p-2 fs-08"
+                    *ngFor="let item of userAuditDetails"
+                  >
+                    {{ item?.actionType.split("_").join(" ") }} at
+                    {{ item?.createdDate | date : "medium" }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6 position-relative">
+      <div class="btn-light border collapse-rounded pb-3 px-3">
+        <div class="d-flex align-items-center justify-content-between py-4">
+          <span class="fs-09 fw-500">
+            Support's List
+
+            <div class="custom-border-bottom-collapse"></div
+          ></span>
+          <span class="text-danger fw-500 fs-12"
+            >{{
+              supportUsersData.activeCount + "/" + supportUsersData.totalCount
+            }}
+          </span>
+        </div>
+
+        <div
+          class="custom-scrollbar-queue overflow-auto"
+          id="requestHistory"
+          (scroll)="onScroll($event)"
+        >
+          <div
+            class="pe-2 cursor-pointer"
+            *ngFor="let item of supportUsersData.users; index as i"
+          >
+            <div
+              class="accordion accordion-flush"
+              [ngClass]="{ 'cursor-default': !is_admin }"
+              id="accordionFlushExample"
+              (click)="showUserDetails(item?.user_id)"
+            >
+              <div
+                class="accordion-item px-1 pt-1 mb-2"
+                [ngClass]="{ 'pointer-events-none': !is_admin }"
+              >
+                <span class="accordion-header lh-base" id="heading{{ i }}">
+                  <button
+                    class="accordion-button collapsed p-2"
+                    [ngClass]="{ 'accordian-after-icon': !is_admin }"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    [attr.data-bs-target]="'#collapse' + i"
+                    aria-expanded="false"
+                    attr.aria-controls="collapse{{ i }}"
+                  >
+                    <div class="d-flex align-items-center flex-fill">
+                      <span
+                        class="rounded-pill me-3"
+                        [ngClass]="[
+                          item?.is_active ? 'bg-success' : 'bg-danger'
+                        ]"
+                      >
+                        <i
+                          class="fa-solid fa-user fs-12"
+                          style="color: #fff"
+                        ></i>
+                      </span>
+                      <div class="d-flex flex-column">
+                        <span class="fs-09 mb-1 fw-500"
+                          >{{ item?.first_name }} {{ item?.last_name }}</span
+                        >
+                        <span class="fs-08">{{ item?.user_name }}</span>
+                      </div>
+                    </div>
+                    <div
+                      class="d-flex align-items-center"
+                      *ngIf="item?.is_active && is_admin"
+                    >
+                      <div class="" (click)="changeScreen(item?.user_id)">
+                        <i
+                          class="fa-solid fa-headset text-danger me-3 fs-11"
+                        ></i>
+                      </div>
+                      <div (click)="showLogOutConfirmation(item)">
+                        <i
+                          class="fa-solid fa-right-from-bracket text-danger fs-11 me-3"
+                        ></i>
+                      </div>
+                    </div>
+                  </button>
+                </span>
+                <div
+                  [id]="'collapse' + i"
+                  class="accordion-collapse collapse ps-3"
+                  aria-labelledby="flush-headingOne"
+                  data-bs-parent="#accordionFlushExample"
+                >
+                  <div
+                    class="accordion-body p-2 fs-08"
+                    *ngFor="let item of userAuditDetails"
+                  >
+                    {{ item?.actionType.split("_").join(" ") }} at
+                    {{ item?.createdDate | date : "medium" }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="scrollReachedBottom">
+          <div class="container text-center my-5">
+            <div class="spinner-grow text-danger" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow text-danger mx-2" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="spinner-grow text-danger" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

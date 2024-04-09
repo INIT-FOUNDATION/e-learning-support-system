@@ -54,9 +54,10 @@ export class DashboardService {
     return this.http.get(`${environment.auth_prefix}/nonPrimaryRoleCount`);
   }
 
-  getQueueRequest() {
-    return this.http.get(
-      `${environment.support_system_prefix}/getRequestsQueue`
+  getQueueRequest(postParams: any): Observable<any> {
+    return this.http.post(
+      `${environment.support_system_prefix}/getRequestsQueue`,
+      postParams
     );
   }
 
@@ -66,5 +67,13 @@ export class DashboardService {
 
   logoutUserByAdmin(postParams: any): Observable<any> {
     return this.http.post(`${environment.auth_prefix}/logoutUser`, postParams);
+  }
+
+  startRecording(payload) {
+    return this.http.post(`${environment.support_system_prefix}/startRecording`, payload);
+  }
+
+  getAuditByUser(postParams: any): Observable<any> {
+    return this.http.post(`${environment.auth_prefix}/auditLogs`, postParams);
   }
 }

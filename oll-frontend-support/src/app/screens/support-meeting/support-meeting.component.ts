@@ -118,7 +118,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'desktop',
     ];
     if (this.auth.currentUserValue?.token) {
-      toolbarButtons.push('recording');
+      // toolbarButtons.push('recording');
       toolbarButtons.push('invite');
     }
     this.options = {
@@ -131,6 +131,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
           hideDisplayName: false,
         },
         inviteBaseUrl: `${environment.lss_web_url}/support`,
+        endMeetingCallBackUrl: `${environment.support_system_prefix}/endMeeting/${this.room}`,
         readOnlyName: false,
         enableUserRolesBasedOnToken: true,
         enableFeaturesBasedOnToken: true,
@@ -211,6 +212,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   handleParticipantJoined = async (participant) => {
     const data = await this.getParticipants();
+    this.api.executeCommand('toggleTileView');
   };
 
   handleVideoConferenceJoined = async (participant) => {
@@ -222,10 +224,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       if (muted) this.api.executeCommand('toggleAudio');
     });
 
-    this.api.executeCommand('toggleTileView');
-    this.api.executeCommand('startRecording', {
-      mode: 'local',
-    });
+    // this.api.executeCommand('toggleTileView');
+    this.dashboardService.startRecording({meetingCode: this.room}).subscribe((res) => {console.log(res);});
     let data: any = await this.getParticipants();
   };
 

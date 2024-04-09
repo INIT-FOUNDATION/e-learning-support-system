@@ -329,6 +329,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   handleParticipantJoined = async (participant) => {
     const data = await this.getParticipants();
+    this.api.executeCommand('toggleTileView');
   };
 
   handleVideoConferenceJoined = async (participant) => {
@@ -340,7 +341,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       if (muted) this.api.executeCommand('toggleAudio');
     });
 
-    this.api.executeCommand('toggleTileView');
+    // this.api.executeCommand('toggleTileView');
     let data: any = await this.getParticipants();
   };
 

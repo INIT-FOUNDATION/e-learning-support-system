@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { DataService } from 'src/app/modules/shared/services/data.service';
 import { DashboardService } from './services/dashboard.service';
 import { AuthService } from '../auth/services/auth.service';
+import { WebsocketService } from 'src/app/modules/shared/services/websocket.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,6 +12,7 @@ import { AuthService } from '../auth/services/auth.service';
 })
 export class DashboardComponent implements OnInit {
   supportUserid: any = '';
+  supportRoleid: any = '';
   is_admin: boolean = false;
   roleName: any;
   viewType = 'support';
@@ -20,8 +22,9 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  getSupportUserId(userId: any) {
-    this.supportUserid = userId;
+  getSupportUserDetails(userData: {userId: string, roleId: string}) {
+    this.supportUserid = userData.userId;
+    this.supportRoleid = userData.roleId;
     this.viewType = 'support';
   }
   toggleStatus: boolean = true;

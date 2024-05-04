@@ -28,7 +28,7 @@ export class AdminDashboardComponent implements OnInit {
   currentPage = 1;
   expertSupportView: boolean = true;
   is_admin: boolean = false;
-  @Output() supportUserId = new EventEmitter<string>();
+  @Output() supportUserDetails = new EventEmitter<{userId: string, roleId: string}>();
   userAuditDetails: any = [];
 
   constructor(
@@ -165,8 +165,8 @@ export class AdminDashboardComponent implements OnInit {
     }, 500);
   }
 
-  changeScreen(userId) {
-    this.supportUserId.emit(userId);
+  changeScreen(userId: string, roleId: string) {
+    this.supportUserDetails.emit({userId: userId, roleId: roleId});
     this.expertSupportView = false;
   }
 }

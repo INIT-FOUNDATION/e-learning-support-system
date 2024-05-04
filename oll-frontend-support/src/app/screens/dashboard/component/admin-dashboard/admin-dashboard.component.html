@@ -64,7 +64,7 @@
                       class="d-flex align-items-center"
                       *ngIf="item?.is_active && is_admin"
                     >
-                      <div class="" (click)="changeScreen(item?.user_id)">
+                      <div class="" (click)="changeScreen(item?.user_id, item?.roleId)">
                         <i
                           class="fa-solid fa-headset text-danger me-3 fs-11"
                         ></i>
@@ -165,7 +165,7 @@
                       class="d-flex align-items-center"
                       *ngIf="item?.is_active && is_admin"
                     >
-                      <div class="" (click)="changeScreen(item?.user_id)">
+                      <div class="" (click)="changeScreen(item?.user_id, item?.roleId)">
                         <i
                           class="fa-solid fa-headset text-danger me-3 fs-11"
                         ></i>

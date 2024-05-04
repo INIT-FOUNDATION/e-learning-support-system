@@ -37,7 +37,7 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
     if (state) {
       this.requestDetails = state;
     } else {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       return;
     }
   }
@@ -83,12 +83,15 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
           }
         });
 
-      this.websocketService.listen('connect').subscribe(res => {
+      this.websocketService.listen('connect').subscribe((res) => {
         console.log('Websocket Connected');
-        this.websocketService.emit('lss_user_requests', this.requestDetails?.requestId);
+        this.websocketService.emit(
+          'lss_user_requests',
+          this.requestDetails?.requestId
+        );
       });
-  
-      this.websocketService.listen('disconnect').subscribe(res => {
+
+      this.websocketService.listen('disconnect').subscribe((res) => {
         console.log('Websocket Disconnected');
       });
     }
@@ -150,7 +153,7 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
           this.customerSupportService
             .deniedWaiting(payload)
             .subscribe((res: any) => {
-              this.router.navigate(['/home']).then(() => {
+              this.router.navigate(['/']).then(() => {
                 location.reload();
               });
             });

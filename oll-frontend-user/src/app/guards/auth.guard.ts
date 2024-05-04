@@ -12,7 +12,7 @@ import {
 export class AuthGuard implements CanActivate {
   constructor(private router: Router) {}
   exclude_urls = [];
-  urls_can_visit_bfr_login = ['/login', '/registration', , '/support', '/home'];
+  urls_can_visit_bfr_login = ['/login', '/registration', , '/support', '/'];
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot

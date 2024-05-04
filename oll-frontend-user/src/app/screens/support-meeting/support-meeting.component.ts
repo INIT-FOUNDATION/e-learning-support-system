@@ -61,7 +61,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     } else {
       this.meetingCode = this.route.snapshot.params['meetingCode'];
       if (!this.meetingCode) {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       }
 
       return;
@@ -192,7 +192,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   closeRequestAndRoute = () => {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
     const starsHtml = `
     <div class="rating">
       <span class="star" id="star1"><i class="fa fa-star"></i></span>

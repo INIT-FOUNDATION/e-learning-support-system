@@ -46,7 +46,7 @@ export class TrexWaitingGameComponent
     if (state) {
       this.requestDetails = state;
     } else {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
       return;
     }
   }
@@ -93,12 +93,15 @@ export class TrexWaitingGameComponent
           }
         });
 
-      this.websocketService.listen('connect').subscribe(res => {
+      this.websocketService.listen('connect').subscribe((res) => {
         console.log('Websocket Connected');
-        this.websocketService.emit('lss_user_requests', this.requestDetails?.requestId);
+        this.websocketService.emit(
+          'lss_user_requests',
+          this.requestDetails?.requestId
+        );
       });
 
-      this.websocketService.listen('disconnect').subscribe(res => {
+      this.websocketService.listen('disconnect').subscribe((res) => {
         console.log('Websocket Disconnected');
       });
     }
@@ -138,7 +141,7 @@ export class TrexWaitingGameComponent
       confirmButtonText: 'Okay',
       confirmButtonColor: '#da2128',
       reverseButtons: true,
-      buttonsStyling: false, 
+      buttonsStyling: false,
       allowOutsideClick: false,
       allowEscapeKey: false,
       didOpen: () => {
@@ -168,7 +171,7 @@ export class TrexWaitingGameComponent
           this.customerSupportService
             .deniedWaiting(payload)
             .subscribe((res: any) => {
-              this.router.navigate(['/home']).then(() => {
+              this.router.navigate(['/']).then(() => {
                 location.reload();
               });
             });
@@ -183,7 +186,7 @@ export class TrexWaitingGameComponent
   //     timer: 5000,
   //     timerProgressBar: true,
   //     willClose: () => {
-  //       this.router.navigate(['/home']).then(() => {
+  //       this.router.navigate(['/']).then(() => {
   //         location.reload();
   //       });
   //     },
@@ -207,7 +210,7 @@ export class TrexWaitingGameComponent
   //   }).then((result) => {
   //     /* Read more about isConfirmed, isDenied below */
   //     if (result.dismiss === Swal.DismissReason.timer) {
-  //       this.router.navigate(['/home']).then(() => {
+  //       this.router.navigate(['/']).then(() => {
   //         location.reload();
   //       });
   //     }

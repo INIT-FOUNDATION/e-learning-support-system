@@ -24,9 +24,11 @@ export class HomeComponent {
   currentHour = new Date().getHours();
   idFound: boolean;
   rolesList: any;
+  activeRouteId: any;
   ngOnInit(): void {
     this.utilityService.showHeaderSet = true;
     this.detectDeviceType();
+    this.activeRouteId = this.activeRoute.snapshot.params['id'];
   }
 
   detectDeviceType(): void {
@@ -39,6 +41,7 @@ export class HomeComponent {
         ? this.userName
         : `Guest-${moment().format('HHmmssDDMMYY')}`,
       requestedUserDeviceInfo: this.isMobile ? 'Mobile' : 'Desktop',
+      requestPurpose: this.activeRouteId ? this.activeRouteId : 'General',
     };
 
     try {

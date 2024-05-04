@@ -30,7 +30,7 @@ export class ConfirmationModalComponent {
   closeModal(): void {
     this.showModal = false;
     setTimeout(() => {
-      this.router.navigate(['/home']).then(() => {
+      this.router.navigate(['/']).then(() => {
         location.reload();
       });
     }, 5000);

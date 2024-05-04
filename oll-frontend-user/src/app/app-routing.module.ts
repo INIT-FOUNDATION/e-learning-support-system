@@ -10,10 +10,10 @@ import { AuthGuard } from './guards/auth.guard';
 import { PreJoinComponent } from './screens/pre-join/pre-join.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: '', pathMatch: 'full' },
 
   {
-    path: 'home',
+    path: '',
     loadChildren: () =>
       import('./screens/home/home.module').then((m) => m.HomeModule),
   },

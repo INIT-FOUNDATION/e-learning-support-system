@@ -28,7 +28,11 @@ export class AdminDashboardComponent implements OnInit {
   currentPage = 1;
   expertSupportView: boolean = true;
   is_admin: boolean = false;
-  @Output() supportUserDetails = new EventEmitter<{userId: string, roleId: string}>();
+  @Output() supportUserDetails = new EventEmitter<{
+    userId: string;
+    roleId: string;
+    userName: string;
+  }>();
   userAuditDetails: any = [];
 
   constructor(
@@ -165,8 +169,13 @@ export class AdminDashboardComponent implements OnInit {
     }, 500);
   }
 
-  changeScreen(userId: string, roleId: string) {
-    this.supportUserDetails.emit({userId: userId, roleId: roleId});
+  changeScreen(userId: string, roleId: string, first_name: string, last_name) {
+    this.supportUserDetails.emit({
+      userId: userId,
+      roleId: roleId,
+      userName: first_name + ' ' + last_name,
+    });
+
     this.expertSupportView = false;
   }
 }

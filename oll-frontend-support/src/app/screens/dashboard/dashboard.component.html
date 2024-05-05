@@ -9,9 +9,7 @@
       style="color: #da2128"
     ></i>
     <span class="fw-600 fs-12 lh-base position-relative">
-      {{
-        is_admin ? "Admin Dashboard" : "Customer Support Executive Dashboard"
-      }}
+      {{ is_admin ? supportUserName : "Customer Support Executive Dashboard" }}
       <div class="custom-border-bottom position-absolute"></div
     ></span>
   </div>

@@ -13,6 +13,7 @@ import { WebsocketService } from 'src/app/modules/shared/services/websocket.serv
 export class DashboardComponent implements OnInit {
   supportUserid: any = '';
   supportRoleid: any = '';
+  supportUserName: any = 'Admin Dashboard';
   is_admin: boolean = false;
   roleName: any;
   viewType = 'support';
@@ -22,7 +23,12 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  getSupportUserDetails(userData: {userId: string, roleId: string}) {
+  getSupportUserDetails(userData: {
+    userId: string;
+    roleId: string;
+    userName: string;
+  }) {
+    this.supportUserName = userData?.userName;
     this.supportUserid = userData.userId;
     this.supportRoleid = userData.roleId;
     this.viewType = 'support';
@@ -51,6 +57,7 @@ export class DashboardComponent implements OnInit {
   }
 
   goBack(event) {
+    this.supportUserName = 'Admin Dashboard';
     this.toggleChangeView = event;
     this.changeView();
   }

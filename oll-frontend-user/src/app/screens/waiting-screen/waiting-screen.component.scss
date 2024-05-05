@@ -114,3 +114,8 @@
     opacity: 0;
   }
 }
+
+.preview-screen {
+  transform: scaleX(-1);
+  width: 35rem;
+}

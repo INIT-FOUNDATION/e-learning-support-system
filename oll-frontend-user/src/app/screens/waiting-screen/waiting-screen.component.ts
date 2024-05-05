@@ -121,7 +121,7 @@ export class WaitingScreenComponent
       if (this.video) {
         this.displayPreviewScreen = true;
       }
-    }, 1000);
+    }, 1500);
   }
 
   startVideo() {

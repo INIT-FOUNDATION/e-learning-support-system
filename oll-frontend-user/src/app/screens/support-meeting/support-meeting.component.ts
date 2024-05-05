@@ -145,6 +145,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         buttonsWithNotifyClick: ['__end'],
         hideEmailInSettings: true,
         hideLobbyButton: false,
+        hiddenParticipantNames: [environment.inspection_bot]
       },
       interfaceConfigOverwrite: {
         ENABLE_DIAL_OUT: false,

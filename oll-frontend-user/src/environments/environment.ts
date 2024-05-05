@@ -29,4 +29,5 @@ export const environment = {
   lss_web_url: `http://localhost:4200`,
   enable_no_support: false,
   client_id: 'OLL',
+  inspection_bot: 'Inspection Bot'
 };

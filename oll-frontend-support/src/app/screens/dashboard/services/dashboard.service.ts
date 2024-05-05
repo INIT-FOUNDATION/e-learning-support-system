@@ -29,6 +29,13 @@ export class DashboardService {
     );
   }
 
+  joinIncognitoMode(payload): Observable<any> {
+    return this.http.post(
+      `${environment.support_system_prefix}/joinIncognitoMode`,
+      payload
+    );
+  }
+
   joinSupport(payload): Observable<any> {
     return this.http.post(
       `${environment.support_system_prefix}/joinSupport`,
@@ -39,6 +46,13 @@ export class DashboardService {
   requestHistory(payload): Observable<any> {
     return this.http.post(
       `${environment.support_system_prefix}/requestsHistory`,
+      payload
+    );
+  }
+
+  requestOnGoingCalls(payload): Observable<any> {
+    return this.http.post(
+      `${environment.support_system_prefix}/onGoingCalls`,
       payload
     );
   }

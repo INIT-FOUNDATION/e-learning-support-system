@@ -11,40 +11,91 @@
             {{ callQueueWaitingList.length }}
           </span>
         </div>
-        <div class="custom-scrollbar-queue overflow-auto">
-          <div
-            class="d-flex align-items-center justify-content-between py-3 pe-2 cursor-pointer"
-            [ngClass]="{ 'border-top': i !== 0 }"
-            *ngFor="let item of callQueueWaitingList; index as i"
+        <mat-form-field
+          appearance="outline"
+          class="me-1 border rounded bg-white"
+        >
+          <mat-select
+            class="fs-08"
+            [value]="selectedCallQueueFilter"
+            (selectionChange)="changeCallQueueFilter($event)"
           >
-            <div class="d-flex align-items-center">
-              <span
-                class="rounded-pill b me-3"
-                [ngClass]="[item?.is_active ? 'bg-success' : 'bg-danger']"
-              >
-                <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
-              </span>
-              <div class="d-flex flex-column align-items-start">
-                <span class="username-label mb-1">{{
-                  item?.requestedByUser
-                }}</span>
-                <span class="fs-08 d-flex align-items-center flex-wrap"
-                  ><img
-                    src="assets/images/waitTimer.svg"
-                    style="width: 1rem"
-                    class="me-2"
-                  />
-                  Wait Time -
-                  <span class="text-danger fw-500">{{
-                    item?.wait_time
-                  }}</span></span
+            <mat-option
+              class="fs-08 py-1 custom-min-height"
+              *ngFor="let item of callQueueFilter"
+              [value]="item?.id"
+            >
+              {{ item?.label }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <div class="custom-scrollbar-queue overflow-auto">
+          <ng-container *ngIf="selectedCallQueueFilter == 1">
+            <div
+              class="d-flex align-items-center justify-content-between py-3 pe-2 cursor-pointer"
+              [ngClass]="{ 'border-top': i !== 0 }"
+              *ngFor="let item of callQueueWaitingList; index as i"
+            >
+              <div class="d-flex align-items-center">
+                <span
+                  class="rounded-pill b me-3"
+                  [ngClass]="[item?.is_active ? 'bg-success' : 'bg-danger']"
                 >
+                  <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
+                </span>
+                <div class="d-flex flex-column align-items-start">
+                  <span class="username-label mb-1">{{
+                    item?.requestedByUser
+                  }}</span>
+                  <span class="fs-08 d-flex align-items-center flex-wrap"
+                    ><img
+                      src="assets/images/waitTimer.svg"
+                      style="width: 1rem"
+                      class="me-2"
+                    />
+                    Wait Time -
+                    <span class="text-danger fw-500">{{
+                      item?.wait_time
+                    }}</span></span
+                  >
+                </div>
+              </div>
+              <div class="" (click)="acceptRequest(item)">
+                <img src="assets/images/joinVideo.svg" style="width: 2rem" />
               </div>
             </div>
-            <div class="" (click)="acceptRequest(item)">
-              <img src="assets/images/joinVideo.svg" style="width: 2rem" />
+          </ng-container>
+          <ng-container *ngIf="selectedCallQueueFilter == 2">
+            <div
+              class="d-flex align-items-center justify-content-between py-3 pe-2 cursor-pointer"
+              [ngClass]="{ 'border-top': i !== 0 }"
+              *ngFor="let item of onGoingcallWaitingList; index as i"
+            >
+              <div class="d-flex align-items-center">
+                <span
+                  class="rounded-pill b me-3"
+                  [ngClass]="[item?.is_active ? 'bg-success' : 'bg-danger']"
+                >
+                  <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
+                </span>
+                <div class="d-flex flex-column align-items-start">
+                  <span class="username-label mb-1">{{
+                    item?.requestedByUser
+                  }}</span>
+                  <span class="fs-08 d-flex align-items-center flex-wrap"
+                    ><img
+                      src="assets/images/waitTimer.svg"
+                      style="width: 1rem"
+                      class="me-2"
+                    />
+                    Call OnGoing </span>
+                </div>
+              </div>
+              <div class="" (click)="joinTheCall(item)">
+                <img src="assets/images/joinVideo.svg" style="width: 2rem" />
+              </div>
             </div>
-          </div>
+          </ng-container>
         </div>
       </div>
     </div>

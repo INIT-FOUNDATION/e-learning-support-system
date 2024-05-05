@@ -23,6 +23,7 @@ import * as moment from 'moment';
 import { RecordingModalComponent } from 'src/app/modules/shared/modal/recording-modal/recording-modal.component';
 import { MatSelectChange } from '@angular/material/select';
 import Swal from 'sweetalert2';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-support-dashboard',
@@ -34,6 +35,7 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   is_admin: boolean = false;
   roleName: any;
   callQueueWaitingList: any = [];
+  onGoingcallWaitingList: any = [];
   hideMatLabel: boolean = false;
   expertUsersData: any = {
     activeCount: 0,
@@ -69,6 +71,7 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   availabilityStatus = this.loginStatus[1];
   selectedMeetingFilter = 1;
+  selectedCallQueueFilter = 1;
   currentPage = 1;
   pageSize = 5;
   scrollReachedBottom = false;
@@ -95,6 +98,11 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
     { id: 3, label: 'Last 15 days' },
     { id: 4, label: 'Last 30 days' },
     { id: 5, label: 'All' },
+  ];
+
+  callQueueFilter: any = [
+    { id: 1, label: 'Call Queue' },
+    { id: 2, label: 'On going Calls' }
   ];
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -278,6 +286,38 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
+  joinTheCall(requestDetails: any) {
+    if (this.is_admin) {
+      this.joinInIncognitoMode(requestDetails);
+    } else {
+      this.router.navigate([`/support/${requestDetails.meetingCode}`]);
+    }
+  }
+
+  joinInIncognitoMode(requestDetails: any) {
+    this.dashboardService.joinIncognitoMode({ requestId: requestDetails.requestId }).subscribe((res: any) => {
+        this.utilityService.showPaddingSet = false;
+        const navigationExtras: NavigationExtras = {
+          state: {
+            ...res,
+            requestId: requestDetails.requestId,
+            participant_name: environment.inspection_bot,
+          },
+        };
+        this.router.navigate(['/support'], navigationExtras);
+      });
+  }
+
+  onGoingCalls(user_id) {
+    const payload = {
+      userId: user_id,
+    };
+
+    this.dashboardService.requestOnGoingCalls(payload).subscribe((res: any) => {
+      this.onGoingcallWaitingList = res;
+    })
+  }
+
   meetingHistory(user_id) {
     const payload = {
       duration_type: this.selectedMeetingFilter,
@@ -355,6 +395,12 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
     this.currentPage = 1;
     this.callHistoryList = [];
     this.meetingHistory(this.userId);
+  }
+
+
+  changeCallQueueFilter(event: MatSelectChange) {
+    this.selectedCallQueueFilter = event.value;
+    this.onGoingCalls(this.userId);
   }
 
   changeLoginStatus() {

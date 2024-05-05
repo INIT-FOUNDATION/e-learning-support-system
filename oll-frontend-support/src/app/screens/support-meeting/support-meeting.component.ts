@@ -139,6 +139,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         buttonsWithNotifyClick: ['__end'],
         hideEmailInSettings: true,
         hideLobbyButton: false,
+        hiddenParticipantNames: [environment.inspection_bot]
       },
       interfaceConfigOverwrite: {
         ENABLE_DIAL_OUT: false,
@@ -216,15 +217,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   };
 
   handleVideoConferenceJoined = async (participant) => {
-    this.api.isVideoMuted().then((muted) => {
-      if (muted) this.api.executeCommand('toggleVideo');
-    });
-
-    this.api.isAudioMuted().then((muted) => {
-      if (muted) this.api.executeCommand('toggleAudio');
-    });
-
-    // this.api.executeCommand('toggleTileView');
     this.dashboardService.startRecording({meetingCode: this.room}).subscribe((res) => {console.log(res);});
     let data: any = await this.getParticipants();
   };

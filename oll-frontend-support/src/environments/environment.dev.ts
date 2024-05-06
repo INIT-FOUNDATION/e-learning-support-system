@@ -1,5 +1,5 @@
-const BASE_URL = 'https://apilss.dev.letslink.ai';
-const DIRECT_BASE_URL = 'https://apilss.dev.letslink.ai';
+const BASE_URL = 'https://apilss.dev.orrizonte.in';
+const DIRECT_BASE_URL = 'https://apilss.dev.orrizonte.in';
 
 export const environment = {
   production: false,
@@ -13,13 +13,13 @@ export const environment = {
     client_secret: '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',
     javascript_origins: [
       'http://localhost:4200',
-      'https://apilss.dev.letslink.ai',
+      'https://apilss.dev.orrizonte.in',
     ],
   },
 
   support_system_prefix: `${BASE_URL}/api/v1/supportSystem`,
   auth_prefix: `${BASE_URL}/api/v1/auth`,
-  lss_websocket_url: `wss://apilss.dev.letslink.ai`,
+  lss_websocket_url: `wss://apilss.dev.orrizonte.in`,
   waiting_timer: 60,
   lss_web_url: `https://oll.dev.aieze.in`,
   enable_no_support: false,

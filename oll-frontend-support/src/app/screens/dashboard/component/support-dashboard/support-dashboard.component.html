@@ -25,9 +25,13 @@
                 <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
               </span>
               <div class="d-flex flex-column align-items-start">
-                <span class="username-label mb-1">{{
-                  item?.requestedByUser
-                }}</span>
+                <span class="username-label mb-1"
+                  >{{ item?.requestedByUser }}
+                  <span class="fw-500 fs-09"
+                    >- {{ item?.requestPurpose }}</span
+                  ></span
+                >
+
                 <span class="fs-08 d-flex align-items-center flex-wrap"
                   ><img
                     src="assets/images/waitTimer.svg"
@@ -98,10 +102,13 @@
                 <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
               </span>
               <div class="d-flex flex-column align-items-start">
-                <span class="username-label mb-1">{{
-                  item?.requestedByUser
-                }}</span>
-                <span class="text-secondary fs-09 fw-500"
+                <span class="username-label mb-1"
+                  >{{ item?.requestedByUser }}
+                  <span class="fw-500 fs-09"
+                    >- {{ item?.requestPurpose }}</span
+                  ></span
+                >
+                <span class="text-secondary fs-08 fw-500"
                   >{{ item?.requestAttendedAt | date : "HH:mm a" }} -
                   {{ item?.requestClosedAt | date : "HH:mm a" }}</span
                 >
@@ -128,7 +135,7 @@
               />
               <img
                 src="assets/images/viewRecording.svg"
-                *ngIf="(item.recordings && item.recordings.length > 0)"
+                *ngIf="item.recordings && item.recordings.length > 0"
                 style="width: 2rem"
                 (click)="playRecording(item.recordings)"
               />

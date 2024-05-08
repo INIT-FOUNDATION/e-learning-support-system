@@ -28,7 +28,7 @@ export class HomeComponent {
   ngOnInit(): void {
     this.utilityService.showHeaderSet = true;
     this.detectDeviceType();
-    this.activeRouteId = this.activeRoute.snapshot.params['id'];
+    this.activeRouteId = this.activeRoute.snapshot.queryParams['courseName'];
   }
 
   detectDeviceType(): void {

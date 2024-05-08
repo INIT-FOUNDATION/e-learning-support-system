@@ -180,7 +180,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   closeRequestAndRoute = () => {
-    if (this.auth.currentUserValue?.token) {
+    if (this.auth.currentUserValue?.token && this.meeting_details.isMod) {
       if (this.meeting_details.requestId) {
         this.dashboardService
           .closeRequest({ requestId: this.meeting_details.requestId })
@@ -196,6 +196,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       } else {
         this.router.navigate(['/dashboard']);
       }
+    } else {
+      this.router.navigate(['/dashboard']);
     }
   };
 

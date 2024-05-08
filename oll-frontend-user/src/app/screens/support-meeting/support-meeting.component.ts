@@ -269,6 +269,9 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
             );
         }
       },
+      didClose: () => {
+        window.location.href="https://www.oll.co/";
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         let feedbackText = (
@@ -291,6 +294,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
                 this.utilityService.showSuccessMessage(
                   'Feedback submitted successfully!'
                 );
+                window.location.href="https://www.oll.co/";
               }
             });
         }
@@ -341,6 +345,10 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         if (this.meeting_details.videoButton) {
           this.api.executeCommand('toggleVideo');
         }
+      } else {
+        if (!this.meeting_details.videoButton) {
+          this.api.executeCommand('toggleVideo');
+        }
       }
     });
 
@@ -349,11 +357,15 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         if (this.meeting_details.micButton) {
           this.api.executeCommand('toggleAudio');
         }
+      } else {
+        if (!this.meeting_details.micButton) {
+          this.api.executeCommand('toggleAudio');
+        }
       }
     });
 
     // this.api.executeCommand('toggleTileView');
-    let data: any = await this.getParticipants();
+    // let data: any = await this.getParticipants();
   };
 
   addBreakoutRoom(name) {

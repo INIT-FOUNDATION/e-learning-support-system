@@ -275,6 +275,10 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
+        if (result.isConfirmed && result.value) {
+          this.redirectToExternalSite();
+        }
+
         let feedbackText = (
           document.getElementById('swal-input') as HTMLInputElement
         ).value;

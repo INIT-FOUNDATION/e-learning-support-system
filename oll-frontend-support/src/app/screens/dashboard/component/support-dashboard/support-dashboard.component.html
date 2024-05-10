@@ -8,7 +8,11 @@
             <div class="custom-border-bottom-collapse"></div
           ></span>
           <span class="text-danger fw-500 fs-12">
-            {{ callQueueWaitingList.length }}
+            {{
+              selectedCallQueueFilter == 1
+                ? callQueueWaitingList.length
+                : onGoingcallWaitingList.length
+            }}
           </span>
         </div>
         <mat-form-field
@@ -29,7 +33,7 @@
             >
           </mat-select>
         </mat-form-field>
-        <div class="custom-scrollbar-queue overflow-auto">
+        <div class="custom-scrollbar-queue overflow-auto my-2">
           <ng-container *ngIf="selectedCallQueueFilter == 1">
             <div
               class="d-flex align-items-center justify-content-between py-3 pe-2 cursor-pointer"
@@ -44,9 +48,18 @@
                   <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
                 </span>
                 <div class="d-flex flex-column align-items-start">
-                  <span class="username-label mb-1">{{
-                    item?.requestedByUser
-                  }}</span>
+                  <div class="username-label mb-1 d-flex align-items-center">
+                    {{ item?.requestedByUser }}
+                    <div class="fw-500 fs-09 ms-2">
+                      |
+                      <img
+                        class="ms-1"
+                        src="/assets/images/courseIcon.svg"
+                        style="width: 1rem"
+                      />
+                      {{ item?.requestPurpose }}
+                    </div>
+                  </div>
                   <span class="fs-08 d-flex align-items-center flex-wrap"
                     ><img
                       src="assets/images/waitTimer.svg"
@@ -79,16 +92,26 @@
                   <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
                 </span>
                 <div class="d-flex flex-column align-items-start">
-                  <span class="username-label mb-1">{{
-                    item?.requestedByUser
-                  }}</span>
+                  <div class="username-label mb-1 d-flex align-items-center">
+                    {{ item?.requestedByUser }}
+                    <div class="fw-500 fs-09 ms-2">
+                      |
+                      <img
+                        class="ms-1"
+                        src="/assets/images/courseIcon.svg"
+                        style="width: 1rem"
+                      />
+                      {{ item?.requestPurpose }}
+                    </div>
+                  </div>
                   <span class="fs-08 d-flex align-items-center flex-wrap"
                     ><img
                       src="assets/images/waitTimer.svg"
                       style="width: 1rem"
                       class="me-2"
                     />
-                    Call OnGoing </span>
+                    Call OnGoing
+                  </span>
                 </div>
               </div>
               <div class="" (click)="joinTheCall(item)">
@@ -149,12 +172,18 @@
                 <i class="fa-solid fa-user fs-12" style="color: #fff"></i>
               </span>
               <div class="d-flex flex-column align-items-start">
-                <span class="username-label mb-1"
-                  >{{ item?.requestedByUser }}
-                  <span class="fw-500 fs-09"
-                    >- {{ item?.requestPurpose }}</span
-                  ></span
-                >
+                <div class="username-label mb-1 d-flex align-items-center">
+                  {{ item?.requestedByUser }}
+                  <div class="fw-500 fs-09 ms-2">
+                    |
+                    <img
+                      class="ms-1"
+                      src="/assets/images/courseIcon.svg"
+                      style="width: 1rem"
+                    />
+                    {{ item?.requestPurpose }}
+                  </div>
+                </div>
                 <span class="text-secondary fs-08 fw-500"
                   >{{ item?.requestAttendedAt | date : "HH:mm a" }} -
                   {{ item?.requestClosedAt | date : "HH:mm a" }}</span

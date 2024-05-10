@@ -56,6 +56,7 @@
 
 .custom-border {
   border-radius: 0.7rem;
+  width: 30rem;
 }
 
 .fs-80 {
@@ -113,9 +114,4 @@
     left: -5px;
     opacity: 0;
   }
-}
-
-.preview-screen {
-  transform: scaleX(-1);
-  width: 35rem;
 }

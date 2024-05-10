@@ -145,7 +145,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         buttonsWithNotifyClick: ['__end'],
         hideEmailInSettings: true,
         hideLobbyButton: false,
-        hiddenParticipantNames: [environment.inspection_bot]
+        hiddenParticipantNames: [environment.inspection_bot],
       },
       interfaceConfigOverwrite: {
         ENABLE_DIAL_OUT: false,
@@ -270,8 +270,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         }
       },
       didClose: () => {
-        window.location.href="https://www.oll.co/";
-      }
+        this.redirectToExternalSite();
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         let feedbackText = (
@@ -294,13 +294,17 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
                 this.utilityService.showSuccessMessage(
                   'Feedback submitted successfully!'
                 );
-                window.location.href="https://www.oll.co/";
+                window.location.href = 'https://www.oll.co/';
               }
             });
         }
       }
     });
   };
+
+  redirectToExternalSite() {
+    window.location.href = 'https://oll.co';
+  }
 
   countStar(star, confirmButton) {
     this.selectedRating = star;
@@ -342,7 +346,10 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   handleVideoConferenceJoined = async (participant) => {
     this.api.isVideoMuted().then((muted) => {
       if (muted) {
+        console.log(this.meeting_details.videoButton);
         if (this.meeting_details.videoButton) {
+          console.log('Hii');
+
           this.api.executeCommand('toggleVideo');
         }
       } else {

@@ -121,7 +121,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'hangup',
       'microphone',
       'raisehand',
-      'tileview',
+      // 'tileview',
       'desktop',
     ];
     // if (this.auth.currentUserValue?.token) {
@@ -146,6 +146,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         hideEmailInSettings: true,
         hideLobbyButton: false,
         hiddenParticipantNames: [environment.inspection_bot],
+        tileView: { disabled: true },
       },
       interfaceConfigOverwrite: {
         ENABLE_DIAL_OUT: false,

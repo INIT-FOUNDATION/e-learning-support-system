@@ -32,6 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
   inactiveTime = environment.session_inactive_time;
   userInactivitySub$: Subscription;
   userCurrentStatus: any = 0;
+  redirectionNotNeeded = ["/support"];
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -55,9 +56,16 @@ export class AppComponent implements OnInit, OnDestroy {
           this.appPreferences.setValue('oll_user_details',userDetails.data);
           this.dataService.userDetails = userDetails.data;
         }
-        
+
         let url = this.location.path();
-        if (r.redirect) {
+        let urlIsRedirected = false;
+        this.redirectionNotNeeded.forEach(v => {
+          if (url.indexOf(v) != -1) {
+            urlIsRedirected = true;
+            return;
+          }
+        })
+        if (r.redirect && !urlIsRedirected) {
           // if (url.indexOf('login') != -1) {
           // }
           this.router.navigate(['/dashboard']);

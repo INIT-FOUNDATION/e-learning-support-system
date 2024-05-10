@@ -114,7 +114,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'hangup',
       'microphone',
       'raisehand',
-      'tileview',
+      // 'tileview',
       'desktop',
     ];
     if (this.auth.currentUserValue?.token) {
@@ -139,6 +139,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         buttonsWithNotifyClick: ['__end'],
         hideEmailInSettings: true,
         hideLobbyButton: false,
+        hiddenParticipantNames: [environment.inspection_bot],
+        tileView: {disabled: true}
       },
       interfaceConfigOverwrite: {
         ENABLE_DIAL_OUT: false,
@@ -179,7 +181,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   closeRequestAndRoute = () => {
-    if (this.auth.currentUserValue?.token) {
+    if (this.auth.currentUserValue?.token && this.meeting_details.isMod) {
       if (this.meeting_details.requestId) {
         this.dashboardService
           .closeRequest({ requestId: this.meeting_details.requestId })
@@ -195,6 +197,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       } else {
         this.router.navigate(['/dashboard']);
       }
+    } else {
+      this.router.navigate(['/dashboard']);
     }
   };
 
@@ -216,15 +220,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   };
 
   handleVideoConferenceJoined = async (participant) => {
-    this.api.isVideoMuted().then((muted) => {
-      if (muted) this.api.executeCommand('toggleVideo');
-    });
-
-    this.api.isAudioMuted().then((muted) => {
-      if (muted) this.api.executeCommand('toggleAudio');
-    });
-
-    // this.api.executeCommand('toggleTileView');
     this.dashboardService.startRecording({meetingCode: this.room}).subscribe((res) => {console.log(res);});
     let data: any = await this.getParticipants();
   };

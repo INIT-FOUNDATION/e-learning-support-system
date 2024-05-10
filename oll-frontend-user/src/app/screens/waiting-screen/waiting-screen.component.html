@@ -1,12 +1,58 @@
 <div class="row align-items-center py-5">
-  <div class="col-12 col-lg-6 col-md-6 col-sm-12 d-flex justify-content-center">
-    <img
-      src="../../../assets/images/supportImageOne.svg"
-      alt=""
-      class="py-4 image-fluid supportImage"
-    />
+  <div
+    class="col-12 col-lg-6 px-0 d-flex justify-content-center position-relative overflow-hidden"
+  >
+    <div
+      class="position-absolute d-flex align-items-center justify-content-center h-100"
+      *ngIf="!displayPreviewScreen"
+    >
+      <span class="loader position-relative rounded-circle"></span>
+    </div>
+
+    <video
+      class="custom-border preview-screen custom-border"
+      #videoElement
+    ></video>
+
+    <div
+      class="position-absolute h-100 bg-danger d-flex align-items-center justify-content-center fw-bolder fs-80 text-white custom-border"
+      *ngIf="!videoEnabled && displayPreviewScreen"
+    >
+      G
+    </div>
+    <div
+      class="position-absolute bottom-0 d-flex align-items-center mb-3"
+      *ngIf="displayPreviewScreen"
+    >
+      <div class="rounded-pill me-3 cursor-pointer" (click)="toggleMute()">
+        <img
+          src="/assets/images/micIcon.svg"
+          style="width: 3rem"
+          *ngIf="micEnabled"
+        />
+        <img
+          src="/assets/images/unmuteMicIcon.svg"
+          style="width: 3rem"
+          *ngIf="!micEnabled"
+        />
+      </div>
+
+      <div class="rounded-pill me-3 cursor-pointer" (click)="toggleVideo()">
+        <img
+          src="/assets/images/videoIcon.svg"
+          style="width: 3rem"
+          *ngIf="videoEnabled"
+        />
+        <img
+          src="/assets/images/unmuteVideoIcon.svg"
+          style="width: 3rem"
+          *ngIf="!videoEnabled"
+        />
+      </div>
+    </div>
   </div>
-  <div class="col-12 col-lg-6 col-md-6 col-sm-12">
+
+  <div class="col-12 col-lg-6 mt-5 mt-lg-0">
     <p class="text-center heading">
       <b>Sorry to make you wait</b>
     </p>

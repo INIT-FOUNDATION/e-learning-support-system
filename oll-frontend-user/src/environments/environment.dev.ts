@@ -24,4 +24,5 @@ export const environment = {
   lss_web_url: `https://oll.dev.letslink.in`,
   enable_no_support: false,
   client_id: 'OLL',
+  inspection_bot: 'Inspection Bot'
 };

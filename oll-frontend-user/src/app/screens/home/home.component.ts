@@ -29,6 +29,9 @@ export class HomeComponent {
     this.utilityService.showHeaderSet = true;
     this.detectDeviceType();
     this.activeRouteId = this.activeRoute.snapshot.queryParams['courseName'];
+    if (this.activeRouteId) {
+      this.connectWithSupportTeam();
+    }
   }
 
   detectDeviceType(): void {

@@ -266,8 +266,12 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
             );
         }
       },
-    }).then((result) => {
+    }).then((result: any) => {
       if (result.isConfirmed) {
+        if (result.isConfirmed && result.value) {
+          this.redirectToExternalSite();
+        }
+
         let feedbackText = (
           document.getElementById('swal-input') as HTMLInputElement
         ).value;
@@ -291,9 +295,15 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
               }
             });
         }
+      } else if (result.dismiss == 'cancel') {
+        this.redirectToExternalSite();
       }
     });
   };
+
+  redirectToExternalSite() {
+    window.location.href = 'https://oll.co';
+  }
 
   countStar(star, confirmButton) {
     this.selectedRating = star;

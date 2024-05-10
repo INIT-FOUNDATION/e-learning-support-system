@@ -121,7 +121,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'hangup',
       'microphone',
       'raisehand',
-      'tileview',
+      // 'tileview',
       'desktop',
     ];
     // if (this.auth.currentUserValue?.token) {

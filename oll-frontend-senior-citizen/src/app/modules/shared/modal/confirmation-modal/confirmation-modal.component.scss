@@ -1,0 +1,41 @@
+.confirmationDialogContainer {
+  position: absolute;
+  width: 80%;
+  top: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.confirmationDialog {
+  position: absolute;
+  top: 150px;
+}
+
+.confirmationBtns {
+  .modalBtn {
+    border-radius: 20px;
+    width: 100px;
+  }
+
+  .noBtn {
+    background-color: #fff;
+    color: #da2128;
+    border: 1px solid #da2128;
+    font-size: 0.9rem;
+
+    @media screen and (max-width: 346px) {
+      font-size: 0.8rem;
+    }
+  }
+
+  .submitBtn {
+    background-color: #da2128;
+    color: #fff;
+    font-size: 0.9rem;
+    border: none;
+
+    @media screen and (max-width: 346px) {
+      font-size: 0.8rem;
+    }
+  }
+}

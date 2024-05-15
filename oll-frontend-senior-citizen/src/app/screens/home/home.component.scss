@@ -1,0 +1,46 @@
+.container {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .clickToConnect {
+    color: #202e61;
+    font-size: 1.2rem;
+    bottom: 0;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .headerLogo {
+    width: 50%;
+
+    @media screen and (max-width: 426px) {
+      width: 100%;
+    }
+  }
+
+  .idImage {
+    width: 250px;
+    height: 250px;
+    border-radius: 125px;
+
+    @media screen and (max-width: 426px) {
+      width: 200px;
+      height: 200px;
+      border-radius: 100px;
+    }
+  }
+
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.blue-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #202e61;
+}

@@ -1,0 +1,5 @@
+.custom-padding {
+  padding: 4rem 0rem 0rem;
+  padding-left: clamp(0.5rem, 5vw, 10rem);
+  padding-right: clamp(0.5rem, 5vw, 10rem);
+}

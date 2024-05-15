@@ -1,0 +1,48 @@
+<div class="py-3 py-lg-5 py-md-4 py-sm-3 pb-3">
+  <div class="d-flex align-items-center pb-3 pb-lg-4 pb-md-4 pb-sm-3">
+    <b
+      >Support team is currently unavailable as it is outside of their working
+      hours.</b
+    >
+  </div>
+
+  <p>
+    Please try again between 10:00 AM and 9:00 PM daily. We apologize for any
+    inconvenience outside of these hours.
+  </p>
+</div>
+<div class="row align-items-center">
+  <div class="col-12 col-lg-6 col-md-6 col-sm-12 d-flex justify-content-center">
+    <img
+      src="../../../assets/images/noCustomerSupportImage.svg"
+      alt=""
+      class="pt-1 image-fluid w-75 supportImage"
+    />
+  </div>
+  <div class="col-12 col-lg-6 col-md-6 col-sm-12">
+    <p class="text-center heading">
+      <b class="lh-base">Sorry to make you wait until tomorrow</b>
+    </p>
+    <div class="timerContainer p-3 p-lg-4 p-md-3 p-sm-3">
+      <div class="no-customer-support-content">
+        <p>You will be able to connect with the support team in :</p>
+      </div>
+      <div class="d-flex align-items-center justify-content-center">
+        <div class="time position-relative me-3">
+          <span
+            *ngIf="timeLeft >= 0"
+            class="position-absolute text-center w-100"
+          >
+            {{ msToTime(timeLeft) }}</span
+          >
+        </div>
+        <b>Hours</b>
+      </div>
+    </div>
+  </div>
+</div>
+<p style="font-size: 0.6rem">
+  If you require immediate assistance, consider checking our online help
+  resources or reaching out to our email support at [support@email.com]. We
+  apologize for any inconvenience.
+</p>

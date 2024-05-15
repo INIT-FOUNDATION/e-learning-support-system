@@ -1,0 +1,74 @@
+// .center {
+//     position: absolute;
+//     top: 50%;
+//     left: 50%;
+//     -moz-transform: translateX(-50%) translateY(-50%);
+//     -webkit-transform: translateX(-50%) translateY(-50%);
+//     transform: translateX(-50%) translateY(-50%);
+// }
+// .overlay{
+//     height:100vh;
+//     width:100%;
+//     background-color:rgba(0, 0, 0, 0.286);
+//     z-index:    10;
+//     top:        0;
+//     left:       0;
+//     position:   fixed;
+//   }
+::ng-deep .loaderimg {
+  width: 200px;
+  height: 150px;
+}
+
+.loader {
+  border: 1.5rem solid #da2128;
+  box-sizing: border-box;
+  animation: eat 1s linear infinite;
+}
+
+.loader::after,
+.loader::before {
+  content: "";
+  position: absolute;
+  left: 50px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  background: #da2128;
+  width: 1.3rem;
+  height: 1.3rem;
+  box-sizing: border-box;
+  opacity: 0;
+  animation: move 2s linear infinite;
+  border-width: 50%;
+  border-top-right-radius: 1.5rem;
+}
+
+.loader::before {
+  animation-delay: 1s;
+}
+
+@keyframes eat {
+  0%,
+  49% {
+    border-right-color: #da2128;
+  }
+  50%,
+  100% {
+    border-right-color: #0000;
+  }
+}
+@keyframes move {
+  0% {
+    left: 4rem;
+    opacity: 1;
+  }
+  50% {
+    left: 0px;
+    opacity: 1;
+  }
+  52%,
+  100% {
+    left: -5px;
+    opacity: 0;
+  }
+}

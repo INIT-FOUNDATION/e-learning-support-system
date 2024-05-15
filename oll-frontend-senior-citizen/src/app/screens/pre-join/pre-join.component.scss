@@ -1,0 +1,52 @@
+.prejoinBg {
+  background-color: #212121 !important;
+}
+.container {
+  color: #e0e0e0;
+  .btnContainer {
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    cursor: pointer;
+
+    img {
+      width: 15px;
+    }
+
+    p {
+      color: #e0e0e0;
+    }
+  }
+
+  .meetingInfo {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .rightBorder {
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .profileImg {
+    border-radius: 50%;
+  }
+
+  .startMeetingBtn {
+    background: #e6790c;
+    border-radius: 25px;
+    color: #e0e0e0;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  .greenDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: #21dd2d;
+  }
+
+  .smallText {
+    color: #a6a6a6;
+    font-size: 0.8rem;
+  }
+}

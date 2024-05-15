@@ -1,0 +1,17 @@
+.custom-padding {
+  padding-left: clamp(2rem, 5vw, 10rem);
+  padding-right: clamp(2rem, 5vw, 10rem);
+  z-index: 10;
+}
+
+.dropdown-item:focus,
+.dropdown-item:hover {
+  color: #000;
+  background-color: transparent;
+}
+
+.btn-theme-blue {
+  border: 1px solid #1dbfd7;
+  color: #1dbfd7;
+  border-radius: 0.5rem;
+}

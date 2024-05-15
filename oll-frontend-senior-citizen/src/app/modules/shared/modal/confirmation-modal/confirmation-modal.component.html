@@ -1,0 +1,35 @@
+<div class="confirmationDialogContainer">
+  <div
+    class="modal-dialog confirmationDialog"
+    *ngIf="showModal"
+    #redirectionModal
+  >
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="m-0" style="font-size: 1.2rem">
+          Do you want to continue waiting?
+        </p>
+      </div>
+      <div class="d-flex justify-content-around py-3 confirmationBtns">
+        <div class="w-75 d-flex justify-content-around">
+          <button
+            type="button"
+            class="btn btn-secondary modalBtn noBtn"
+            data-bs-toggle="modal"
+            data-bs-target="#redirectionModal"
+            (click)="closeModal()"
+          >
+            No
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary modalBtn submitBtn"
+            (click)="confirmAction()"
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NavigationExtras, Router } from '@angular/router';
 import { ConfirmationModalComponent } from 'src/app/modules/shared/modal/confirmation-modal/confirmation-modal.component';
@@ -16,7 +23,9 @@ declare var Runner: any;
   templateUrl: './waiting-screen.component.html',
   styleUrls: ['./waiting-screen.component.scss'],
 })
-export class WaitingScreenComponent implements OnInit, OnDestroy {
+export class WaitingScreenComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   remainingTime: number = environment.waiting_timer;
   @ViewChild(ConfirmationModalComponent)
   confirmationModal?: ConfirmationModalComponent;
@@ -25,6 +34,14 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
   interval;
   requestAccepted = false;
   joinsupportSubscription: Subscription;
+
+  @ViewChild('videoElement') videoElement: ElementRef;
+  video: HTMLVideoElement;
+  stream: MediaStream;
+  micEnabled: boolean = true;
+  videoEnabled: boolean = true;
+  displayPreviewScreen: boolean = false;
+
   constructor(
     private websocketService: WebsocketService,
     private router: Router,
@@ -77,6 +94,8 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
                 ...res,
                 requestId: this.requestDetails?.requestId,
                 participant_name: `${this.requestDetails?.requestedByUser}`,
+                micButton: this.micEnabled,
+                videoButton: this.videoEnabled,
               },
             };
             this.router.navigate(['/support'], navigationExtras);
@@ -84,7 +103,6 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
         });
 
       this.websocketService.listen('connect').subscribe((res) => {
-        console.log('Websocket Connected');
         this.websocketService.emit(
           'lss_user_requests',
           this.requestDetails?.requestId
@@ -92,9 +110,61 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
       });
 
       this.websocketService.listen('disconnect').subscribe((res) => {
-        console.log('Websocket Disconnected');
+        // console.log('Websocket Disconnected');
       });
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.startVideo();
+    setTimeout(() => {
+      if (this.video) {
+        this.displayPreviewScreen = true;
+      }
+    }, 1500);
+  }
+
+  startVideo() {
+    this.video = this.videoElement.nativeElement;
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        this.stream = stream;
+        this.video.srcObject = stream;
+        this.video.play();
+      })
+      .catch((err) => {
+        console.error('Error accessing the camera: ', err);
+      });
+  }
+
+  toggleMute() {
+    if (!this.stream) {
+      console.error('Stream not available.');
+      return;
+    }
+
+    this.stream.getAudioTracks().forEach((track) => {
+      track.enabled = !track.enabled;
+      this.micEnabled = track.enabled;
+    });
+  }
+
+  toggleVideo() {
+    if (!this.stream) {
+      console.error('Stream not available.');
+      return;
+    }
+
+    this.stream.getVideoTracks().forEach((track) => {
+      track.enabled = !track.enabled;
+      this.videoEnabled = track.enabled;
+      if (this.videoEnabled == false) {
+        this.stream.getVideoTracks().forEach((track) => track.stop());
+      } else {
+        this.startVideo();
+      }
+    });
   }
 
   showConfirmationDialog() {
@@ -169,10 +239,58 @@ export class WaitingScreenComponent implements OnInit, OnDestroy {
       } else {
         clearInterval(this.interval);
         if (!this.requestAccepted) {
-          this.showConfirmationDialog();
+          // this.showConfirmationDialog();
+          this.showTimerModal();
         }
       }
     }, 1000);
+  }
+
+  showTimerModal() {
+    Swal.fire({
+      title:
+        'All customer support executives are currently occupied. Please request again later.',
+      showCancelButton: false,
+      confirmButtonText: 'Okay',
+      confirmButtonColor: '#da2128',
+      reverseButtons: true,
+      buttonsStyling: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        const text = document.querySelector('.swal2-title');
+        const btnContainer = document.querySelector('.swal2-actions');
+        const confirmButton = document.querySelector('.swal2-confirm');
+
+        if (confirmButton) {
+          btnContainer.setAttribute('style', 'margin-bottom: 10px;'),
+            confirmButton.setAttribute(
+              'style',
+              'border-radius: 18px; width: 100px; background-color: #da2128; color: #fff; border:none; padding:8px 10px; margin-left: 20px;'
+            );
+
+          text.setAttribute(
+            'style',
+            'color: #000; margin: 10px 0; display: flex; justify-content: center; align-items: center'
+          );
+        }
+      },
+    }).then((result) => {
+      if (!this.requestAccepted) {
+        if (result.isConfirmed) {
+          let payload = {
+            requestId: this.requestDetails?.requestId,
+          };
+          this.customerSupportService
+            .deniedWaiting(payload)
+            .subscribe((res: any) => {
+              this.router.navigate(['/']).then(() => {
+                location.reload();
+              });
+            });
+        }
+      }
+    });
   }
 
   openConfirmationModal(): void {

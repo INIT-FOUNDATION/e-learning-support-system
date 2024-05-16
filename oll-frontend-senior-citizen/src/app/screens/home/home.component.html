@@ -1,17 +1,17 @@
-<div class="container">
+<div
+  class="container d-flex flex-column align-items-center justify-content-center h-100"
+>
   <div>
-    <div
-      class="d-flex flex-column align-items-center mt-3 position-relative"
-      (click)="connectWithSupportTeam()"
-    >
-      <img
-        src="assets/images/ollUserLogo.svg"
-        style="cursor: pointer"
-        class="headerLogo"
-      />
-      <p class="position-absolute clickToConnect text-center m-0">
-        Click to connect with expert instantly
-      </p>
+    <div class="d-flex flex-column align-items-center justify-content-center">
+      <span class="fs-20 fw-500 text-secondary">Instant Meeting</span>
+      <img src="assets/images/favIcon.svg" class="my-4" style="width: 12rem" />
+      <button
+        (click)="connectWithSupportTeam()"
+        type="button"
+        class="btn btn-theme-blue fs-11 px-4 py-2 text-white"
+      >
+        Click to connect with live expert instantly
+      </button>
     </div>
   </div>
 </div>

@@ -121,7 +121,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       'hangup',
       'microphone',
       'raisehand',
-      'tileview',
+      // 'tileview',
       'desktop',
     ];
     // if (this.auth.currentUserValue?.token) {
@@ -145,6 +145,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         buttonsWithNotifyClick: ['__end'],
         hideEmailInSettings: true,
         hideLobbyButton: false,
+        hiddenParticipantNames: [environment.inspection_bot],
+        tileView: { disabled: true },
       },
       interfaceConfigOverwrite: {
         ENABLE_DIAL_OUT: false,
@@ -189,6 +191,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       audioMuteStatusChanged: this.handleMuteStatus,
       videoMuteStatusChanged: this.handleVideoStatus,
     });
+
+    console.log(this.meeting_details);
   }
 
   closeRequestAndRoute = () => {
@@ -266,7 +270,10 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
             );
         }
       },
-    }).then((result: any) => {
+      didClose: () => {
+        this.redirectToExternalSite();
+      },
+    }).then((result) => {
       if (result.isConfirmed) {
         if (result.isConfirmed && result.value) {
           this.redirectToExternalSite();
@@ -292,11 +299,10 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
                 this.utilityService.showSuccessMessage(
                   'Feedback submitted successfully!'
                 );
+                window.location.href = 'https://www.oll.co/';
               }
             });
         }
-      } else if (result.dismiss == 'cancel') {
-        this.redirectToExternalSite();
       }
     });
   };
@@ -344,15 +350,34 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   handleVideoConferenceJoined = async (participant) => {
     this.api.isVideoMuted().then((muted) => {
-      if (muted) this.api.executeCommand('toggleVideo');
+      if (muted) {
+        console.log(this.meeting_details.videoButton);
+        if (this.meeting_details.videoButton) {
+          console.log('Hii');
+
+          this.api.executeCommand('toggleVideo');
+        }
+      } else {
+        if (!this.meeting_details.videoButton) {
+          this.api.executeCommand('toggleVideo');
+        }
+      }
     });
 
     this.api.isAudioMuted().then((muted) => {
-      if (muted) this.api.executeCommand('toggleAudio');
+      if (muted) {
+        if (this.meeting_details.micButton) {
+          this.api.executeCommand('toggleAudio');
+        }
+      } else {
+        if (!this.meeting_details.micButton) {
+          this.api.executeCommand('toggleAudio');
+        }
+      }
     });
 
     // this.api.executeCommand('toggleTileView');
-    let data: any = await this.getParticipants();
+    // let data: any = await this.getParticipants();
   };
 
   addBreakoutRoom(name) {

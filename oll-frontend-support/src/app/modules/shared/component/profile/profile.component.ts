@@ -26,6 +26,8 @@ export class ProfileComponent implements OnInit {
   activeScreen = 'view_profile';
   passwordVisible: boolean = false;
   passwordVisibleSecond: boolean = false;
+  courseExpertList: any = [];
+  selectedCourseID: any = [];
   constructor(
     private authService: AuthService,
     public dataService: DataService,
@@ -41,6 +43,7 @@ export class ProfileComponent implements OnInit {
     this.userDetails = this.dataService.userDetails;
     this.initForm();
     this.setDatatoForm();
+    this.getCourseDetails();
     let details = this.appPreference.getValue('oll_user_details');
     this.userDetails = JSON.parse(details);
     // this.profileForm.patchValue({
@@ -51,6 +54,25 @@ export class ProfileComponent implements OnInit {
     //   // password: this.userDetails.password,
     // });
     this.profileForm.updateValueAndValidity();
+  }
+
+  getCourseDetails() {
+    this.profileService.getCourseList().subscribe((res: any) => {
+      this.courseExpertList = res?.data?.course;
+    });
+  }
+
+  updateExpertCategory(payload) {
+    this.profileService.updateExpertCategory(payload).subscribe((res: any) => {
+      console.log(res);
+    });
+  }
+
+  selectExpertCategory(data) {
+    this.selectedCourseID.push({
+      categoryId: data.id,
+      categoryName: data.name,
+    });
   }
 
   initForm() {
@@ -97,6 +119,12 @@ export class ProfileComponent implements OnInit {
       this.commonService.getUserDetails();
       this.utilService.showSuccessMessage('Profile updated successfully');
       this.activeScreen = 'view_profile';
+
+      const payload = {
+        course: this.selectedCourseID,
+      };
+
+      this.updateExpertCategory(payload);
     });
   }
 
@@ -209,6 +237,11 @@ export class ProfileComponent implements OnInit {
 
   goToFaceAuthentication() {
     this.router.navigate(['/face-recognization']);
+    this.dialogRef.close();
+  }
+
+  goToExpertFeedback() {
+    this.router.navigate(['/expert-feedback']);
     this.dialogRef.close();
   }
 }

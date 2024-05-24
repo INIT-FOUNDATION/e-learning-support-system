@@ -13,6 +13,7 @@ import { TokenInterceptor } from '../app/interceptor/token.interceptor';
 import { ErrorHandlerInterceptor } from '../app/interceptor/error-handler.interceptor';
 import { LoaderInterceptor } from '../app/interceptor/loader.interceptor';
 import { PreJoinComponent } from './screens/pre-join/pre-join.component';
+import { ExpertFeedbackComponent } from './screens/expert-feedback/expert-feedback.component';
 
 @NgModule({
   declarations: [

@@ -1,0 +1,27 @@
+.h-100vh {
+  height: 100vh;
+}
+
+.custom-height {
+  height: calc(100vh - 5rem);
+}
+
+.custom-border {
+  border-radius: 1rem;
+  height: unset !important;
+}
+
+.calendar-width {
+  width: 20rem;
+}
+
+.input-label {
+  top: -0.5rem;
+  left: 0.5rem;
+  font-size: 0.7rem;
+}
+
+::ng-deep .mat-calendar,
+::ng-deep .mat-mdc-button.mat-unthemed {
+  font-family: "Poppins" !important;
+}

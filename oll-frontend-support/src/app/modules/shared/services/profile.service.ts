@@ -22,4 +22,15 @@ export class ProfileService {
       payload
     );
   }
+
+  getCourseList() {
+    return this.http.get(`${environment.auth_prefix}/getCategoryList`);
+  }
+
+  updateExpertCategory(payload) {
+    return this.http.post(
+      `${environment.auth_prefix}/addExpertCategoryMappings`,
+      payload
+    );
+  }
 }

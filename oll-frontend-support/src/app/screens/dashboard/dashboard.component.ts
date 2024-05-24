@@ -42,6 +42,8 @@ export class DashboardComponent implements OnInit {
       if (userDetails.is_admin_user) {
         this.is_admin = true;
         this.roleName = userDetails.role_name;
+        console.log(this.roleName);
+
         this.viewType = 'admin';
       } else {
         this.viewType = 'support';

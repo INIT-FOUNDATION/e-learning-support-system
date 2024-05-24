@@ -23,15 +23,15 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-      this.dataService.userData.subscribe(res => {
-        if (res) {
-          this.userDetails = res;
-          this.loggedInUser = true;
-        } else {
-          this.loggedInUser = false;
-          this.userDetails = {};
-        }
-      })
+    this.dataService.userData.subscribe((res) => {
+      if (res) {
+        this.userDetails = res;
+        this.loggedInUser = true;
+      } else {
+        this.loggedInUser = false;
+        this.userDetails = {};
+      }
+    });
   }
 
   goToFaceAuthentication() {

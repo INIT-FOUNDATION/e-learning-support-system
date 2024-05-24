@@ -24,3 +24,10 @@
 .accordian-after-icon::after {
   background-image: none !important;
 }
+
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text,
+::ng-deep .mat-mdc-select {
+  font-family: "Poppins" !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+}

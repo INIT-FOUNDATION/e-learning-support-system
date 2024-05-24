@@ -9,7 +9,13 @@
       style="color: #da2128"
     ></i>
     <span class="fw-600 fs-12 lh-base position-relative">
-      {{ is_admin ? supportUserName : "Customer Support Executive Dashboard" }}
+      {{
+        dataService.userDetails.role_name == "Expert"
+          ? "OLL Expert Dashboard"
+          : is_admin
+          ? supportUserName
+          : "Customer Support Executive Dashboard"
+      }}
       <div class="custom-border-bottom position-absolute"></div
     ></span>
   </div>
@@ -38,7 +44,10 @@
       </div>
     </div>
 
-    <div class="d-flex align-items-center me-3">
+    <div
+      class="d-flex align-items-center me-3"
+      *ngIf="dataService.userDetails.role_name !== 'Expert'"
+    >
       <img
         src="assets/images/viewIcon.svg"
         style="width: 0.9rem; padding-top: 0.1rem"
@@ -62,10 +71,14 @@
 <app-support-dashboard
   [userId]="supportUserid"
   [roleId]="supportRoleid"
-  *ngIf="viewType !== 'admin'"
+  *ngIf="viewType !== 'admin' && dataService.userDetails.role_name !== 'Expert'"
 ></app-support-dashboard>
 
 <app-admin-dashboard
   (supportUserDetails)="getSupportUserDetails($event)"
-  *ngIf="viewType === 'admin'"
+  *ngIf="viewType === 'admin' && dataService.userDetails.role_name !== 'Expert'"
 ></app-admin-dashboard>
+
+<app-expert-dashboard
+  *ngIf="dataService.userDetails.role_name == 'Expert'"
+></app-expert-dashboard>

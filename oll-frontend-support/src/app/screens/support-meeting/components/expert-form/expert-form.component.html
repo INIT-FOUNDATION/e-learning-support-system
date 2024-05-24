@@ -1,0 +1,99 @@
+<div class="border p-4 h-100 custom-border-radius">
+  <div class="fs-13 fw-500 text-center text-secondary">History</div>
+
+  <form action="">
+    <mat-form-field
+      class="w-100 border my-3 custom-border-radius py-1 overflow-hidden bg-white"
+    >
+      <mat-label class="fs-09">Name</mat-label>
+      <input matInput [value]="currentData.name" />
+    </mat-form-field>
+
+    <mat-tab-group>
+      <mat-tab label="Notes by Experts" class="border rounded overflow-hidden">
+        <button
+          type="button"
+          class="btn bg-danger text-white fs-09 rounded w-100 mt-3"
+          (click)="openTranscriptModal(transcriptModal)"
+        >
+          <img src="assets/images/viewTranscript.svg" class="me-2" />
+          View Transcript
+        </button>
+
+        <div class="my-4 w-100 text-center">
+          <i
+            class="fa-solid fa-chevron-left fs-11 cursor-pointer"
+            [ngClass]="[currentIndex == 0 ? 'text-secondary' : 'text-danger']"
+            (click)="showPreviousData()"
+          ></i>
+          <span class="mx-3">{{ currentData.date }}</span>
+          <i
+            class="fa-solid fa-chevron-right fs-11 cursor-pointer"
+            [ngClass]="[
+              currentIndex == historyFormArray.length - 1
+                ? 'text-secondary'
+                : 'text-danger'
+            ]"
+            (click)="showNextData()"
+          ></i>
+        </div>
+
+        <mat-form-field
+          class="w-100 border custom-border-radius py-1 my-3 overflow-hidden bg-white"
+        >
+          <mat-label class="fs-09">Issue</mat-label>
+          <textarea matInput [value]="currentData.note"></textarea>
+        </mat-form-field>
+
+        <mat-form-field
+          class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+        >
+          <mat-label class="fs-09">Solution Suggested</mat-label>
+          <textarea matInput [value]="currentData.solution"></textarea>
+        </mat-form-field>
+      </mat-tab>
+      <mat-tab label="Add new note">
+        <mat-form-field
+          class="w-100 border custom-border-radius py-1 my-3 overflow-hidden bg-white"
+        >
+          <mat-label class="fs-09">Notes</mat-label>
+          <textarea matInput></textarea>
+        </mat-form-field>
+
+        <mat-form-field
+          class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+        >
+          <mat-label class="fs-09">Solution Suggested</mat-label>
+          <textarea matInput></textarea>
+        </mat-form-field>
+
+        <button
+          type="button"
+          class="btn bg-danger text-white w-100 mt-5 rounded-pill py-2"
+        >
+          Submit
+        </button>
+      </mat-tab>
+    </mat-tab-group>
+  </form>
+</div>
+
+<ng-template #transcriptModal>
+  <div class="">
+    <div
+      class="text-center transcript-header d-flex justify-content-between py-2 mb-3"
+    >
+      <div class="flex-fill">
+        <img src="assets/images/transcriptHeaderLogo.svg" class="me-2" />
+        Transcript
+      </div>
+      <div class="me-3 cursor-pointer" (click)="closeTranscriptionModal()">
+        <i class="fa-solid fa-xmark text-danger fs-5"></i>
+      </div>
+    </div>
+    <div class="mb-2 fs-09 px-3" *ngFor="let item of currentData.transcript">
+      <span class="text-danger fw-500 me-2">{{ item?.name }}</span>
+      <span>{{ item?.desc }}</span>
+    </div>
+  </div></ng-template
+>

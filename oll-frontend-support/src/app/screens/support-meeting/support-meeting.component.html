@@ -1,1 +1,33 @@
-<div id="jitsi-iframe" class="meetingVideoCall"></div>
+<div class="container-fluid mt-4 pt-2">
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      <span class="fw-600 fs-12 lh-base position-relative">
+        {{
+          userDetails?.role_name == "Counsellor/support"
+            ? "Customer Support Executive Dashboard"
+            : "OLL Expert Dashboard"
+        }}
+        <div class="custom-border-bottom position-absolute"></div
+      ></span>
+
+      <div class="custom-border overflow-hidden mt-3">
+        <div
+          *ngIf="isSupportMeetingRoom"
+          id="jitsi-iframe"
+          class="meetingVideoCall"
+        ></div>
+        <div *ngIf="!isSupportMeetingRoom">
+          <img src="assets/images/expertMeetingJitsiView.svg" class="w-100" />
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+      <app-counselor-form
+        [requestDetailsFromParent]="meeting_details"
+        *ngIf="isSupportMeetingRoom"
+      ></app-counselor-form>
+      <app-expert-form *ngIf="!isSupportMeetingRoom"></app-expert-form>
+    </div>
+  </div>
+</div>

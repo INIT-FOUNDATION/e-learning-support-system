@@ -1,0 +1,175 @@
+<div class="border p-4 h-100 custom-border-radius">
+  <div class="fs-12 fw-500 text-center text-secondary">Issue Log Form</div>
+
+  <form
+    class="d-flex flex-column align-items-center justify-content-between h-100"
+    [formGroup]="userLoginDetailsForm"
+    (ngSubmit)="
+      activeExperts?.length == 0 && showExperts
+        ? opencalendarModal()
+        : submitUserForm()
+    "
+  >
+    <div class="">
+      <div class="container-fluid mt-3 px-3">
+        <div class="row">
+          <div class="col-6 ps-0 pe-1">
+            <mat-form-field
+              class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+            >
+              <mat-label>Mobile Number</mat-label>
+              <input
+                matInput
+                type="tel"
+                pattern="[0-9]*"
+                maxlength="10"
+                minlength="10"
+                formControlName="mobileNumber"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-6 pe-0 ps-1">
+            <mat-form-field
+              class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+            >
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid my-3 px-3">
+        <div class="row">
+          <div class="col-6 ps-0 pe-1">
+            <mat-form-field
+              class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+            >
+              <mat-label>Educational Qualification</mat-label>
+              <mat-select formControlName="educationQualification">
+                <mat-option
+                  class="fs-08"
+                  *ngFor="let item of educationalQualification"
+                  [value]="item"
+                  >{{ item }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-6 pe-0 ps-1">
+            <mat-form-field
+              class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+            >
+              <mat-label>Preferred Language</mat-label>
+              <mat-select formControlName="preferredLanguage">
+                <mat-option
+                  *ngFor="let item of preferredLanguage"
+                  [value]="item"
+                  >{{ item }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="">
+        <mat-radio-group aria-label="Select an option">
+          <mat-radio-button value="1" (click)="choosedOption('supportQueries')"
+            >Support Queries</mat-radio-button
+          >
+          <mat-radio-button
+            value="2"
+            checked
+            (click)="choosedOption('enquiries')"
+            >Enquiry</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+
+      <mat-form-field
+        *ngIf="isSelectedRadioOption == 'supportQueries'"
+        class="w-100 border custom-border-radius py-1 overflow-hidden bg-white my-3"
+      >
+        <mat-label>Support Queries</mat-label>
+        <mat-select formControlName="categoryId">
+          <mat-option *ngFor="let item of supportQueries" [value]="item?.id">{{
+            item?.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+      <mat-form-field
+        *ngIf="isSelectedRadioOption == 'enquiries'"
+        class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+      >
+        <mat-label>Exquiry</mat-label>
+        <mat-select formControlName="categoryId">
+          <mat-option
+            *ngFor="let item of questionCategory"
+            [value]="item?.id"
+            (click)="showExpertsList(item?.id)"
+            >{{ item?.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <div class="row expert-row-height" *ngIf="showExperts">
+        <div class="col-4 mt-2" *ngFor="let item of activeExperts">
+          <div
+            class="border rounded py-2 w-100 fw-500 text-center cursor-pointer"
+            (click)="selectExpert(item?.id)"
+            [ngClass]="{ 'bg-danger text-white': selectedExpert == item?.id }"
+          >
+            {{ item?.name }}
+          </div>
+        </div>
+        <div class="col-12 ps-5 pt-3" *ngIf="activeExperts?.length == 0">
+          0 experts available
+        </div>
+      </div>
+
+      <mat-form-field
+        class="w-100 border custom-border-radius py-1 my-3 overflow-hidden bg-white"
+      >
+        <mat-label>Notes</mat-label>
+        <textarea matInput formControlName="notes"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="w-100">
+      <button
+        *ngIf="!dialogClosedData"
+        [disabled]="!userLoginDetailsForm.valid"
+        type="submit"
+        class="btn bg-danger text-white w-100 rounded-pill py-2 mb-3 fs-09"
+      >
+        {{
+          activeExperts?.length == 0 && showExperts
+            ? "Schedule meeting with expert"
+            : "Connect now with expert"
+        }}
+      </button>
+
+      <div
+        class="text-center text-secondary fs-09 mb-3 lh-xl"
+        *ngIf="dialogClosedData"
+      >
+        The meeting has been schedule at
+        <span class="text-danger fw-500">{{
+          userLoginDetailsForm.get("scheduleDate").value
+        }}</span>
+        from
+        <span class="text-danger fw-500">{{
+          userLoginDetailsForm.get("preferedStartTime").value
+        }}</span>
+        to
+        <span class="text-danger fw-500">{{
+          userLoginDetailsForm.get("preferedEndTime").value
+        }}</span>
+      </div>
+    </div>
+  </form>
+</div>

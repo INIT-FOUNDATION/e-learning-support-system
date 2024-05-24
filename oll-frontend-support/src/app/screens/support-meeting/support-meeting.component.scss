@@ -1,111 +1,68 @@
 .meetingVideoCall {
-    width: 100%;
-    display: block;
-    border: 0px solid transparent;
+  width: 100%;
+  display: block;
+  border: 0px solid transparent;
+  overflow: hidden !important;
+  height: 100vh;
+  background: #0a2640;
+}
+
+::ng-deep {
+  iframe,
+  .custom-border {
+    height: 75vh !important;
     overflow: hidden !important;
-    height: 100vh;
-    background: #0a2640;
-  }
-  
-  
-  
-  ::ng-deep {
-    iframe {
+
+    @media only screen and (max-width: 1024px) {
       height: 100vh !important;
-      overflow: hidden !important;
-  
-      // @media only screen and (min-width: 320px) {
-      //   height: calc(100vh - 5rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 390px) {
-      //   height: calc(100vh - 5rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 414px) {
-      //   height: calc(100vh - 5rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 568px) {
-      //   height: calc(100vh - 9rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 640px) {
-      //   height: calc(100vh - 9rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 658px) {
-      //   height: calc(100vh - 9rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 736px) {
-      //   height: calc(100vh - 9rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 768px) {
-      //   height: calc(100vh - 10rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 800px) {
-      //   height: calc(100vh - 10rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 812px) {
-      //   height: calc(100vh - 10rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 820px) {
-      //   height: calc(100vh - 10rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 823px) {
-      //   height: calc(100vh - 10rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 844px) {
-      //   height: calc(100vh - 10rem) !important;
-      // }
-  
-      // @media only screen and (min-width: 896px) {
-      //   height: calc(100vh - 10rem) !important;
-      // }
-  
-  
-      // @media only screen and (min-width: 1024px) {
-      //   height: 100vh !important;
-      // }
-  
-      // @media only screen and (min-width: 1098px) {
-      //   height: 100vh !important;
-      // }
-  
-      // @media only screen and (min-width: 1152px) {
-      //   height: 100vh !important;
-      // }
-  
-      // @media only screen and (min-width: 1180px) {
-      //   height: 100vh !important;
-      // }
-  
-      // @media only screen and (min-width: 1280px) {
-      //   height: 100vh !important;
-      // }
-  
-      // @media only screen and (min-width: 1360px) {
-      //   height: 100vh !important;
-      // }
-  
-      // @media only screen and (min-width: 1366px) {
-      //   height: 100vh !important;
-      // }
-  
-      // @media only screen and (min-width: 1440px) {
-      //   height: 100vh !important;
-      // }
-  
-      // @media only screen and (min-width: 1600px) {
-      //   height: 100vh !important;
-      // }
     }
   }
-  
+}
+
+.custom-border-bottom {
+  border: 5px solid #da2128;
+  border-radius: 1rem;
+  width: 2.5rem;
+  left: 0.2rem;
+}
+
+.custom-border {
+  border-radius: 1rem;
+}
+
+::ng-deep .mdc-floating-label--float-above {
+  transform: translateY(-85%) scale(0.75) !important;
+}
+
+::ng-deep .mat-mdc-form-field-focus-overlay,
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: #fff !important;
+}
+
+::ng-deep .mdc-text-field--filled .mdc-line-ripple::before,
+::ng-deep .mdc-text-field--filled .mdc-line-ripple::after {
+  border-bottom: none !important;
+}
+
+::ng-deep .mdc-text-field__input,
+::ng-deep .mdc-text-field--filled .mdc-floating-label,
+::ng-deep .mat-mdc-option.mat-mdc-option-active.mdc-list-item,
+::ng-deep .mat-mdc-select-value-text,
+::ng-deep .mat-mdc-radio-button .mdc-form-field {
+  font-family: "Poppins" !important;
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
+  transform: translateY(0px) !important;
+}
+
+::ng-deep .mdc-list-item__primary-text {
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  font-family: "Poppins" !important;
+}
+
+::ng-deep .mat-mdc-option {
+  min-height: 2.5rem;
+}

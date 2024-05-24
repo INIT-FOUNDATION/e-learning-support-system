@@ -1,0 +1,92 @@
+<div class="h-100vh p-4">
+  <div
+    class="d-flex align-items-center justify-content-between border-bottom pb-2"
+  >
+    <span class="fs-11 fw-500">Scheduling meeting with JS Expert</span>
+    <i
+      class="fa-solid fa-xmark text-secondary fs-3 cursor-pointer"
+      (click)="closeDialog()"
+    ></i>
+  </div>
+
+  <div
+    class="d-flex flex-column align-items-center justify-content-between custom-height"
+  >
+    <div class="d-flex align-items-center justify-content-center flex-column">
+      <div class="text-center fs-09 fw-500 py-4">Calendar</div>
+      <mat-card class="calendar-width mb-5">
+        <mat-calendar
+          class="bg-light"
+          [(selected)]="data.selected_slot ? data.selected_slot : selected"
+          [minDate]="minDate"
+          (selectedChange)="selectedDate($event)"
+        ></mat-calendar>
+      </mat-card>
+
+      <span class="fs-09 d-flex align-self-start">Meeting time</span>
+      <form [formGroup]="selectSlots" class="d-flex align-items-center mt-3">
+        <div class="position-relative">
+          <span class="bg-white position-absolute input-label px-1"
+            >Meeting Start</span
+          >
+          <input
+            appMaskInput
+            matInput
+            [matAutocomplete]="fromTime"
+            formControlName="preferedStartTime"
+            (change)="onStartTimeChange()"
+            class="w-100 ps-3 fs-09 fw-500 border rounded py-2"
+          />
+          <i
+            class="fa fa-clock-o position-absolute"
+            style="right: 0.5rem; top: 0.5rem"
+          ></i>
+          <mat-autocomplete #fromTime="matAutocomplete">
+            <mat-option
+              class="fs-08"
+              *ngFor="let option of time_options"
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+        <span class="mx-2 fs-08">To</span>
+        <div class="position-relative">
+          <span class="bg-white position-absolute input-label px-1"
+            >Meeting End</span
+          >
+          <input
+            appMaskInput
+            matInput
+            [matAutocomplete]="fromTime"
+            formControlName="preferedEndTime"
+            class="w-100 ps-3 fs-09 fw-500 border rounded py-2"
+          />
+          <i
+            class="fa fa-clock-o position-absolute"
+            style="right: 0.5rem; top: 0.5rem"
+          ></i>
+          <mat-autocomplete #fromTime="matAutocomplete">
+            <mat-option
+              class="fs-08"
+              *ngFor="let option of time_options; index as i"
+              [value]="option.value"
+            >
+              <span>{{ option.label }}</span>
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+      </form>
+    </div>
+
+    <button
+      (click)="sumbitForm()"
+      type="button"
+      class="btn bg-danger text-white py-2 custom-border w-100 fs-09"
+    >
+      <img src="/assets/images/videoBtnIcon.svg" class="me-2" />
+      <span>Schedule Meeting with expert</span>
+    </button>
+  </div>
+</div>

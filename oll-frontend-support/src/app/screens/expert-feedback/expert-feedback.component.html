@@ -1,7 +1,7 @@
-<div class="pt-5 pb-3">
-  <div class="">
+<div class="py-3">
+  <div class="mb-3">
     <span class="fw-600 fs-12 lh-base position-relative">
-      Expert Dashboard
+      Expert Feedback
       <div class="custom-border-bottom position-absolute"></div
     ></span>
   </div>
@@ -31,8 +31,37 @@
     </div>
 
     <div class="text-center fw-600 fs-12">
-      <span>How was your experience?</span>
-      <img src="" alt="" />
+      <div class="mb-2">How was your experience?</div>
+      <img
+        *ngFor="let item of ratingsStarArray"
+        src="/assets/images/{{ item?.img }}.svg"
+        alt=""
+      />
     </div>
+
+    <div class="text-center fs-12 my-4">
+      <div class="fw-600 mb-2">What did you like?</div>
+      <div class="d-flex align-items-center">
+        <span
+          class="border mx-3 p-2 rounded-pill fs-08 cursor-pointer"
+          *ngFor="let item of didYouLike"
+          (click)="selectedExperience(item?.id)"
+          [ngClass]="[
+            item?.id == bgSelectedColor
+              ? 'border-danger text-danger fw-500'
+              : 'border-secondary text-secondary'
+          ]"
+        >
+          {{ item?.label }}
+        </span>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="btn bg-danger text-white rounded-pill py-2 px-5 fs-09"
+    >
+      Submit
+    </button>
   </div>
 </div>

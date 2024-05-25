@@ -87,17 +87,6 @@ button:focus:not(:focus-visible) {
   cursor: pointer;
 }
 
-.mat-mdc-form-field-infix {
-  padding-top: 0.6rem !important;
-  padding-bottom: 0.6rem !important;
-  min-height: 0rem;
-}
-
-.mat-mdc-form-field:not(.mat-form-field-disabled)
-  .mat-mdc-floating-label.mdc-floating-label {
-  padding: 0rem 0rem 1rem 0rem;
-}
-
 .custom-video-height {
   // width: calc(100vw - 3rem);
   height: 60vh;

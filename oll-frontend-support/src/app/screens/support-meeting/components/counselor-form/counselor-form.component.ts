@@ -148,6 +148,7 @@ export class CounselorFormComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((res: any) => {
+      this.userLoginDetailsForm.disable();
       this.dialogClosedData = true;
       this.showExperts = false;
       this.userLoginDetailsForm.patchValue({

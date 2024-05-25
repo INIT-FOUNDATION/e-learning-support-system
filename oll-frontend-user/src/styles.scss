@@ -106,3 +106,7 @@ button:focus:not(:focus-visible) {
     height: 30vh;
   }
 }
+
+.swal-width {
+  width: clamp(40rem, 30vw, 40rem);
+}

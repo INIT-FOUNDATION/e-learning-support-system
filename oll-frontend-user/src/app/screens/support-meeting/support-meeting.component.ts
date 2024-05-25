@@ -216,6 +216,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       showLoaderOnConfirm: true,
       allowOutsideClick: false,
       allowEscapeKey: false,
+      customClass: 'swal-width',
 
       didOpen: () => {
         const text = document.querySelector('.swal2-title');

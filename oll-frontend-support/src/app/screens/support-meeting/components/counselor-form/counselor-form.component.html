@@ -13,9 +13,9 @@
     <div class="w-100">
       <div class="container-fluid mt-3 px-3">
         <div class="row">
-          <div class="col-6 ps-0 pe-1">
+          <div class="col-12 px-0">
             <mat-form-field
-              class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+              class="w-100 border custom-border-radius overflow-hidden bg-white"
             >
               <mat-label>Mobile Number</mat-label>
               <input
@@ -31,9 +31,9 @@
             </mat-form-field>
           </div>
 
-          <div class="col-6 pe-0 ps-1">
+          <div class="col-12 px-0 my-3">
             <mat-form-field
-              class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+              class="w-100 border custom-border-radius overflow-hidden bg-white"
             >
               <mat-label>Name</mat-label>
               <input matInput formControlName="name" />
@@ -42,11 +42,11 @@
         </div>
       </div>
 
-      <div class="container-fluid my-3 px-3">
+      <div class="container-fluid px-3">
         <div class="row">
-          <div class="col-6 ps-0 pe-1">
+          <div class="col-12 px-0">
             <mat-form-field
-              class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+              class="w-100 border custom-border-radius overflow-hidden bg-white"
             >
               <mat-label>Educational Qualification</mat-label>
               <mat-select formControlName="educationQualification">
@@ -60,9 +60,9 @@
             </mat-form-field>
           </div>
 
-          <div class="col-6 pe-0 ps-1">
+          <div class="col-12 px-0 my-3">
             <mat-form-field
-              class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+              class="w-100 border custom-border-radius overflow-hidden bg-white"
             >
               <mat-label>Preferred Language</mat-label>
               <mat-select formControlName="preferredLanguage">
@@ -93,7 +93,7 @@
 
       <mat-form-field
         *ngIf="isSelectedRadioOption == 'supportQueries'"
-        class="w-100 border custom-border-radius py-1 overflow-hidden bg-white my-3"
+        class="w-100 border custom-border-radius overflow-hidden bg-white my-3"
       >
         <mat-label>Support Queries</mat-label>
         <mat-select formControlName="categoryId">
@@ -105,14 +105,16 @@
 
       <mat-form-field
         *ngIf="isSelectedRadioOption == 'enquiries'"
-        class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
+        class="w-100 border custom-border-radius overflow-hidden bg-white"
       >
         <mat-label>Exquiry</mat-label>
-        <mat-select formControlName="categoryId">
+        <mat-select
+          formControlName="categoryId"
+          (selectionChange)="showExpertsList($event.value)"
+        >
           <mat-option
             *ngFor="let item of questionCategory"
             [value]="item?.id"
-            (click)="showExpertsList(item?.id)"
             >{{ item?.name }}</mat-option
           >
         </mat-select>
@@ -128,15 +130,15 @@
             {{ item?.name }}
           </div>
         </div>
-        <div class="col-12 ps-5 pt-3" *ngIf="activeExperts?.length == 0">
+        <div class="col-12 ps-5 pt-1" *ngIf="activeExperts?.length == 0">
           0 experts available
         </div>
       </div>
 
       <mat-form-field
-        class="w-100 border custom-border-radius py-1 my-3 overflow-hidden bg-white"
+        class="w-100 border custom-border-radius mt-3 overflow-hidden bg-white"
       >
-        <mat-label>Notes</mat-label>
+        <mat-label>Problem Statement</mat-label>
         <textarea matInput formControlName="notes"></textarea>
       </mat-form-field>
     </div>
@@ -146,7 +148,7 @@
         *ngIf="!dialogClosedData"
         [disabled]="!userLoginDetailsForm.valid"
         type="submit"
-        class="btn bg-danger text-white w-100 rounded-pill py-2 mb-3 fs-09"
+        class="btn bg-danger text-white w-100 rounded-pill py-2 mb-2 fs-09"
       >
         {{
           activeExperts?.length == 0 && showExperts

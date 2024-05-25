@@ -24,6 +24,7 @@ export class CounselorFormComponent implements OnInit {
   @Input() requestDetailsFromParent: any;
   isSelectedRadioOption: any = 'enquiries';
   dialogClosedData: boolean = false;
+  getUserData: any = [];
 
   supportQueries: any = [
     { id: 1, name: 'I want to learn Zoho' },
@@ -51,19 +52,35 @@ export class CounselorFormComponent implements OnInit {
 
   initForm() {
     this.userLoginDetailsForm = new FormGroup({
-      mobileNumber: new FormControl(null, [
-        Validators.required,
-        Validators.pattern('[0-9]*'),
-        Validators.maxLength(10),
-        Validators.minLength(10),
-      ]),
-      name: new FormControl(null, [Validators.required]),
-      educationQualification: new FormControl(null, [Validators.required]),
+      mobileNumber: new FormControl(
+        this.getUserData.mobileNumber ? this.getUserData.mobileNumber : null,
+        [
+          Validators.required,
+          Validators.pattern('[0-9]*'),
+          Validators.maxLength(10),
+          Validators.minLength(10),
+        ]
+      ),
+      name: new FormControl(
+        this.getUserData.name ? this.getUserData.name : null,
+        [Validators.required]
+      ),
+      educationQualification: new FormControl(
+        this.getUserData.educationQualification
+          ? this.getUserData.educationQualification
+          : null,
+        [Validators.required]
+      ),
       categoryId: new FormControl(
         this.requestDetailsFromParent?.requestDetails?.requestPurpose,
         [Validators.required]
       ),
-      preferredLanguage: new FormControl(null, [Validators.required]),
+      preferredLanguage: new FormControl(
+        this.getUserData.preferredLanguage
+          ? this.getUserData.preferredLanguage
+          : null,
+        [Validators.required]
+      ),
       notes: new FormControl(null, [Validators.required]),
       scheduleDate: new FormControl(null),
       preferedStartTime: new FormControl(null),
@@ -71,10 +88,6 @@ export class CounselorFormComponent implements OnInit {
       parentRequestId: new FormControl(
         this.requestDetailsFromParent?.requestDetails?.requestId
       ),
-      guestUserId: new FormControl(
-        this.requestDetailsFromParent?.requestDetails?.requestedByUser
-      ),
-      userId: new FormControl(this.userDetails?.user_id),
     });
   }
 
@@ -100,6 +113,15 @@ export class CounselorFormComponent implements OnInit {
     this.supportService.getExpertsList(expert_id).subscribe((res: any) => {
       this.activeExperts = res?.data;
     });
+  }
+
+  getMobileNumber(mobile_number) {
+    this.supportService
+      .getUserByMobileNumber(mobile_number)
+      .subscribe((res: any) => {
+        this.getUserData = res?.data;
+        this.initForm();
+      });
   }
 
   showExpertsList(expert_id) {

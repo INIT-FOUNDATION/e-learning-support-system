@@ -62,12 +62,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  updateExpertCategory(payload) {
-    this.profileService.updateExpertCategory(payload).subscribe((res: any) => {
-      console.log(res);
-    });
-  }
-
   selectExpertCategory(data) {
     this.selectedCourseID.push({
       categoryId: data.id,
@@ -107,6 +101,7 @@ export class ProfileComponent implements OnInit {
 
   submitProfile() {
     let data = this.profileForm.getRawValue();
+    data.categories = this.selectedCourseID;
     if (!data.password || !data.confirmPassword) {
       delete data.password;
       delete data.confirmPassword;
@@ -119,12 +114,6 @@ export class ProfileComponent implements OnInit {
       this.commonService.getUserDetails();
       this.utilService.showSuccessMessage('Profile updated successfully');
       this.activeScreen = 'view_profile';
-
-      const payload = {
-        course: this.selectedCourseID,
-      };
-
-      this.updateExpertCategory(payload);
     });
   }
 

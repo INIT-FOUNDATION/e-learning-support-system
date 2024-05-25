@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { UtilityService } from '../../services/utility.service';
+import { SupportMeetingService } from 'src/app/screens/support-meeting/services/support-meeting.service';
 
 @Component({
   selector: 'app-calendar-modal',
@@ -14,7 +15,8 @@ export class CalendarModalComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<CalendarModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private utilService: UtilityService
+    private utilService: UtilityService,
+    private supportService: SupportMeetingService
   ) {}
 
   time_options: any[];
@@ -178,12 +180,6 @@ export class CalendarModalComponent implements OnInit {
           ? this.data?.value?.parentRequestId
           : null
       ),
-      guestUserId: new FormControl(
-        this.data?.value?.guestUserId ? this.data?.value?.guestUserId : null
-      ),
-      userId: new FormControl(
-        this.data?.value?.userId ? this.data?.value?.userId : null
-      ),
     });
   }
 
@@ -228,7 +224,15 @@ export class CalendarModalComponent implements OnInit {
   }
 
   sumbitForm() {
-    this.utilService.showSuccessMessage('Schedule meeting successfully!');
-    this.closeDialog();
+    try {
+      const formData = this.selectSlots.getRawValue();
+      this.supportService.createIssueLogin(formData).subscribe((res: any) => {
+        console.log(res);
+        this.utilService.showSuccessMessage('Schedule meeting successfully!');
+        this.closeDialog();
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

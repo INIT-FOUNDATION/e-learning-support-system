@@ -35,4 +35,10 @@ export class SupportMeetingService {
       `${environment.auth_prefix}/getAvailableExperts/${expert_id}`
     );
   }
+
+  getUserByMobileNumber(mobile_number: number) {
+    return this.http.get(
+      `${environment.auth_prefix}/getGuestUser/${mobile_number}`
+    );
+  }
 }

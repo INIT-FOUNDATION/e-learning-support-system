@@ -26,12 +26,19 @@ export class HomeComponent {
   rolesList: any;
   activeRouteId: any;
   ngOnInit(): void {
+    this.getDeviceInformation();
     this.utilityService.showHeaderSet = true;
     this.detectDeviceType();
     this.activeRouteId = this.activeRoute.snapshot.queryParams['courseName'];
     if (this.activeRouteId) {
       this.connectWithSupportTeam();
     }
+  }
+
+  getDeviceInformation() {
+    this.utilityService.getPublicIp().subscribe((res: any) => {
+      localStorage.setItem('device-ip', res.ip);
+    });
   }
 
   detectDeviceType(): void {

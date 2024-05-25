@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -15,7 +16,7 @@ export class UtilityService {
   private showPadding: BehaviorSubject<boolean>;
   showPadding$: Observable<boolean>;
 
-  constructor(private toasterService: ToastrService) {
+  constructor(private toasterService: ToastrService, private http: HttpClient) {
     this.showHeader = new BehaviorSubject(true);
     this.showHeader$ = this.showHeader.asObservable();
 
@@ -69,4 +70,8 @@ export class UtilityService {
     const blob = new Blob(byteArrays, { type: contentType });
     return blob;
   };
+
+  getPublicIp() {
+    return this.http.get('https://api.ipify.org/?format=json');
+  }
 }

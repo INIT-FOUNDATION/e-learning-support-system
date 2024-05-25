@@ -228,7 +228,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     this.dashboardService
       .startRecording({ meetingCode: this.room })
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
       });
     let data: any = await this.getParticipants();
   };

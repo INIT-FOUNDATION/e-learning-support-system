@@ -227,7 +227,6 @@ export class CalendarModalComponent implements OnInit {
     try {
       const formData = this.selectSlots.getRawValue();
       this.supportService.createIssueLogin(formData).subscribe((res: any) => {
-        console.log(res);
         this.utilService.showSuccessMessage('Schedule meeting successfully!');
         this.closeDialog();
       });

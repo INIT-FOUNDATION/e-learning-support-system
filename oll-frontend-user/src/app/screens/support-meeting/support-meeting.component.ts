@@ -191,8 +191,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       audioMuteStatusChanged: this.handleMuteStatus,
       videoMuteStatusChanged: this.handleVideoStatus,
     });
-
-    console.log(this.meeting_details);
   }
 
   closeRequestAndRoute = () => {
@@ -352,10 +350,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   handleVideoConferenceJoined = async (participant) => {
     this.api.isVideoMuted().then((muted) => {
       if (muted) {
-        console.log(this.meeting_details.videoButton);
         if (this.meeting_details.videoButton) {
-          console.log('Hii');
-
           this.api.executeCommand('toggleVideo');
         }
       } else {

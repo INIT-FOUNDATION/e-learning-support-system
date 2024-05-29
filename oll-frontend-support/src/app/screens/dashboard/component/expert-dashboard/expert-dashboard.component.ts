@@ -14,46 +14,9 @@ import { NotificationService } from 'src/app/modules/shared/services/notificatio
   styleUrls: ['./expert-dashboard.component.scss'],
 })
 export class ExpertDashboardComponent implements OnInit {
-  callQueueWaitingList: any = [
-    // {
-    //   id: 1,
-    //   is_active: false,
-    //   requestedByUser: 'Guest-123456789',
-    //   wait_time: '10 secsond(s)',
-    //   requestPurpose: 'Python',
-    //   meeting_code: 'qwerty',
-    // },
-  ];
-
-  onGoingcallWaitingList: any = [
-    // {
-    //   id: 1,
-    //   is_active: false,
-    //   requestedByUser: 'Guest-123456789',
-    //   wait_time: 'Call is in progress',
-    //   requestPurpose: 'Python',
-    //   meeting_code: 'qwerty',
-    // },
-    // {
-    //   id: 2,
-    //   is_active: false,
-    //   requestedByUser: 'Guest-123456789',
-    //   wait_time: 'Call is in progress',
-    //   requestPurpose: 'Web Designing',
-    //   meeting_code: 'qwerty',
-    // },
-    // {
-    //   id: 3,
-    //   is_active: false,
-    //   requestedByUser: 'Guest-123456789',
-    //   wait_time: 'Call is in progress',
-    //   requestPurpose: 'General',
-    //   meeting_code: 'qwerty',
-    // },
-  ];
-
+  callQueueWaitingList: any = [];
+  onGoingcallWaitingList: any = [];
   scheduledCalls: any = [];
-
   meetingHistoryFilter: any = [
     { id: 1, label: 'Today' },
     { id: 2, label: 'Yesterday' },
@@ -61,7 +24,6 @@ export class ExpertDashboardComponent implements OnInit {
     { id: 4, label: 'Last 30 days' },
     { id: 5, label: 'All' },
   ];
-
   callQueueFilter: any = [
     { id: 1, label: 'Call Queue' },
     { id: 2, label: 'On going Calls' },

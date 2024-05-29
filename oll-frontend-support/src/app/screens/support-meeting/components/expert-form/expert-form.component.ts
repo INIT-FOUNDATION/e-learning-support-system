@@ -1,6 +1,8 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { SupportMeetingService } from '../../services/support-meeting.service';
+import { UtilityService } from 'src/app/modules/shared/services/utility.service';
 
 @Component({
   selector: 'app-expert-form',
@@ -8,7 +10,9 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./expert-form.component.scss'],
 })
 export class ExpertFormComponent implements OnInit {
+  @Input() requestDetailsFromParent: any;
   userLoginDetailsForm: FormGroup;
+  addSolutionForm: FormGroup;
   historyFormArray: any = [
     {
       id: 1,
@@ -193,14 +197,29 @@ export class ExpertFormComponent implements OnInit {
   ];
   currentIndex: number = this.historyFormArray.length - 1;
   showTranscription: boolean = false;
-  constructor(public dialog: MatDialog) {}
+  constructor(
+    public dialog: MatDialog,
+    private supportMeetingService: SupportMeetingService,
+    private utilService: UtilityService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.requestDetailsFromParent);
+
+    this.initForm();
+    this.getUserData();
+  }
 
   initForm() {
     this.userLoginDetailsForm = new FormGroup({
       name: new FormControl(null, [Validators.required]),
       issues: new FormControl(null),
+    });
+
+    this.addSolutionForm = new FormGroup({
+      solutionSuggested: new FormControl(null),
+      requestId: new FormControl(this.requestDetailsFromParent?.requestId),
+      notes: new FormControl(null),
     });
   }
 
@@ -236,5 +255,33 @@ export class ExpertFormComponent implements OnInit {
 
   closeTranscriptionModal() {
     this.dialog.closeAll();
+  }
+
+  getUserData() {
+    try {
+      const payload: any = {
+        guestUserId: this.requestDetailsFromParent?.requestedByUserId,
+        categoryId: this.requestDetailsFromParent?.categoryId,
+      };
+      this.supportMeetingService
+        .getRequestByGuest(payload)
+        .subscribe((res: any) => {
+          console.log(res);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  submitForm() {
+    try {
+      const formData = this.addSolutionForm.getRawValue();
+      this.supportMeetingService.addSolution(formData).subscribe((res: any) => {
+        this.utilService.showSuccessMessage('Notes added successfully!');
+        this.getUserData();
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

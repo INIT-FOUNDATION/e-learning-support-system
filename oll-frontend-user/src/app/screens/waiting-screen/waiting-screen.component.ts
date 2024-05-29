@@ -72,6 +72,7 @@ export class WaitingScreenComponent
           switchMap((res: any) => {
             if (res) {
               const data = JSON.parse(res);
+              console.log(data);
               if (
                 data.meetingCode &&
                 data.status == 2 &&
@@ -98,6 +99,7 @@ export class WaitingScreenComponent
                 videoButton: this.videoEnabled,
               },
             };
+            this.websocketService.disconnect();
             this.router.navigate(['/support'], navigationExtras);
           }
         });

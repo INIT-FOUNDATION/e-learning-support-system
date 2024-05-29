@@ -52,22 +52,23 @@
           <textarea matInput [value]="currentData.solution"></textarea>
         </mat-form-field>
       </mat-tab>
-      <mat-tab label="Add new note">
+      <mat-tab label="Add new note" [formGroup]="addSolutionForm">
         <mat-form-field
           class="w-100 border custom-border-radius py-1 my-3 overflow-hidden bg-white"
         >
           <mat-label class="fs-09">Notes</mat-label>
-          <textarea matInput></textarea>
+          <textarea matInput formControlName="notes"></textarea>
         </mat-form-field>
 
         <mat-form-field
           class="w-100 border custom-border-radius py-1 overflow-hidden bg-white"
         >
           <mat-label class="fs-09">Solution Suggested</mat-label>
-          <textarea matInput></textarea>
+          <textarea matInput formControlName="solutionSuggested"></textarea>
         </mat-form-field>
 
         <button
+          (click)="submitForm()"
           type="button"
           class="btn bg-danger text-white w-100 mt-5 rounded-pill py-2"
         >

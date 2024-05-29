@@ -1,12 +1,13 @@
 import { Location, LocationStrategy } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DataService } from 'src/app/modules/shared/services/data.service';
 import { UtilityService } from 'src/app/modules/shared/services/utility.service';
 import { environment } from 'src/environments/environment';
 import { SupportMeetingService } from './services/support-meeting.service';
 import Swal from 'sweetalert2';
+import { WebsocketService } from 'src/app/modules/shared/services/websocket.service';
 
 declare var JitsiMeetExternalAPI: any;
 
@@ -48,7 +49,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private location: LocationStrategy,
     private supportMeetingService: SupportMeetingService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private websocketService: WebsocketService
   ) {
     this.utilityService.showHeaderSet = false;
     this.utilityService.showFooterSet = false;
@@ -90,6 +92,28 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     history.pushState(null, null, window.location.href);
     this.location.onPopState(() => {
       history.pushState(null, null, window.location.href);
+    });
+
+    this.websocketService.connect();
+    this.websocketService.listen('connect').subscribe((res) => {
+      this.websocketService.emit(
+        'lss_user_requests',
+        this.meeting_details?.requestId
+      );
+    });
+    this.websocketService.listen('request_status').subscribe((res: any) => {
+      const data = JSON.parse(res);
+      console.log(data);
+
+      if (data.expertRequestId) {
+        const navigationExtras: NavigationExtras = {
+          state: {
+            requestId: this.meeting_details.requestId,
+          },
+        };
+        this.websocketService.disconnect();
+        this.router.navigate(['/waiting'], navigationExtras);
+      }
     });
   }
 
@@ -415,6 +439,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy(): void {
     window.removeEventListener('beforeunload', this.beforeUnload, true);
-    this.closeRequestAndRoute();
+    // this.closeRequestAndRoute();
   }
 }

@@ -41,4 +41,17 @@ export class SupportMeetingService {
       `${environment.auth_prefix}/getGuestUser/${mobile_number}`
     );
   }
+
+  getRequestByGuest(payload) {
+    return this.http.get(
+      `${environment.support_system_prefix}/getRequestHistoryByGuestUsers/${payload.guestUserId}/${payload.categoryId}`
+    );
+  }
+
+  addSolution(postParams: any): Observable<any> {
+    return this.http.post(
+      `${environment.support_system_prefix}/addSolutionToRequest`,
+      postParams
+    );
+  }
 }

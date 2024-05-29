@@ -27,7 +27,10 @@
         [requestDetailsFromParent]="meeting_details"
         *ngIf="isSupportMeetingRoom"
       ></app-counselor-form>
-      <app-expert-form *ngIf="!isSupportMeetingRoom"></app-expert-form>
+      <app-expert-form
+        [requestDetailsFromParent]="meeting_details"
+        *ngIf="!isSupportMeetingRoom"
+      ></app-expert-form>
     </div>
   </div>
 </div>

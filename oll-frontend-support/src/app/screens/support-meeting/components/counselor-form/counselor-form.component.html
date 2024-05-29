@@ -1,8 +1,8 @@
-<div class="border p-4 h-100 custom-border-radius">
+<div class="border p-4 custom-border-radius custom-height">
   <div class="fs-12 fw-500 text-center text-secondary">Issue Log Form</div>
 
   <form
-    class="d-flex flex-column align-items-center justify-content-between h-100"
+    class="d-flex flex-column align-items-center justify-content-between"
     [formGroup]="userLoginDetailsForm"
     (ngSubmit)="
       activeExperts?.length == 0 && showExperts
@@ -10,7 +10,7 @@
         : submitUserForm()
     "
   >
-    <div class="w-100">
+    <div class="w-100 mb-4">
       <div class="container-fluid mt-3 px-3">
         <div class="row">
           <div class="col-12 px-0">
@@ -110,7 +110,7 @@
         <mat-label>Exquiry</mat-label>
         <mat-select
           formControlName="categoryId"
-          (selectionChange)="showExpertsList($event.value)"
+          (selectionChange)="showExpertsList($event)"
         >
           <mat-option
             *ngFor="let item of questionCategory"
@@ -121,13 +121,25 @@
       </mat-form-field>
 
       <div class="row expert-row-height" *ngIf="showExperts">
-        <div class="col-4 mt-2" *ngFor="let item of activeExperts">
+        <div
+          class="mt-2"
+          *ngFor="let item of activeExperts"
+          [ngClass]="[
+            activeExperts?.length == 1
+              ? 'col-12'
+              : activeExperts?.length == 2
+              ? 'col-6'
+              : 'col-4'
+          ]"
+        >
           <div
             class="border rounded py-2 w-100 fw-500 text-center cursor-pointer"
-            (click)="selectExpert(item?.id)"
-            [ngClass]="{ 'bg-danger text-white': selectedExpert == item?.id }"
+            (click)="selectExpert(item?.expertUserId)"
+            [ngClass]="{
+              'bg-danger text-white': selectedExpert == item?.expertUserId
+            }"
           >
-            {{ item?.name }}
+            {{ item?.expertUserName }}
           </div>
         </div>
         <div class="col-12 ps-5 pt-1" *ngIf="activeExperts?.length == 0">
@@ -139,7 +151,7 @@
         class="w-100 border custom-border-radius mt-3 overflow-hidden bg-white"
       >
         <mat-label>Problem Statement</mat-label>
-        <textarea matInput formControlName="notes"></textarea>
+        <textarea matInput formControlName="problemStatement"></textarea>
       </mat-form-field>
     </div>
 

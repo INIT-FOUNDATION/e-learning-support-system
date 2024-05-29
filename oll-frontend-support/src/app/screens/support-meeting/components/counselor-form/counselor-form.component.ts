@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { CalendarModalComponent } from 'src/app/modules/shared/modal/calendar-modal/calendar-modal.component';
 import { SupportMeetingService } from '../../services/support-meeting.service';
 import { DataService } from 'src/app/modules/shared/services/data.service';
+import { UtilityService } from 'src/app/modules/shared/services/utility.service';
+import { MatOption } from '@angular/material/core';
 
 @Component({
   selector: 'app-counselor-form',
@@ -35,7 +37,8 @@ export class CounselorFormComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private supportService: SupportMeetingService,
-    public dataService: DataService
+    public dataService: DataService,
+    private utilService: UtilityService
   ) {}
 
   ngOnInit(): void {
@@ -71,22 +74,24 @@ export class CounselorFormComponent implements OnInit {
           : null,
         [Validators.required]
       ),
-      categoryId: new FormControl(
-        this.requestDetailsFromParent?.requestDetails?.requestPurpose,
-        [Validators.required]
-      ),
+      categoryId: new FormControl(null, [Validators.required]),
+      requestPurpose: new FormControl(null, [Validators.required]),
       preferredLanguage: new FormControl(
         this.getUserData.preferredLanguage
           ? this.getUserData.preferredLanguage
           : null,
         [Validators.required]
       ),
-      notes: new FormControl(null, [Validators.required]),
+      problemStatement: new FormControl(null, [Validators.required]),
       scheduleDate: new FormControl(null),
       preferedStartTime: new FormControl(null),
       preferedEndTime: new FormControl(null),
+      expertUserId: new FormControl(null),
       parentRequestId: new FormControl(
         this.requestDetailsFromParent?.requestDetails?.requestId
+      ),
+      guestUserId: new FormControl(
+        this.getUserData.guestUserId ? this.getUserData.guestUserId : null
       ),
     });
   }
@@ -124,13 +129,18 @@ export class CounselorFormComponent implements OnInit {
       });
   }
 
-  showExpertsList(expert_id) {
-    this.getAvailableExpertsList(expert_id);
+  showExpertsList(expertDetails) {
+    const value: MatOption = expertDetails.source.selected;
+    this.getAvailableExpertsList(expertDetails.value);
+    this.userLoginDetailsForm.get('requestPurpose').setValue(value.getLabel());
     this.showExperts = true;
   }
 
   selectExpert(expert_id) {
     this.selectedExpert = expert_id;
+    this.userLoginDetailsForm.patchValue({
+      expertUserId: expert_id,
+    });
   }
 
   opencalendarModal() {
@@ -164,14 +174,14 @@ export class CounselorFormComponent implements OnInit {
   }
 
   submitUserForm() {
-    console.log(this.userLoginDetailsForm.getRawValue());
-    // try {
-    //   const formData = this.userLoginDetailsForm.getRawValue();
-    //   this.supportService.createIssueLogin(formData).subscribe((res: any) => {
-    //     console.log(res);
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const formData = this.userLoginDetailsForm.getRawValue();
+      this.supportService.createIssueLogin(formData).subscribe((res: any) => {
+        this.utilService.showSuccessMessage('Schedule meeting successfully!');
+        this.userLoginDetailsForm.disable();
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

@@ -10,7 +10,7 @@
     ></i>
     <span class="fw-600 fs-12 lh-base position-relative">
       {{
-        dataService.userDetails.role_name == "Expert"
+        dataService.userDetails?.role_name == "Expert"
           ? "OLL Expert Dashboard"
           : is_admin
           ? supportUserName

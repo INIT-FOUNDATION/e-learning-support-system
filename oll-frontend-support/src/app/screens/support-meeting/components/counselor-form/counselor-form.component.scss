@@ -10,3 +10,9 @@
 .cursor-none {
   pointer-events: none;
 }
+
+.custom-height {
+  height: calc(100vh - 6.5rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+}

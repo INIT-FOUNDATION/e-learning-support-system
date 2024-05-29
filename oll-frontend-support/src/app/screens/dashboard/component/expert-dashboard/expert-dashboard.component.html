@@ -12,7 +12,7 @@
               selectedCallQueueFilter == 1
                 ? callQueueWaitingList.length
                 : selectedCallQueueFilter == 2
-                ? onGoingCalls.length
+                ? onGoingcallWaitingList.length
                 : scheduledCalls.length
             }}
           </span>
@@ -80,7 +80,7 @@
             <div
               class="d-flex align-items-center justify-content-between py-3 pe-2 cursor-pointer"
               [ngClass]="{ 'border-top': i !== 0 }"
-              *ngFor="let item of onGoingCalls; index as i"
+              *ngFor="let item of onGoingcallWaitingList; index as i"
             >
               <div class="d-flex align-items-center">
                 <span
@@ -128,10 +128,12 @@
                 <div class="d-flex flex-column align-items-start">
                   <div class="fs-08 mb-1 d-flex align-items-center flex-wrap">
                     Meeting schedule with
-                    <span class="fw-500 mx-1">{{ item?.requestedByUser }}</span>
-                    at
-                    <span class="fs-08 d-flex align-items-center ms-1">
-                      {{ item?.date }} on {{ item?.time }}
+                    <span class="fw-500 mx-1">{{ item?.guestUserName }}</span
+                    >at
+                    <span class="fs-08 d-flex align-items-center ms-1 fw-500">
+                      {{ item?.scheduleDate | date : "mediumDate" }} on
+                      {{ item?.preferedStartTime }} -
+                      {{ item?.preferedEndTime }}
                     </span>
                   </div>
                   <div class="fw-500 fs-09 flex-wrap">

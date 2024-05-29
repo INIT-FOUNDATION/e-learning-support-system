@@ -167,18 +167,28 @@ export class CalendarModalComponent implements OnInit {
       categoryId: new FormControl(
         this.data?.value?.categoryId ? this.data?.value?.categoryId : null
       ),
+      requestPurpose: new FormControl(
+        this.data?.value?.requestPurpose
+          ? this.data?.value?.requestPurpose
+          : null
+      ),
       preferredLanguage: new FormControl(
         this.data?.value?.preferredLanguage
           ? this.data?.value?.preferredLanguage
           : null
       ),
-      notes: new FormControl(
-        this.data?.value?.notes ? this.data?.value?.notes : null
+      problemStatement: new FormControl(
+        this.data?.value?.problemStatement
+          ? this.data?.value?.problemStatement
+          : null
       ),
       parentRequestId: new FormControl(
         this.data?.value?.parentRequestId
           ? this.data?.value?.parentRequestId
           : null
+      ),
+      guestUserId: new FormControl(
+        this.data?.value?.guestUserId ? this.data?.value?.guestUserId : null
       ),
     });
   }

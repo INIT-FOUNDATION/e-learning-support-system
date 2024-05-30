@@ -108,7 +108,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       if (data.expertRequestId) {
         const navigationExtras: NavigationExtras = {
           state: {
-            requestId: this.meeting_details.requestId,
+            requestId: data.expertRequestId,
+            expertRequest: true
           },
         };
         this.websocketService.disconnect();

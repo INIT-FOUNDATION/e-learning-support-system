@@ -7,6 +7,8 @@ import { DashboardService } from '../../services/dashboard.service';
 import { WebsocketService } from 'src/app/modules/shared/services/websocket.service';
 import { AppPreferencesService } from 'src/app/modules/shared/services/app-preferences.service';
 import { NotificationService } from 'src/app/modules/shared/services/notification.service';
+import { RecordingModalComponent } from 'src/app/modules/shared/modal/recording-modal/recording-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-expert-dashboard',
@@ -54,7 +56,8 @@ export class ExpertDashboardComponent implements OnInit {
     private websocketService: WebsocketService,
     private appPreferences: AppPreferencesService,
     private notificationService: NotificationService,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -139,20 +142,8 @@ export class ExpertDashboardComponent implements OnInit {
   }
 
   acceptRequest(requestDetails) {
-    const navigationExtras: NavigationExtras = {
-      state: {
-        ...requestDetails,
-        isSupportuser: false,
-        backend_server_url: 'jitsi.orrizonte.in',
-      },
-    };
-    this.router.navigate(['/support'], navigationExtras);
-
-    this.dashboardService
-      .attendRequest({
-        requestId: requestDetails.requestId,
-        userId: this.userDetails.user_id,
-      })
+    console.log(requestDetails);
+    this.dashboardService.attendRequest({requestId: requestDetails.requestId, userId: this.userDetails.user_id})
       .subscribe((res: any) => {
         // this.utilityService.showPaddingSet = false;
         const navigationExtras: NavigationExtras = {
@@ -161,7 +152,9 @@ export class ExpertDashboardComponent implements OnInit {
             requestId: requestDetails.requestId,
             participant_name: `${this.userDetails?.first_name} ${this.userDetails?.last_name}`,
             requestDetails: requestDetails,
-            isSupportuser: true,
+            isSupportuser: false,
+            requestedByUserId: requestDetails.requestedByUserId,
+            categoryId: requestDetails.categoryId
           },
         };
         this.router.navigate(['/support'], navigationExtras);
@@ -318,4 +311,54 @@ export class ExpertDashboardComponent implements OnInit {
 
     return differenceArray2;
   }
+
+  playRecording(recordings) {
+    if (recordings && recordings.length > 0) {
+      const dialogRef = this.dialog.open(RecordingModalComponent, {
+        width: '400px',
+        data: { recordingUrl: recordings[0].recording_url },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        // console.log('The dialog was closed');
+      });
+    }
+  }
+
+  onScroll(event: any): void {
+    this.scrollReachedBottom = this.isScrollbarAtBottom(event);
+    if (this.scrollReachedBottom) {
+      this.currentPage += 1;
+      // this.meetingHistory(this.userDetails?.user_id);
+    }
+  }
+
+  private isScrollbarAtBottom(event): boolean {
+    const { scrollHeight, scrollTop, clientHeight } = event.target;
+
+    if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
+      return true;
+    }
+    return false;
+  }
+
+  // showUserDetails(userId) {
+  //   if (this.is_admin) {
+  //     const payload = {
+  //       duration_type: this.selectedMeetingFilter,
+  //       page_size: this.pageSize,
+  //       current_page: this.currentPage,
+  //       userId: userId,
+  //     };
+  //     this.dashboardService.getAuditByUser(payload).subscribe(
+  //       (res: any) => {
+  //         this.userAuditDetails = res.data;
+  //         this.resetScrollBottomLoader();
+  //       },
+  //       (err) => {
+  //         this.resetScrollBottomLoader();
+  //       }
+  //     );
+  //   }
+  // }
 }

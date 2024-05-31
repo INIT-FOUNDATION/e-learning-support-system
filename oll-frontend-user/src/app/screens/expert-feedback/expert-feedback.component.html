@@ -13,28 +13,33 @@
       class="d-flex align-items-center justify-content-center flex-column bg-light-theme w-100 pb-3 custom-border-radius"
     >
       <div class="profile-photo rounded-circle border bg-secondary mb-2"></div>
-      <span class="fw-600 fs-13">Suraj</span>
-      <span class="my-3 text-secondary">Experienced AutoCAD Tutor</span>
+      <span class="fw-600 fs-13">{{ expertDetails?.userName }}</span>
+      <span class="my-3 text-secondary"
+        >Requested for {{ expertDetails?.requestPurpose }}</span
+      >
       <div
         class="border rounded-pill d-flex align-items-center bg-white text-secondary py-2 px-3"
       >
-        <img src="/assets/images/starRatings.svg" class="me-2" />
+        <img
+          [src]="
+            markedFavourite
+              ? '/assets/images/yellowStarIcon.svg'
+              : '/assets/images/starRatings.svg'
+          "
+          class="me-2 cursor-pointer"
+          (click)="markedFav((markedFavourite = !markedFavourite))"
+        />
         <span>Mark as Favourite</span>
       </div>
     </div>
 
-    <div
-      class="bg-gray custom-border-radius py-2 w-100 d-flex align-items-center justify-content-center text-secondary fs-08 my-4"
-    >
-      <img src="assets/images/expertFeedbackVideoIcon.svg" class="me-2" />
-      <span>Recordings of this session will be generated within 2-4 hours</span>
-    </div>
-
-    <div class="text-center fw-600 fs-12">
+    <div class="text-center fw-600 fs-12 mt-3">
       <div class="mb-2">How was your experience?</div>
       <img
+        class="me-1 cursor-pointer"
         *ngFor="let item of ratingsStarArray"
-        src="/assets/images/{{ item?.img }}.svg"
+        (click)="feedbackRatings(item?.id)"
+        src="assets/images/{{ item?.img }}.svg"
         alt=""
       />
     </div>
@@ -45,10 +50,10 @@
         <span
           class="border mx-3 p-2 rounded-pill fs-08 cursor-pointer"
           *ngFor="let item of didYouLike"
-          (click)="selectedExperience(item?.id)"
+          (click)="selectedExperience(item)"
           [ngClass]="[
-            item?.id == bgSelectedColor
-              ? 'border-danger text-danger fw-500'
+            changeBgColor(item?.id)
+              ? 'bg-danger text-white fw-500'
               : 'border-secondary text-secondary'
           ]"
         >
@@ -58,6 +63,8 @@
     </div>
 
     <button
+      [disabled]="submittedForm"
+      (click)="submitForm()"
       type="button"
       class="btn bg-danger text-white rounded-pill py-2 px-5 fs-09"
     >

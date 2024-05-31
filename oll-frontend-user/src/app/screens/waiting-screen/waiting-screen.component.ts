@@ -67,11 +67,17 @@ export class WaitingScreenComponent
     if (this.requestDetails) {
       this.websocketService.connect();
       this.startTimer();
-      this.joinsupportSubscription = this.websocketService.listen('request_status').pipe(
+      this.joinsupportSubscription = this.websocketService
+        .listen('request_status')
+        .pipe(
           switchMap((res: any) => {
             if (res) {
               const data = JSON.parse(res);
-              if (data.meetingCode && data.status == 2 && this.requestDetails.requestId == data.requestId) {
+              if (
+                data.meetingCode &&
+                data.status == 2 &&
+                this.requestDetails.requestId == data.requestId
+              ) {
                 Swal.close();
                 // this.supportMeetingService.requestAcceptedSet = true;
                 return this.supportMeetingService.joinUser({
@@ -91,6 +97,7 @@ export class WaitingScreenComponent
                 participant_name: `${this.requestDetails?.requestedByUser}`,
                 micButton: this.micEnabled,
                 videoButton: this.videoEnabled,
+                expertRequest: this.requestDetails?.expertRequest,
               },
             };
             this.websocketService.disconnect();
@@ -99,7 +106,10 @@ export class WaitingScreenComponent
         });
 
       this.websocketService.listen('connect').subscribe((res) => {
-        this.websocketService.emit('lss_user_requests', this.requestDetails?.requestId);
+        this.websocketService.emit(
+          'lss_user_requests',
+          this.requestDetails?.requestId
+        );
       });
 
       this.websocketService.listen('disconnect').subscribe((res) => {

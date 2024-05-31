@@ -16,6 +16,7 @@ import { MatOption } from '@angular/material/core';
 export class CounselorFormComponent implements OnInit {
   userLoginDetailsForm: FormGroup;
   selectedExpert: any;
+  selectedExpertName: any = [];
   showExperts: boolean = false;
   educationalQualification: any = [];
   questionCategory: any = [];
@@ -27,7 +28,6 @@ export class CounselorFormComponent implements OnInit {
   isSelectedRadioOption: any = 'enquiries';
   dialogClosedData: boolean = false;
   getUserData: any = [];
-
   supportQueries: any = [
     { id: 1, name: 'I want to learn Zoho' },
     { id: 2, name: 'I want to learn Gmail' },
@@ -55,33 +55,22 @@ export class CounselorFormComponent implements OnInit {
 
   initForm() {
     this.userLoginDetailsForm = new FormGroup({
-      mobileNumber: new FormControl(
-        this.getUserData.mobileNumber ? this.getUserData.mobileNumber : null,
-        [
-          Validators.required,
-          Validators.pattern('[0-9]*'),
-          Validators.maxLength(10),
-          Validators.minLength(10),
-        ]
-      ),
-      name: new FormControl(
-        this.getUserData.name ? this.getUserData.name : null,
-        [Validators.required]
-      ),
-      educationQualification: new FormControl(
-        this.getUserData.educationQualification
-          ? this.getUserData.educationQualification
-          : null,
-        [Validators.required]
-      ),
+      mobileNumber: new FormControl(null, [
+        Validators.required,
+        Validators.pattern('[0-9]*'),
+        Validators.maxLength(10),
+        Validators.minLength(10),
+      ]),
+      name: new FormControl(null, [Validators.required]),
+      educationQualification: new FormControl(null, [Validators.required]),
       categoryId: new FormControl(null, [Validators.required]),
-      requestPurpose: new FormControl(null, [Validators.required]),
-      preferredLanguage: new FormControl(
-        this.getUserData.preferredLanguage
-          ? this.getUserData.preferredLanguage
+      requestPurpose: new FormControl(
+        this.requestDetailsFromParent?.requestDetails?.requestPurpose
+          ? this.requestDetailsFromParent?.requestDetails?.requestPurpose
           : null,
         [Validators.required]
       ),
+      preferredLanguage: new FormControl(null, [Validators.required]),
       problemStatement: new FormControl(null, [Validators.required]),
       scheduleDate: new FormControl(null),
       preferedStartTime: new FormControl(null),
@@ -90,15 +79,28 @@ export class CounselorFormComponent implements OnInit {
       parentRequestId: new FormControl(
         this.requestDetailsFromParent?.requestDetails?.requestId
       ),
-      guestUserId: new FormControl(
-        this.getUserData.guestUserId ? this.getUserData.guestUserId : null
-      ),
+      guestUserId: new FormControl(null),
     });
   }
 
   getCourseDetails() {
     this.supportService.getCourseList().subscribe((res: any) => {
       this.questionCategory = res?.data?.course;
+      const requestPurpose =
+        this.requestDetailsFromParent?.requestDetails?.requestPurpose;
+      if (requestPurpose) {
+        const currentRequestPurpose = this.questionCategory.find(
+          (item) => item.name.toLowerCase() == requestPurpose.toLowerCase()
+        );
+
+        if (currentRequestPurpose) {
+          this.userLoginDetailsForm
+            .get('categoryId')
+            .setValue(currentRequestPurpose.id);
+          this.getAvailableExpertsList(currentRequestPurpose.id);
+          this.showExperts = true;
+        }
+      }
     });
   }
 
@@ -114,10 +116,13 @@ export class CounselorFormComponent implements OnInit {
     });
   }
 
-  getAvailableExpertsList(expert_id) {
-    this.supportService.getExpertsList(expert_id).subscribe((res: any) => {
-      this.activeExperts = res?.data;
-    });
+  async getAvailableExpertsList(expert_id) {
+    console.log(expert_id);
+
+    const expertsList: any = await this.supportService
+      .getExpertsList(expert_id)
+      .toPromise();
+    this.activeExperts = expertsList.data;
   }
 
   getMobileNumber(mobile_number) {
@@ -125,7 +130,19 @@ export class CounselorFormComponent implements OnInit {
       .getUserByMobileNumber(mobile_number)
       .subscribe((res: any) => {
         this.getUserData = res?.data;
-        this.initForm();
+        this.userLoginDetailsForm
+          .get('mobileNumber')
+          .setValue(this.getUserData.mobileNumber);
+        this.userLoginDetailsForm.get('name').setValue(this.getUserData.name);
+        this.userLoginDetailsForm
+          .get('educationQualification')
+          .setValue(this.getUserData.educationQualification);
+        this.userLoginDetailsForm
+          .get('preferredLanguage')
+          .setValue(this.getUserData.preferredLanguage);
+        this.userLoginDetailsForm
+          .get('guestUserId')
+          .setValue(this.getUserData.guestUserId);
       });
   }
 
@@ -136,10 +153,11 @@ export class CounselorFormComponent implements OnInit {
     this.showExperts = true;
   }
 
-  selectExpert(expert_id) {
-    this.selectedExpert = expert_id;
+  selectExpert(expertDetails) {
+    this.selectedExpert = expertDetails?.expertUserId;
+    this.selectedExpertName = expertDetails?.expertUserName;
     this.userLoginDetailsForm.patchValue({
-      expertUserId: expert_id,
+      expertUserId: expertDetails?.expertUserId,
     });
   }
 
@@ -173,13 +191,29 @@ export class CounselorFormComponent implements OnInit {
     this.isSelectedRadioOption = value;
   }
 
-  submitUserForm() {
+  async submitUserForm() {
     try {
-      const formData = this.userLoginDetailsForm.getRawValue();
-      this.supportService.createIssueLogin(formData).subscribe((res: any) => {
-        this.utilService.showSuccessMessage('Schedule meeting successfully!');
-        this.userLoginDetailsForm.disable();
-      });
+      await this.getAvailableExpertsList(
+        this.userLoginDetailsForm.get('categoryId').value
+      );
+
+      if (
+        this.activeExperts.some(
+          (item) =>
+            item.expertUserId ===
+            this.userLoginDetailsForm.get('expertUserId').value
+        )
+      ) {
+        const formData = this.userLoginDetailsForm.getRawValue();
+        this.supportService.createIssueLogin(formData).subscribe((res: any) => {
+          this.utilService.showSuccessMessage(
+            `Schedule meeting successfully with ${this.selectedExpertName}!`
+          );
+          this.userLoginDetailsForm.disable();
+        });
+      } else {
+        this.utilService.showErrorMessage('Expert not available');
+      }
     } catch (error) {
       console.log(error);
     }

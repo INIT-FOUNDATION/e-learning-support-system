@@ -142,8 +142,11 @@ export class ExpertDashboardComponent implements OnInit {
   }
 
   acceptRequest(requestDetails) {
-    console.log(requestDetails);
-    this.dashboardService.attendRequest({requestId: requestDetails.requestId, userId: this.userDetails.user_id})
+    this.dashboardService
+      .attendRequest({
+        requestId: requestDetails.requestId,
+        userId: this.userDetails.user_id,
+      })
       .subscribe((res: any) => {
         // this.utilityService.showPaddingSet = false;
         const navigationExtras: NavigationExtras = {
@@ -154,7 +157,7 @@ export class ExpertDashboardComponent implements OnInit {
             requestDetails: requestDetails,
             isSupportuser: false,
             requestedByUserId: requestDetails.requestedByUserId,
-            categoryId: requestDetails.categoryId
+            categoryId: requestDetails.categoryId,
           },
         };
         this.router.navigate(['/support'], navigationExtras);

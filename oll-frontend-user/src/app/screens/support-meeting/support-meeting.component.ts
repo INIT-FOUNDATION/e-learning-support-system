@@ -103,13 +103,12 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     });
     this.websocketService.listen('request_status').subscribe((res: any) => {
       const data = JSON.parse(res);
-      console.log(data);
-
       if (data.expertRequestId) {
+        this.utilityService.showHeaderSet = true;
         const navigationExtras: NavigationExtras = {
           state: {
             requestId: data.expertRequestId,
-            expertRequest: true
+            expertRequest: true,
           },
         };
         this.websocketService.disconnect();
@@ -406,7 +405,16 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   handleVideoConferenceLeft = () => {
-    this.closeRequestAndRoute();
+    if (this.meeting_details.expertRequest) {
+      const navigationExtras: NavigationExtras = {
+        state: {
+          ...this.meeting_details,
+        },
+      };
+      this.router.navigate(['/expert-feedback'], navigationExtras);
+    } else {
+      this.closeRequestAndRoute();
+    }
   };
 
   handleMuteStatus = (audio) => {

@@ -117,8 +117,6 @@ export class CounselorFormComponent implements OnInit {
   }
 
   async getAvailableExpertsList(expert_id) {
-    console.log(expert_id);
-
     const expertsList: any = await this.supportService
       .getExpertsList(expert_id)
       .toPromise();

@@ -302,17 +302,20 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
           this.redirectToExternalSite();
         }
 
-        let feedbackText = (
+        let feedbackText: any = [];
+        feedbackText = (
           document.getElementById('swal-input') as HTMLInputElement
         ).value;
         let rating = this.selectedRating;
-        if (feedbackText === '') {
+        if (feedbackText.length == 0) {
           Swal.showValidationMessage('Feedback is required');
         } else {
           let payload = {
             requestId: 'this.meeting_details.requestId',
             feedback: feedbackText,
             ratings: rating,
+            feedbackPoints: [],
+            mark_as_favourite: false,
           };
 
           this.supportMeetingService

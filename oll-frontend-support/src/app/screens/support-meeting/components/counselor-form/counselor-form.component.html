@@ -10,7 +10,7 @@
         : submitUserForm()
     "
   >
-    <div class="w-100 mb-4">
+    <div class="w-100 form-height">
       <div class="container-fluid my-3 px-3">
         <div class="row">
           <div class="col-6 ps-0">
@@ -60,7 +60,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-6 pe-0 my-3">
+          <div class="col-6 pe-0">
             <mat-form-field
               class="w-100 border custom-border-radius overflow-hidden bg-white"
             >
@@ -77,12 +77,16 @@
         </div>
       </div>
 
-      <div class="">
+      <div class="my-2">
         <mat-radio-group aria-label="Select an option">
-          <mat-radio-button value="1" (click)="choosedOption('supportQueries')"
+          <mat-radio-button
+            value="1"
+            [disabled]="dialogClosedData"
+            (click)="choosedOption('supportQueries')"
             >Support Queries</mat-radio-button
           >
           <mat-radio-button
+            [disabled]="dialogClosedData"
             value="2"
             checked
             (click)="choosedOption('enquiries')"
@@ -93,7 +97,7 @@
 
       <mat-form-field
         *ngIf="isSelectedRadioOption == 'supportQueries'"
-        class="w-100 border custom-border-radius overflow-hidden bg-white my-3"
+        class="w-100 border custom-border-radius overflow-hidden bg-white"
       >
         <mat-label>Support Queries</mat-label>
         <mat-select formControlName="categoryId">
@@ -105,7 +109,7 @@
 
       <mat-form-field
         *ngIf="isSelectedRadioOption == 'enquiries'"
-        class="w-100 border custom-border-radius overflow-hidden bg-white my-3"
+        class="w-100 border custom-border-radius overflow-hidden bg-white"
       >
         <mat-label>Exquiry</mat-label>
         <mat-select
@@ -163,7 +167,7 @@
         *ngIf="!dialogClosedData"
         [disabled]="!userLoginDetailsForm.valid"
         type="submit"
-        class="btn bg-danger text-white w-100 rounded-pill py-2 mb-2 fs-09"
+        class="btn bg-danger text-white w-100 rounded-pill py-2 fs-09"
       >
         {{
           activeExperts?.length == 0 && showExperts
@@ -173,7 +177,7 @@
       </button>
 
       <div
-        class="text-center text-secondary fs-09 mb-3 lh-xl"
+        class="text-center text-secondary fs-09 lh-xl"
         *ngIf="dialogClosedData"
       >
         The meeting has been schedule at

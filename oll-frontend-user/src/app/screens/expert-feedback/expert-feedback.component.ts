@@ -83,9 +83,7 @@ export class ExpertFeedbackComponent implements OnInit {
 
   getFeedbackDetails() {
     this.supportService
-      .getExpertsDetailsForFeedback(
-        this.requestId ? this.requestId : 'e84166dc-913b-4e8d-bf67-00e02d6344f4'
-      )
+      .getExpertsDetailsForFeedback(this.requestId)
       .subscribe((res: any) => {
         this.expertDetails = res?.data;
       });

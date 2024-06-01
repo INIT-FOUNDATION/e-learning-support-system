@@ -16,3 +16,7 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+.form-height {
+  height: calc(100vh - 13.5rem);
+}

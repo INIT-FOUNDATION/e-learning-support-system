@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { DataService } from 'src/app/modules/shared/services/data.service';
 import { DashboardService } from './services/dashboard.service';
 import { AuthService } from '../auth/services/auth.service';
-import { WebsocketService } from 'src/app/modules/shared/services/websocket.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,6 +22,13 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService
   ) {}
 
+  loginStatus: any = [
+    { label: 'Offline', availability_status: 0 },
+    { label: 'Online', availability_status: 1 },
+  ];
+
+  availabilityStatus = this.loginStatus[1];
+
   getSupportUserDetails(userData: {
     userId: string;
     roleId: string;
@@ -33,6 +39,7 @@ export class DashboardComponent implements OnInit {
     this.supportRoleid = userData.roleId;
     this.viewType = 'support';
   }
+
   toggleStatus: boolean = true;
   toggleChangeView: boolean = false;
   supportStatus: any = 1;
@@ -47,6 +54,14 @@ export class DashboardComponent implements OnInit {
         this.viewType = 'support';
       }
     }
+  }
+
+  getAvailabilityStatus(data) {
+    this.availabilityStatus = this.loginStatus.find(
+      (it) => it.availability_status == data.availability_status
+    );
+    this.toggleStatus =
+      this.availabilityStatus.availability_status == 0 ? false : true;
   }
 
   changeLoginStatus() {

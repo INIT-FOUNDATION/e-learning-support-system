@@ -1,10 +1,12 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -93,6 +95,8 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
     private toastrService: ToastrService
   ) {}
 
+  @Output() availability_status = new EventEmitter();
+
   meetingHistoryFilter: any = [
     { id: 1, label: 'Today' },
     { id: 2, label: 'Yesterday' },
@@ -118,6 +122,8 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log(this.userId);
+
     if (this.authService.currentUserValue?.token) {
       const userDetails = this.dataService.userDetails;
       if (userDetails.is_admin_user) {
@@ -130,6 +136,7 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
         this.userId = userDetails?.user_id;
       }
     }
+    
     // this.utilityService.showHeaderSet = true;
     // this.utilityService.showFooterSet = true;
     this.notificationService.requestPermission();
@@ -147,11 +154,7 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
         .listen('lss_user_availability_status')
         .subscribe((res: any) => {
           if (res) {
-            this.availabilityStatus = this.loginStatus.find(
-              (it) => it.availability_status == res.availability_status
-            );
-            this.toggleStatus =
-              this.availabilityStatus.availability_status == 0 ? false : true;
+            this.availability_status.emit(res);
           }
         });
       this.websocketService.listen('requests').subscribe((res: any) => {
@@ -505,6 +508,8 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.websocketService.disconnect();
+    if (this.is_admin) {
+      this.websocketService.disconnect();
+    }
   }
 }

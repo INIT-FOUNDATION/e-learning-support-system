@@ -314,7 +314,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
             requestId: 'this.meeting_details.requestId',
             feedback: feedbackText,
             ratings: rating,
-            feedbackPoints: [],
             mark_as_favourite: false,
           };
 

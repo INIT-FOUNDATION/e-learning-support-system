@@ -15,7 +15,7 @@ export class ExpertFeedbackComponent implements OnInit {
   requestId: any;
   expertFeedbackForm: FormGroup;
   expertDetails: any = [];
-  ratingsGiven: number;
+  ratingsGiven: number = 1;
   markedFavourite: boolean = false;
   feedback_points: any = [];
   submittedForm: boolean = false;
@@ -94,9 +94,8 @@ export class ExpertFeedbackComponent implements OnInit {
       const payload: any = {
         requestId: this.requestId,
         mark_as_favourite: this.markedFavourite,
-        ratings: this.ratingsGiven ? this.ratingsGiven : 1,
-        feedbackPoints: this.feedback_points,
-        feedback: [],
+        ratings: this.ratingsGiven,
+        feedback: this.feedback_points,
       };
       this.supportService.userFeedback(payload).subscribe((res) => {
         this.UtilityService.showSuccessMessage('Thankyou for your feedback');

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { NavigationExtras, Router } from '@angular/router';
 import * as moment from 'moment';
@@ -35,6 +35,8 @@ export class ExpertDashboardComponent implements OnInit {
     { label: 'Offline', availability_status: 0 },
     { label: 'Online', availability_status: 1 },
   ];
+
+  @Output() availability_status = new EventEmitter();
   availabilityStatus = this.loginStatus[1];
   userDetails: any = [];
   callHistoryList: any = [];
@@ -74,11 +76,7 @@ export class ExpertDashboardComponent implements OnInit {
       .listen('lss_user_availability_status')
       .subscribe((res: any) => {
         if (res) {
-          this.availabilityStatus = this.loginStatus.find(
-            (it) => it.availability_status == res.availability_status
-          );
-          this.toggleStatus =
-            this.availabilityStatus.availability_status == 0 ? false : true;
+          this.availability_status.emit(res);
         }
       });
     this.websocketService.listen('requests').subscribe((res: any) => {

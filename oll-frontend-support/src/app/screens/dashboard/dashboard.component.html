@@ -71,6 +71,7 @@
 <app-support-dashboard
   [userId]="supportUserid"
   [roleId]="supportRoleid"
+  (availability_status)="getAvailabilityStatus($event)"
   *ngIf="viewType !== 'admin' && dataService.userDetails.role_name !== 'Expert'"
 ></app-support-dashboard>
 
@@ -80,5 +81,6 @@
 ></app-admin-dashboard>
 
 <app-expert-dashboard
+  (availability_status)="getAvailabilityStatus($event)"
   *ngIf="dataService.userDetails.role_name == 'Expert'"
 ></app-expert-dashboard>

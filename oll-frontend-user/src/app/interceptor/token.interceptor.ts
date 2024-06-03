@@ -26,7 +26,7 @@ export class TokenInterceptor implements HttpInterceptor {
     const isTablet = this.deviceService.isTablet();
     const isDesktopDevice = this.deviceService.isDesktop();
     const userToken = this.appPreferences.getValue('user_token');
-    const device_ip = localStorage.getItem('device-ip');
+    const device_ip = this.appPreferences.getValue('device-ip');
     let headers = {
       'uo-device-type': deviceInfo.deviceType,
       'uo-os': deviceInfo.os,
@@ -37,7 +37,7 @@ export class TokenInterceptor implements HttpInterceptor {
       'uo-browser-version': deviceInfo.browser_version,
       'uo-browser': deviceInfo.browser,
       'uo-client-id': environment.client_id,
-      'uo-client-ip': device_ip,
+      'uo-client-ip': JSON.parse(device_ip),
     };
 
     if (userToken) {

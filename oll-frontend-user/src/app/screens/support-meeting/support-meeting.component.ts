@@ -221,7 +221,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/']);
     const starsHtml = `
     <div class="rating">
-      <span class="star" id="star1"><i class="fa fa-star"></i></span>
+      <span class="star" id="star1"><i class="fa fa-star" style="color: #ffd700;"></i></span>
       <span class="star" id="star2"><i class="fa fa-star"></i></span>
       <span class="star" id="star3"><i class="fa fa-star"></i></span>
       <span class="star" id="star4"><i class="fa fa-star"></i></span>

@@ -30,10 +30,12 @@ export class SupportMeetingService {
     return this.http.get(`${environment.auth_prefix}/preferredLanguages`);
   }
 
-  getExpertsList(expert_id: any) {
-    return this.http.get(
-      `${environment.auth_prefix}/getAvailableExperts/${expert_id}`
-    );
+  getExpertsList(payload: any) {
+    let url = `${environment.auth_prefix}/getAvailableUsers?roleId=${payload.roleId}`;
+    if (payload.categoryId) {
+      url += `&categoryId=${payload.categoryId}`;
+    }
+    return this.http.get(url);
   }
 
   getUserByMobileNumber(mobile_number: number) {
@@ -43,9 +45,9 @@ export class SupportMeetingService {
   }
 
   getRequestByGuest(payload) {
-    return this.http.get(
-      `${environment.support_system_prefix}/getRequestHistoryByGuestUsers/${payload.guestUserId}/${payload.categoryId}`
-    );
+    let url = `${environment.support_system_prefix}/getRequestHistoryByGuestUser/?guestUserId=${payload.guestUserId}`;
+    if (payload.categoryId) url += `&categoryId=${payload.categoryId}`;
+    return this.http.get(url);
   }
 
   addSolution(postParams: any): Observable<any> {

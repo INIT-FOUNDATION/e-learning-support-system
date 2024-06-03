@@ -5,6 +5,7 @@ import { CustomerSupportModalService } from 'src/app/modules/shared/modal/custom
 import { UtilityService } from 'src/app/modules/shared/services/utility.service';
 import { environment } from 'src/environments/environment';
 import { SupportMeetingService } from '../support-meeting/services/support-meeting.service';
+import { AppPreferencesService } from 'src/app/modules/shared/services/app-preferences.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ export class HomeComponent {
     private customerSupportService: CustomerSupportModalService,
     private utilityService: UtilityService,
     private activeRoute: ActivatedRoute,
-    private supportMeetingService: SupportMeetingService
+    private supportMeetingService: SupportMeetingService,
+    private appPreference: AppPreferencesService
   ) {}
   userName: string = '';
   isMobile: boolean = false;
@@ -37,7 +39,7 @@ export class HomeComponent {
 
   getDeviceInformation() {
     this.utilityService.getPublicIp().subscribe((res: any) => {
-      localStorage.setItem('device-ip', res.ip);
+      this.appPreference.setValue('device-ip', res.ip);
     });
   }
 

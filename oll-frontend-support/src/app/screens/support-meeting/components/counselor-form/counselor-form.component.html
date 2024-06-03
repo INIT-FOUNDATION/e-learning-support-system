@@ -4,11 +4,7 @@
   <form
     class="d-flex flex-column align-items-center justify-content-between"
     [formGroup]="userLoginDetailsForm"
-    (ngSubmit)="
-      activeExperts?.length == 0 && showExperts
-        ? opencalendarModal()
-        : submitUserForm()
-    "
+    (ngSubmit)="submitUserForm()"
   >
     <div class="w-100 form-height">
       <div class="container-fluid my-3 px-3">
@@ -82,33 +78,21 @@
           <mat-radio-button
             value="1"
             [disabled]="dialogClosedData"
-            (click)="choosedOption('supportQueries')"
+            (click)="choosedOption('Support')"
             >Support Queries</mat-radio-button
           >
           <mat-radio-button
             [disabled]="dialogClosedData"
             value="2"
             checked
-            (click)="choosedOption('enquiries')"
+            (click)="choosedOption('Expert')"
             >Enquiry</mat-radio-button
           >
         </mat-radio-group>
       </div>
 
-      <!-- <mat-form-field
-        *ngIf="isSelectedRadioOption == 'supportQueries'"
-        class="w-100 border custom-border-radius overflow-hidden bg-white"
-      >
-        <mat-label>Support Queries</mat-label>
-        <mat-select formControlName="categoryId">
-          <mat-option *ngFor="let item of supportQueries" [value]="item?.id">{{
-            item?.name
-          }}</mat-option>
-        </mat-select>
-      </mat-form-field> -->
-
       <mat-form-field
-        *ngIf="isSelectedRadioOption == 'enquiries'"
+        *ngIf="isSelectedRadioOption == 'Expert'"
         class="w-100 border custom-border-radius overflow-hidden bg-white"
       >
         <mat-label>Exquiry</mat-label>
@@ -124,10 +108,7 @@
         </mat-select>
       </mat-form-field>
 
-      <div
-        class="row expert-row-height"
-        *ngIf="showExperts && isSelectedRadioOption == 'enquiries'"
-      >
+      <div class="row expert-row-height" *ngIf="showExperts">
         <div
           class="mt-2"
           *ngFor="let item of activeExperts"
@@ -143,14 +124,14 @@
             class="border rounded py-2 w-100 fw-500 text-center cursor-pointer"
             (click)="selectExpert(item)"
             [ngClass]="{
-              'bg-danger text-white': selectedExpert == item?.expertUserId
+              'bg-danger text-white': selectedExpert == item?.userId
             }"
           >
-            {{ item?.expertUserName }}
+            {{ item?.userName }}
           </div>
         </div>
         <div class="col-12 ps-5 pt-1" *ngIf="activeExperts?.length == 0">
-          0 experts available
+          0 {{ isSelectedRadioOption }} available
         </div>
       </div>
 

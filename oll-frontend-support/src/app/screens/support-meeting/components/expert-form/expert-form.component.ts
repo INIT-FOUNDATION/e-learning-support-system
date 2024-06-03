@@ -38,7 +38,9 @@ export class ExpertFormComponent implements OnInit {
   initForm() {
     this.addSolutionForm = new FormGroup({
       solutionSuggested: new FormControl(null),
-      requestId: new FormControl(this.requestDetailsFromParent?.requestId),
+      requestId: new FormControl(
+        this.requestDetailsFromParent?.requestDetails?.requestId
+      ),
       notes: new FormControl(null),
     });
   }
@@ -76,8 +78,9 @@ export class ExpertFormComponent implements OnInit {
   getUserData() {
     try {
       const payload: any = {
-        guestUserId: this.requestDetailsFromParent?.requestedByUserId,
-        categoryId: this.requestDetailsFromParent?.categoryId,
+        guestUserId:
+          this.requestDetailsFromParent?.requestDetails?.requestedByUserId,
+        categoryId: this.requestDetailsFromParent?.requestDetails?.categoryId,
       };
       this.supportMeetingService
         .getRequestByGuest(payload)

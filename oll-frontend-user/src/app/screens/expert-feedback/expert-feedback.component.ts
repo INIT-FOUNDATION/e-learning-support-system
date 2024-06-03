@@ -20,7 +20,7 @@ export class ExpertFeedbackComponent implements OnInit {
   feedback_points: any = [];
   submittedForm: boolean = false;
   ratingsStarArray: any = [
-    { id: 1, img: 'starRatings' },
+    { id: 1, img: 'yellowStarIcon' },
     { id: 2, img: 'starRatings' },
     { id: 3, img: 'starRatings' },
     { id: 4, img: 'starRatings' },
@@ -98,8 +98,8 @@ export class ExpertFeedbackComponent implements OnInit {
         feedback: this.feedback_points,
       };
       this.supportService.userFeedback(payload).subscribe((res) => {
-        this.UtilityService.showSuccessMessage('Thankyou for your feedback');
-        this.submittedForm = true;
+        this.UtilityService.showSuccessMessage('Thank you for your feedback');
+        window.location.href = 'https://www.oll.co/';
       });
     } catch (error) {}
   }

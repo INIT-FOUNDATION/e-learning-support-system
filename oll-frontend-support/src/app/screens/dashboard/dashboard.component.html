@@ -14,7 +14,7 @@
           ? "OLL Expert Dashboard"
           : is_admin
           ? supportUserName
-          : "Customer Support Executive Dashboard"
+          : dataService?.userDetails?.role_name + " Dashboard"
       }}
       <div class="custom-border-bottom position-absolute"></div
     ></span>
@@ -46,7 +46,7 @@
 
     <div
       class="d-flex align-items-center me-3"
-      *ngIf="dataService.userDetails.role_name !== 'Expert'"
+      *ngIf="dataService.userDetails.role_name == 'Counsellor'"
     >
       <img
         src="assets/images/viewIcon.svg"

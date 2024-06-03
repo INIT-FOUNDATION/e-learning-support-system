@@ -30,6 +30,7 @@
         <div class="my-4 w-100 text-center">
           <i
             class="fa-solid fa-chevron-left fs-11 cursor-pointer"
+            [ngClass]="[currentIndex == 0 ? 'text-secondary' : 'text-danger']"
             (click)="showPreviousData()"
           ></i>
           <span class="mx-3">{{
@@ -37,6 +38,7 @@
           }}</span>
           <i
             class="fa-solid fa-chevron-right fs-11 cursor-pointer"
+            [ngClass]="[currentIndex == historyFormArray.length - 1  ? 'text-secondary' : 'text-danger']"
             (click)="showNextData()"
           ></i>
         </div>

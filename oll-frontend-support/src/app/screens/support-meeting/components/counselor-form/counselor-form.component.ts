@@ -7,6 +7,7 @@ import { SupportMeetingService } from '../../services/support-meeting.service';
 import { DataService } from 'src/app/modules/shared/services/data.service';
 import { UtilityService } from 'src/app/modules/shared/services/utility.service';
 import { MatOption } from '@angular/material/core';
+import { RegistrationService } from 'src/app/screens/registration/services/registration.service';
 
 @Component({
   selector: 'app-counselor-form',
@@ -25,7 +26,7 @@ export class CounselorFormComponent implements OnInit {
   meeting_details: any;
   userDetails: any = [];
   @Input() requestDetailsFromParent: any;
-  isSelectedRadioOption: any = 'enquiries';
+  isSelectedRadioOption: any = 'Expert';
   dialogClosedData: boolean = false;
   getUserData: any = [];
   supportQueries: any = [
@@ -33,12 +34,14 @@ export class CounselorFormComponent implements OnInit {
     { id: 2, name: 'I want to learn Gmail' },
     { id: 3, name: 'I want to learn chatGpt' },
   ];
-
+  rolesList: any = [];
+  roleId: string = '0ec7b2da-fafc-4e9a-a369-5ad1f298905c';
   constructor(
     private dialog: MatDialog,
     private supportService: SupportMeetingService,
     public dataService: DataService,
-    private utilService: UtilityService
+    private utilService: UtilityService,
+    private roleService: RegistrationService
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +54,7 @@ export class CounselorFormComponent implements OnInit {
     this.getCourseDetails();
     this.getEducationalQualificationList();
     this.getPreferredLanguagesList();
+    this.getRoles();
   }
 
   initForm() {
@@ -63,7 +67,7 @@ export class CounselorFormComponent implements OnInit {
       ]),
       name: new FormControl(null, [Validators.required]),
       educationQualification: new FormControl(null, [Validators.required]),
-      categoryId: new FormControl(null, [Validators.required]),
+      categoryId: new FormControl(null),
       requestPurpose: new FormControl(
         this.requestDetailsFromParent?.requestDetails?.requestPurpose
           ? this.requestDetailsFromParent?.requestDetails?.requestPurpose
@@ -75,11 +79,12 @@ export class CounselorFormComponent implements OnInit {
       scheduleDate: new FormControl(null),
       preferedStartTime: new FormControl(null),
       preferedEndTime: new FormControl(null),
-      expertUserId: new FormControl(null),
+      userId: new FormControl(null),
       parentRequestId: new FormControl(
         this.requestDetailsFromParent?.requestDetails?.requestId
       ),
-      guestUserId: new FormControl(null),
+      roleId: new FormControl(null),
+      // guestUserId: new FormControl(null),
     });
   }
 
@@ -98,7 +103,7 @@ export class CounselorFormComponent implements OnInit {
             .get('categoryId')
             .setValue(currentRequestPurpose.id);
           this.getAvailableExpertsList(currentRequestPurpose.id);
-          this.showExperts = true;
+          // this.showExperts = true;
         }
       }
     });
@@ -116,11 +121,30 @@ export class CounselorFormComponent implements OnInit {
     });
   }
 
-  async getAvailableExpertsList(expert_id) {
+  async getAvailableExpertsList(categoryId) {
+    const payload: any = {
+      categoryId: categoryId,
+      roleId: this.roleId,
+    };
+
     const expertsList: any = await this.supportService
-      .getExpertsList(expert_id)
+      .getExpertsList(payload)
       .toPromise();
     this.activeExperts = expertsList.data;
+    if (this.activeExperts.length > 0) {
+      this.showExperts = true;
+    }
+  }
+
+  getRoles() {
+    this.roleService.getRoles().subscribe((res) => {
+      this.rolesList = res?.roles;
+
+      const roleDetails = this.rolesList.find(
+        (item) => item?.role_name === this.isSelectedRadioOption
+      );
+      this.roleId = roleDetails?.role_id;
+    });
   }
 
   getMobileNumber(mobile_number) {
@@ -138,9 +162,9 @@ export class CounselorFormComponent implements OnInit {
         this.userLoginDetailsForm
           .get('preferredLanguage')
           .setValue(this.getUserData.preferredLanguage);
-        this.userLoginDetailsForm
-          .get('guestUserId')
-          .setValue(this.getUserData.guestUserId);
+        // this.userLoginDetailsForm
+        //   .get('guestUserId')
+        //   .setValue(this.getUserData.guestUserId);
       });
   }
 
@@ -148,18 +172,17 @@ export class CounselorFormComponent implements OnInit {
     const value: MatOption = expertDetails.source.selected;
     this.getAvailableExpertsList(expertDetails.value);
     this.userLoginDetailsForm.get('requestPurpose').setValue(value.getLabel());
-    this.showExperts = true;
+    // this.showExperts = true;
   }
 
   selectExpert(expertDetails) {
-    this.selectedExpert = expertDetails?.expertUserId;
-    this.selectedExpertName = expertDetails?.expertUserName;
-    this.userLoginDetailsForm.patchValue({
-      expertUserId: expertDetails?.expertUserId,
-    });
+    this.selectedExpert = expertDetails?.userId;
+    this.selectedExpertName = expertDetails?.userName;
+    this.userLoginDetailsForm.get('userId').setValue(expertDetails?.userId);
   }
 
   opencalendarModal() {
+    this.userLoginDetailsForm.get('roleId').setValue(this.roleId);
     let dialogRef = this.dialog.open(CalendarModalComponent, {
       width: 'clamp(25rem, 35vw, 40rem)',
       maxWidth: 'unset',
@@ -187,6 +210,13 @@ export class CounselorFormComponent implements OnInit {
 
   choosedOption(value) {
     this.isSelectedRadioOption = value;
+    const roleDetails = this.rolesList.find(
+      (item) => item?.role_name === value
+    );
+    this.roleId = roleDetails.role_id;
+    if (value !== 'Expert') {
+      this.getAvailableExpertsList(null);
+    }
   }
 
   async submitUserForm() {
@@ -198,10 +228,13 @@ export class CounselorFormComponent implements OnInit {
       if (
         this.activeExperts.some(
           (item) =>
-            item.expertUserId ===
-            this.userLoginDetailsForm.get('expertUserId').value
+            item.userId === this.userLoginDetailsForm.get('userId').value
         )
       ) {
+        if (this.isSelectedRadioOption !== 'Expert') {
+          this.userLoginDetailsForm.removeControl('categoryId');
+        }
+        this.userLoginDetailsForm.get('roleId').setValue(this.roleId);
         const formData = this.userLoginDetailsForm.getRawValue();
         this.supportService.createIssueLogin(formData).subscribe((res: any) => {
           this.utilService.showSuccessMessage(
@@ -211,6 +244,9 @@ export class CounselorFormComponent implements OnInit {
         });
       } else {
         this.utilService.showErrorMessage('Expert not available');
+        if (this.activeExperts.length == 0) {
+          this.opencalendarModal();
+        }
       }
     } catch (error) {
       console.log(error);

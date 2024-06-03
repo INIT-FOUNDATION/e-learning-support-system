@@ -61,6 +61,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       this.isSupportMeetingRoom = state.isSupportuser;
       this.meetingLink = state.backend_server_url;
       // this.meetingLink = 'jitsi.aieze.ai';
+      console.log(state, 'State from support meeting');
 
       this.meeting_details = state;
     } else {

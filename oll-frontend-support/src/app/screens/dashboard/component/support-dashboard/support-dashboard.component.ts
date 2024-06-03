@@ -108,7 +108,10 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   callQueueFilter: any = [
     { id: 1, label: 'Call Queue' },
     { id: 2, label: 'On going Calls' },
+    { id: 3, label: 'Scheduled Calls' },
   ];
+
+  scheduledCalls: any = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['userId'].currentValue) {
@@ -122,8 +125,6 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.userId);
-
     if (this.authService.currentUserValue?.token) {
       const userDetails = this.dataService.userDetails;
       if (userDetails.is_admin_user) {
@@ -136,7 +137,7 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
         this.userId = userDetails?.user_id;
       }
     }
-    
+
     // this.utilityService.showHeaderSet = true;
     // this.utilityService.showFooterSet = true;
     this.notificationService.requestPermission();
@@ -311,7 +312,8 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
             requestId: requestDetails.requestId,
             participant_name: `${this.userDetails?.first_name} ${this.userDetails?.last_name}`,
             requestDetails: requestDetails,
-            isSupportuser: true,
+            isSupportuser:
+              this.userDetails?.role_name == 'Counsellor' ? true : false,
           },
         };
         this.router.navigate(['/support'], navigationExtras);
@@ -433,7 +435,19 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   changeCallQueueFilter(event: MatSelectChange) {
     this.selectedCallQueueFilter = event.value;
-    this.onGoingCalls(this.userId);
+    if (this.selectedCallQueueFilter == 1) {
+      this.queueRequest(this.userDetails?.user_id);
+    } else if (this.selectedCallQueueFilter == 2) {
+      this.onGoingCalls(this.userDetails.user_id);
+    } else if (this.selectedCallQueueFilter == 3) {
+      this.getScheduledMeeting();
+    }
+  }
+
+  getScheduledMeeting() {
+    this.dashboardService.getScheduledMeetings().subscribe((res: any) => {
+      this.scheduledCalls = res?.schedules;
+    });
   }
 
   changeLoginStatus() {

@@ -146,7 +146,6 @@ export class ExpertDashboardComponent implements OnInit {
         userId: this.userDetails.user_id,
       })
       .subscribe((res: any) => {
-        // this.utilityService.showPaddingSet = false;
         const navigationExtras: NavigationExtras = {
           state: {
             ...res,

@@ -120,20 +120,6 @@ export class WaitingScreenComponent
 
   ngAfterViewInit(): void {
     this.startVideo();
-    setTimeout(() => {
-      if (this.stream) {
-        this.displayPreviewScreen = true;
-        this.stream.getAudioTracks().forEach((track) => {
-          track.enabled = !track.enabled;
-          this.micEnabled = track.enabled;
-        });
-        this.stream.getVideoTracks().forEach((track) => {
-          track.enabled = !track.enabled;
-          this.videoEnabled = track.enabled;
-          track.stop();
-        });
-      }
-    }, 2500);
   }
 
   startVideo() {
@@ -144,6 +130,17 @@ export class WaitingScreenComponent
         this.stream = stream;
         this.video.srcObject = stream;
         this.video.play();
+
+        this.displayPreviewScreen = true;
+        this.stream.getAudioTracks().forEach((track) => {
+          track.enabled = !track.enabled;
+          this.micEnabled = track.enabled;
+        });
+        this.stream.getVideoTracks().forEach((track) => {
+          track.enabled = !track.enabled;
+          this.videoEnabled = track.enabled;
+          track.stop();
+        });
       })
       .catch((err) => {
         console.error('Error accessing the camera: ', err);

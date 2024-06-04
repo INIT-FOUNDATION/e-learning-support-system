@@ -35,7 +35,7 @@ export class CounselorFormComponent implements OnInit {
     { id: 3, name: 'I want to learn chatGpt' },
   ];
   rolesList: any = [];
-  roleId: string = '0ec7b2da-fafc-4e9a-a369-5ad1f298905c';
+  roleId: string;
   constructor(
     private dialog: MatDialog,
     private supportService: SupportMeetingService,

@@ -121,10 +121,19 @@ export class WaitingScreenComponent
   ngAfterViewInit(): void {
     this.startVideo();
     setTimeout(() => {
-      if (this.video) {
+      if (this.stream) {
         this.displayPreviewScreen = true;
+        this.stream.getAudioTracks().forEach((track) => {
+          track.enabled = !track.enabled;
+          this.micEnabled = track.enabled;
+        });
+        this.stream.getVideoTracks().forEach((track) => {
+          track.enabled = !track.enabled;
+          this.videoEnabled = track.enabled;
+          track.stop();
+        });
       }
-    }, 2000);
+    }, 2500);
   }
 
   startVideo() {
@@ -141,7 +150,7 @@ export class WaitingScreenComponent
       });
   }
 
-  toggleMute() {
+  async toggleMute() {
     if (!this.stream) {
       console.error('Stream not available.');
       return;
@@ -162,10 +171,11 @@ export class WaitingScreenComponent
     this.stream.getVideoTracks().forEach((track) => {
       track.enabled = !track.enabled;
       this.videoEnabled = track.enabled;
-      if (this.videoEnabled == false) {
-        this.stream.getVideoTracks().forEach((track) => track.stop());
-      } else {
+      if (this.videoEnabled) {
         this.startVideo();
+        this.toggleMute();
+      } else {
+        track.stop();
       }
     });
   }

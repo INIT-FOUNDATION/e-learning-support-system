@@ -21,6 +21,7 @@
       OLL
       <div class="fs-11 mt-5">Live Streaming</div>
     </div>
+    
     <div
       class="position-absolute bottom-0 d-flex align-items-center mb-3"
       *ngIf="displayPreviewScreen"
@@ -78,9 +79,9 @@
       }}
       {{
         micEnabled || videoEnabled
-          ? "on"
+          ? "turned on"
           : !micEnabled && !videoEnabled
-          ? "off"
+          ? "turned off"
           : ""
       }}. You will be redirected in the meeting like this.
     </div>

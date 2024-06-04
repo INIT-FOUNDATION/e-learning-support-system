@@ -40,6 +40,13 @@ const routes: Routes = [
         (m) => m.SupportMeetingModule
       ),
   },
+  {
+    path: 'expert-feedback',
+    loadChildren: () =>
+      import('./screens/expert-feedback/expert-feedback.module').then(
+        (m) => m.ExpertFeedbackModule
+      ),
+  },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'notfound', component: NotFoundComponent },
   { path: 'forbidden', component: ForbiddenComponent },

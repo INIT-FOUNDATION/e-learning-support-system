@@ -4,7 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { HeaderComponent } from './component/header/header.component';
 import { FooterComponent } from './component/footer/footer.component';
 import { ToastrModule } from 'ngx-toastr';
@@ -20,6 +20,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { ProfileComponent } from './component/profile/profile.component';
 import { DndDirective } from './directives/dnd.directive';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { MatTabsModule } from '@angular/material/tabs';
+import { CalendarModalComponent } from './modal/calendar-modal/calendar-modal.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCardModule } from '@angular/material/card';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatRadioModule } from '@angular/material/radio';
 
 const export_material_modules = [
   MatInputModule,
@@ -36,6 +42,12 @@ const export_material_modules = [
   NgxSpinnerModule,
   MatIconModule,
   ImageCropperModule,
+  MatTabsModule,
+  MatDatepickerModule,
+  MatCardModule,
+  MatNativeDateModule,
+  MatAutocompleteModule,
+  MatRadioModule,
 ];
 
 const export_directives = [DndDirective];
@@ -46,6 +58,7 @@ const export_components = [
   LoaderComponent,
   FaceAuthenticationModalComponent,
   ProfileComponent,
+  CalendarModalComponent,
 ];
 
 @NgModule({

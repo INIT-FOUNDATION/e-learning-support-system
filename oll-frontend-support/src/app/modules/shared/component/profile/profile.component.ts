@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from 'src/app/screens/auth/services/auth.service';
 import { DataService } from '../../services/data.service';
@@ -26,6 +26,8 @@ export class ProfileComponent implements OnInit {
   activeScreen = 'view_profile';
   passwordVisible: boolean = false;
   passwordVisibleSecond: boolean = false;
+  courseExpertList: any = [];
+  selectedCourseID: any = [];
   constructor(
     private authService: AuthService,
     public dataService: DataService,
@@ -41,6 +43,7 @@ export class ProfileComponent implements OnInit {
     this.userDetails = this.dataService.userDetails;
     this.initForm();
     this.setDatatoForm();
+    this.getCourseDetails();
     let details = this.appPreference.getValue('oll_user_details');
     this.userDetails = JSON.parse(details);
     // this.profileForm.patchValue({
@@ -53,6 +56,12 @@ export class ProfileComponent implements OnInit {
     this.profileForm.updateValueAndValidity();
   }
 
+  getCourseDetails() {
+    this.profileService.getCourseList().subscribe((res: any) => {
+      this.courseExpertList = res?.data?.course;
+    });
+  }
+
   initForm() {
     this.profileForm = new FormGroup({
       // user_id: new FormControl(null, [Validators.required]),
@@ -62,6 +71,17 @@ export class ProfileComponent implements OnInit {
       emailId: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required]),
       confirmPassword: new FormControl(null, [Validators.required]),
+      categories: new FormControl([]),
+    });
+  }
+
+  selectExpertCategory(data) {
+    this.selectedCourseID = [];
+    data.forEach((element: any) => {
+      this.selectedCourseID.push({
+        categoryId: element.id,
+        categoryName: element.name,
+      });
     });
   }
 
@@ -85,6 +105,8 @@ export class ProfileComponent implements OnInit {
 
   submitProfile() {
     let data = this.profileForm.getRawValue();
+    data.categories = this.selectedCourseID;
+
     if (!data.password || !data.confirmPassword) {
       delete data.password;
       delete data.confirmPassword;
@@ -97,6 +119,10 @@ export class ProfileComponent implements OnInit {
       this.commonService.getUserDetails();
       this.utilService.showSuccessMessage('Profile updated successfully');
       this.activeScreen = 'view_profile';
+
+      setTimeout(() => {
+        this.userDetails = this.dataService.userDetails;
+      }, 200);
     });
   }
 
@@ -209,6 +235,11 @@ export class ProfileComponent implements OnInit {
 
   goToFaceAuthentication() {
     this.router.navigate(['/face-recognization']);
+    this.dialogRef.close();
+  }
+
+  goToExpertFeedback() {
+    this.router.navigate(['/expert-feedback']);
     this.dialogRef.close();
   }
 }

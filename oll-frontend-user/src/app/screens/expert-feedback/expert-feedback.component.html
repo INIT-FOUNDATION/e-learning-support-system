@@ -1,0 +1,73 @@
+<div class="py-3">
+  <div class="mb-3">
+    <span class="fw-600 fs-12 lh-base position-relative">
+      Expert Feedback
+      <div class="custom-border-bottom position-absolute"></div
+    ></span>
+  </div>
+
+  <div
+    class="expert-container border d-flex align-items-center justify-content-center flex-column custom-border-radius"
+  >
+    <div
+      class="d-flex align-items-center justify-content-center flex-column bg-light-theme w-100 pb-3 custom-border-radius"
+    >
+      <div class="profile-photo rounded-circle border bg-secondary mb-2"></div>
+      <span class="fw-600 fs-13">{{ expertDetails?.userName }}</span>
+      <span class="my-3 text-secondary"
+        >Requested for {{ expertDetails?.requestPurpose }}</span
+      >
+      <div
+        class="border rounded-pill d-flex align-items-center bg-white text-secondary py-2 px-3"
+      >
+        <img
+          [src]="
+            markedFavourite
+              ? '/assets/images/yellowStarIcon.svg'
+              : '/assets/images/starRatings.svg'
+          "
+          class="me-2 cursor-pointer"
+          (click)="markedFav((markedFavourite = !markedFavourite))"
+        />
+        <span>Mark as Favourite</span>
+      </div>
+    </div>
+
+    <div class="text-center fw-600 fs-12 mt-3">
+      <div class="mb-2">How was your experience?</div>
+      <img
+        class="me-1 cursor-pointer"
+        *ngFor="let item of ratingsStarArray"
+        (click)="feedbackRatings(item?.id)"
+        src="assets/images/{{ item?.img }}.svg"
+        alt=""
+      />
+    </div>
+
+    <div class="text-center fs-12 my-4">
+      <div class="fw-600 mb-2">What did you like?</div>
+      <div class="d-flex align-items-center">
+        <span
+          class="border mx-3 p-2 rounded-pill fs-08 cursor-pointer"
+          *ngFor="let item of didYouLike"
+          (click)="selectedExperience(item)"
+          [ngClass]="[
+            changeBgColor(item?.id)
+              ? 'bg-danger text-white fw-500'
+              : 'border-secondary text-secondary'
+          ]"
+        >
+          {{ item?.label }}
+        </span>
+      </div>
+    </div>
+
+    <button
+      (click)="submitForm()"
+      type="button"
+      class="btn bg-danger text-white rounded-pill py-2 px-5 fs-09"
+    >
+      Submit
+    </button>
+  </div>
+</div>

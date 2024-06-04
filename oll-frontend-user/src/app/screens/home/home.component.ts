@@ -5,6 +5,7 @@ import { CustomerSupportModalService } from 'src/app/modules/shared/modal/custom
 import { UtilityService } from 'src/app/modules/shared/services/utility.service';
 import { environment } from 'src/environments/environment';
 import { SupportMeetingService } from '../support-meeting/services/support-meeting.service';
+import { AppPreferencesService } from 'src/app/modules/shared/services/app-preferences.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ export class HomeComponent {
     private customerSupportService: CustomerSupportModalService,
     private utilityService: UtilityService,
     private activeRoute: ActivatedRoute,
-    private supportMeetingService: SupportMeetingService
+    private supportMeetingService: SupportMeetingService,
+    private appPreference: AppPreferencesService
   ) {}
   userName: string = '';
   isMobile: boolean = false;
@@ -26,12 +28,19 @@ export class HomeComponent {
   rolesList: any;
   activeRouteId: any;
   ngOnInit(): void {
+    this.getDeviceInformation();
     this.utilityService.showHeaderSet = true;
     this.detectDeviceType();
     this.activeRouteId = this.activeRoute.snapshot.queryParams['courseName'];
     if (this.activeRouteId) {
       this.connectWithSupportTeam();
     }
+  }
+
+  getDeviceInformation() {
+    this.utilityService.getPublicIp().subscribe((res: any) => {
+      this.appPreference.setValue('device-ip', res.ip);
+    });
   }
 
   detectDeviceType(): void {

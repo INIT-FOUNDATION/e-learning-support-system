@@ -84,10 +84,17 @@ export class DashboardService {
   }
 
   startRecording(payload) {
-    return this.http.post(`${environment.support_system_prefix}/startRecording`, payload);
+    return this.http.post(
+      `${environment.support_system_prefix}/startRecording`,
+      payload
+    );
   }
 
   getAuditByUser(postParams: any): Observable<any> {
     return this.http.post(`${environment.auth_prefix}/auditLogs`, postParams);
+  }
+
+  getScheduledMeetings() {
+    return this.http.get(`${environment.support_system_prefix}/listSchedules`);
   }
 }

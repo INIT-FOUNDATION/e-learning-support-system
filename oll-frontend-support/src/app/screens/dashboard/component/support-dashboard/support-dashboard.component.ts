@@ -1,10 +1,12 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -79,7 +81,8 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   expertsCountData: number = 0;
   queueRequestData: any;
   subscription$: Subscription;
-  constructor(public dataService: DataService,
+  constructor(
+    public dataService: DataService,
     private dashboardService: DashboardService,
     private websocketService: WebsocketService,
     private appPreferences: AppPreferencesService,
@@ -90,7 +93,9 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
     private dialog: MatDialog,
     private authService: AuthService,
     private toastrService: ToastrService
-  ) { }
+  ) {}
+
+  @Output() availability_status = new EventEmitter();
 
   meetingHistoryFilter: any = [
     { id: 1, label: 'Today' },
@@ -102,8 +107,11 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   callQueueFilter: any = [
     { id: 1, label: 'Call Queue' },
-    { id: 2, label: 'On going Calls' }
+    { id: 2, label: 'On going Calls' },
+    { id: 3, label: 'Scheduled Calls' },
   ];
+
+  scheduledCalls: any = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['userId'].currentValue) {
@@ -129,30 +137,41 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
         this.userId = userDetails?.user_id;
       }
     }
-    this.utilityService.showHeaderSet = true;
-    this.utilityService.showFooterSet = true;
+
+    // this.utilityService.showHeaderSet = true;
+    // this.utilityService.showFooterSet = true;
     this.notificationService.requestPermission();
     const userToken = this.appPreferences.getValue('user_token');
     this.userDetails = this.dataService.userDetails;
     // this.websocketService.emit('lss_support_availability', JSON.parse(userToken));
-    const establishWebsocketConnection = this.is_admin ? ((this.userId && this.roleId) ? true : false) : true;
+    const establishWebsocketConnection = this.is_admin
+      ? this.userId && this.roleId
+        ? true
+        : false
+      : true;
     if (establishWebsocketConnection) {
       this.websocketService.connect();
-      this.websocketService.listen('lss_user_availability_status').subscribe((res: any) => {
+      this.websocketService
+        .listen('lss_user_availability_status')
+        .subscribe((res: any) => {
           if (res) {
-            this.availabilityStatus = this.loginStatus.find((it) => it.availability_status == res.availability_status);
-            this.toggleStatus = this.availabilityStatus.availability_status == 0 ? false : true;
+            this.availability_status.emit(res);
           }
-      });
+        });
       this.websocketService.listen('requests').subscribe((res: any) => {
         if (res && res.length > 0) {
           this.getOrganisedList(res);
           if (!this.onInit) {
             if (this.previousQueueWaitingList) {
-              const newRequests = this.findArrayDifference(this.previousQueueWaitingList, this.callQueueWaitingList, 'requestId');
+              const newRequests = this.findArrayDifference(
+                this.previousQueueWaitingList,
+                this.callQueueWaitingList,
+                'requestId'
+              );
               if (newRequests && newRequests.length > 0) {
                 const request = newRequests[newRequests.length - 1];
-                this.notificationService.showNotification('New Support request',
+                this.notificationService.showNotification(
+                  'New Support request',
                   {
                     body: `${request.requestedByUser} has placed a request`,
                     icon: 'https://link-prod.blr1.digitaloceanspaces.com/assets/images/oll-logo.png',
@@ -175,22 +194,27 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
         }
       });
 
-
-      let websocketPayload: any = { token: JSON.parse(userToken), type: 'cousellor' };
+      let websocketPayload: any = {
+        token: JSON.parse(userToken),
+        type: 'cousellor',
+      };
       if (this.is_admin) {
         websocketPayload = {
           ...websocketPayload,
           type: 'admin',
           counsellor_user_id: this.userId,
-          counsellor_role_id: this.roleId
-        }
+          counsellor_role_id: this.roleId,
+        };
       }
 
       this.websocketService.listen('connect').subscribe((res) => {
-        this.websocketService.emit('lss_support_availability', JSON.stringify(websocketPayload));
+        this.websocketService.emit(
+          'lss_support_availability',
+          JSON.stringify(websocketPayload)
+        );
       });
 
-      this.websocketService.listen('disconnect').subscribe((res) => { });
+      this.websocketService.listen('disconnect').subscribe((res) => {});
     }
 
     this.meetingHistory(this.userId);
@@ -252,7 +276,9 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   playAudio(): void {
-    const audio = new Audio('https://cklassrooms.innoida.utho.io/assets/audio/notification.wav');
+    const audio = new Audio(
+      'https://cklassrooms.innoida.utho.io/assets/audio/notification.wav'
+    );
     audio.play();
   }
 
@@ -273,13 +299,21 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   acceptRequest(requestDetails: any) {
-    this.dashboardService.attendRequest({ requestId: requestDetails.requestId, userId: (this.is_admin ? this.userId : null) }).subscribe((res: any) => {
-        this.utilityService.showPaddingSet = false;
+    this.dashboardService
+      .attendRequest({
+        requestId: requestDetails.requestId,
+        userId: this.is_admin ? this.userId : null,
+      })
+      .subscribe((res: any) => {
+        // this.utilityService.showPaddingSet = false;
         const navigationExtras: NavigationExtras = {
           state: {
             ...res,
             requestId: requestDetails.requestId,
             participant_name: `${this.userDetails?.first_name} ${this.userDetails?.last_name}`,
+            requestDetails: requestDetails,
+            isSupportuser:
+              this.userDetails?.role_name == 'Counsellor' ? true : false,
           },
         };
         this.router.navigate(['/support'], navigationExtras);
@@ -295,7 +329,9 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   joinInIncognitoMode(requestDetails: any) {
-    this.dashboardService.joinIncognitoMode({ requestId: requestDetails.requestId }).subscribe((res: any) => {
+    this.dashboardService
+      .joinIncognitoMode({ requestId: requestDetails.requestId })
+      .subscribe((res: any) => {
         this.utilityService.showPaddingSet = false;
         const navigationExtras: NavigationExtras = {
           state: {
@@ -315,7 +351,7 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
     this.dashboardService.requestOnGoingCalls(payload).subscribe((res: any) => {
       this.onGoingcallWaitingList = res;
-    })
+    });
   }
 
   meetingHistory(user_id) {
@@ -397,16 +433,29 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
     this.meetingHistory(this.userId);
   }
 
-
   changeCallQueueFilter(event: MatSelectChange) {
     this.selectedCallQueueFilter = event.value;
-    this.onGoingCalls(this.userId);
+    if (this.selectedCallQueueFilter == 1) {
+      this.queueRequest(this.userDetails?.user_id);
+    } else if (this.selectedCallQueueFilter == 2) {
+      this.onGoingCalls(this.userDetails.user_id);
+    } else if (this.selectedCallQueueFilter == 3) {
+      this.getScheduledMeeting();
+    }
+  }
+
+  getScheduledMeeting() {
+    this.dashboardService.getScheduledMeetings().subscribe((res: any) => {
+      this.scheduledCalls = res?.schedules;
+    });
   }
 
   changeLoginStatus() {
     this.supportStatus = this.toggleStatus ? 1 : 0;
     // this.hideMatLabel = true;
-    this.dashboardService.updateLoginStatus({ availability_status: this.supportStatus }).subscribe((res: any) => { });
+    this.dashboardService
+      .updateLoginStatus({ availability_status: this.supportStatus })
+      .subscribe((res: any) => {});
   }
 
   changeView(event) {
@@ -473,6 +522,8 @@ export class SupportDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.websocketService.disconnect();
+    if (this.is_admin) {
+      this.websocketService.disconnect();
+    }
   }
 }

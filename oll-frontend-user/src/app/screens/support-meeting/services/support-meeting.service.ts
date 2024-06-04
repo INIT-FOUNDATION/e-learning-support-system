@@ -71,4 +71,10 @@ export class SupportMeetingService {
   set requestAcceptedSet(flag) {
     this.requestAccepted.next(flag);
   }
+
+  getExpertsDetailsForFeedback(expertId) {
+    return this.http.get(
+      `${environment.auth_prefix}/getUserByRequestId/${expertId}`
+    );
+  }
 }

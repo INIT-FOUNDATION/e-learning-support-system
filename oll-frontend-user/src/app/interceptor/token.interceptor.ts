@@ -13,8 +13,10 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(private appPreferences: AppPreferencesService,
-              private deviceService: DeviceDetectorService) {}
+  constructor(
+    private appPreferences: AppPreferencesService,
+    private deviceService: DeviceDetectorService
+  ) {}
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
@@ -24,23 +26,28 @@ export class TokenInterceptor implements HttpInterceptor {
     const isTablet = this.deviceService.isTablet();
     const isDesktopDevice = this.deviceService.isDesktop();
     const userToken = this.appPreferences.getValue('user_token');
+    const device_ip = this.appPreferences.getValue('device-ip');
     let headers = {
       'uo-device-type': deviceInfo.deviceType,
       'uo-os': deviceInfo.os,
       'uo-os-version': deviceInfo.os_version,
-      'uo-is-mobile': ''+isMobile,
-      'uo-is-tablet': ''+isTablet,
-      'uo-is-desktop': ''+isDesktopDevice,
+      'uo-is-mobile': '' + isMobile,
+      'uo-is-tablet': '' + isTablet,
+      'uo-is-desktop': '' + isDesktopDevice,
       'uo-browser-version': deviceInfo.browser_version,
       'uo-browser': deviceInfo.browser,
-      'uo-client-id': environment.client_id
+      'uo-client-id': environment.client_id,
+      'uo-client-ip': JSON.parse(device_ip),
     };
+
     if (userToken) {
       headers['Authorization'] = JSON.parse(userToken);
     }
-    request = request.clone({
-        setHeaders: headers
-    });
+    if (!request.url.includes('api.ipify.org')) {
+      request = request.clone({
+        setHeaders: headers,
+      });
+    }
     return next.handle(request);
   }
 }

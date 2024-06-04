@@ -24,3 +24,141 @@
 .accordian-after-icon::after {
   background-image: none !important;
 }
+
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text,
+::ng-deep .mat-mdc-select {
+  font-family: "Poppins" !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 20px;
+  margin: 10px;
+}
+
+.toggle-switch .toggle-input {
+  display: none;
+}
+
+.toggle-switch .toggle-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45px;
+  height: 20px;
+  background-color: #da2128;
+  border-radius: 34px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-switch .toggle-label::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s;
+}
+
+.toggle-switch .toggle-input:checked + .toggle-label {
+  background-color: #4caf50;
+}
+
+.toggle-switch .toggle-input:checked + .toggle-label::before {
+  transform: translateX(25px);
+}
+
+select:focus-visible {
+  outline: none;
+}
+
+.custom-border-bottom {
+  border: 5px solid #da2128;
+  border-radius: 1rem;
+  width: 2.5rem;
+  left: 0.2rem;
+}
+
+.custom-border-bottom-collapse {
+  border: 3px solid #da2128;
+  border-radius: 1rem;
+  width: 1.5rem;
+}
+
+.collapse-rounded {
+  border-radius: 0.8rem;
+  height: 30rem;
+}
+
+.fs-30 {
+  font-size: 3rem;
+}
+
+.username-label {
+  font-size: 0.7rem;
+}
+
+.custom-scrollbar {
+  max-height: 21rem;
+}
+
+.custom-scrollbar-queue {
+  max-height: 21rem;
+}
+
+.custom-min-height {
+  min-height: 0rem;
+}
+
+.bg-danger,
+.bg-success {
+  padding: 0.6rem 0.8rem;
+}
+
+::ng-deep .mdc-text-field--outlined {
+  --mdc-outlined-text-field-outline-width: 0rem !important;
+}
+
+::ng-deep
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled)
+  .mdc-notched-outline
+  .mdc-notched-outline__leading {
+  border: none !important;
+}
+
+::ng-deep
+  .mdc-text-field--outlined:not(
+    .mdc-text-field--disabled
+  ).mdc-text-field--focused
+  .mdc-notched-outline__trailing {
+  border: none !important;
+}
+
+::ng-deep
+  .mdc-text-field--outlined:not(
+    .mdc-text-field--disabled
+  ).mdc-text-field--focused
+  .mdc-notched-outline__notch {
+  border: none !important;
+}
+
+::ng-deep .bs-popover-start.popover {
+  font-family: inherit !important;
+  border-radius: 1rem !important;
+  border: unset !important;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.25) !important;
+}
+
+.spinner-grow {
+  height: 1rem;
+  width: 1rem;
+}

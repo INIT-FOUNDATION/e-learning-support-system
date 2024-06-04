@@ -60,6 +60,7 @@ export class WaitingScreenComponent
   }
 
   ngOnInit(): void {
+    this.websocketService.disconnect();
     this.supportMeetingService.requestAccepted$.subscribe((res) => {
       this.requestAccepted = res;
     });
@@ -96,8 +97,10 @@ export class WaitingScreenComponent
                 participant_name: `${this.requestDetails?.requestedByUser}`,
                 micButton: this.micEnabled,
                 videoButton: this.videoEnabled,
+                expertRequest: this.requestDetails?.expertRequest,
               },
             };
+            this.websocketService.disconnect();
             this.router.navigate(['/support'], navigationExtras);
           }
         });
@@ -117,11 +120,6 @@ export class WaitingScreenComponent
 
   ngAfterViewInit(): void {
     this.startVideo();
-    setTimeout(() => {
-      if (this.video) {
-        this.displayPreviewScreen = true;
-      }
-    }, 1500);
   }
 
   startVideo() {
@@ -132,13 +130,24 @@ export class WaitingScreenComponent
         this.stream = stream;
         this.video.srcObject = stream;
         this.video.play();
+
+        this.displayPreviewScreen = true;
+        this.stream.getAudioTracks().forEach((track) => {
+          track.enabled = !track.enabled;
+          this.micEnabled = track.enabled;
+        });
+        this.stream.getVideoTracks().forEach((track) => {
+          track.enabled = !track.enabled;
+          this.videoEnabled = track.enabled;
+          track.stop();
+        });
       })
       .catch((err) => {
         console.error('Error accessing the camera: ', err);
       });
   }
 
-  toggleMute() {
+  async toggleMute() {
     if (!this.stream) {
       console.error('Stream not available.');
       return;
@@ -159,10 +168,11 @@ export class WaitingScreenComponent
     this.stream.getVideoTracks().forEach((track) => {
       track.enabled = !track.enabled;
       this.videoEnabled = track.enabled;
-      if (this.videoEnabled == false) {
-        this.stream.getVideoTracks().forEach((track) => track.stop());
-      } else {
+      if (this.videoEnabled) {
         this.startVideo();
+        this.toggleMute();
+      } else {
+        track.stop();
       }
     });
   }

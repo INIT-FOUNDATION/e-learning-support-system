@@ -1,0 +1,22 @@
+.custom-border-radius {
+  border-radius: 1rem;
+}
+
+.expert-row-height {
+  max-height: 6rem;
+  overflow-y: auto;
+}
+
+.cursor-none {
+  pointer-events: none;
+}
+
+.custom-height {
+  height: calc(100vh - 6.5rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.form-height {
+  height: calc(100vh - 13.5rem);
+}

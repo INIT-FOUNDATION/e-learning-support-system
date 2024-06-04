@@ -37,6 +37,9 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   // For Custom Controls
   onJoinIsAudioMuted = false;
   onJoinIsVideoMuted = false;
+  toggleStatus: boolean = true;
+  supportStatus: any = 1;
+  isSupportMeetingRoom: boolean = false;
 
   constructor(
     private router: Router,
@@ -49,13 +52,16 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     private dashboardService: DashboardService,
     private route: ActivatedRoute
   ) {
-    this.utilityService.showHeaderSet = false;
-    this.utilityService.showFooterSet = false;
+    // this.utilityService.showHeaderSet = false;
+    // this.utilityService.showFooterSet = false;
+
     const navigation = this.router.getCurrentNavigation();
     const state: any = navigation.extras.state;
     if (state) {
+      this.isSupportMeetingRoom = state.isSupportuser;
       this.meetingLink = state.backend_server_url;
       // this.meetingLink = 'jitsi.aieze.ai';
+      console.log(state, 'State from support meeting');
 
       this.meeting_details = state;
     } else {
@@ -79,7 +85,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     this.userDetails = this.dataService.userDetails;
-
     history.pushState(null, null, window.location.href);
     this.location.onPopState(() => {
       history.pushState(null, null, window.location.href);
@@ -140,7 +145,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
         hideEmailInSettings: true,
         hideLobbyButton: false,
         hiddenParticipantNames: [environment.inspection_bot],
-        tileView: {disabled: true}
+        tileView: { disabled: true },
       },
       interfaceConfigOverwrite: {
         ENABLE_DIAL_OUT: false,
@@ -220,7 +225,11 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   };
 
   handleVideoConferenceJoined = async (participant) => {
-    this.dashboardService.startRecording({meetingCode: this.room}).subscribe((res) => {console.log(res);});
+    this.dashboardService
+      .startRecording({ meetingCode: this.room })
+      .subscribe((res) => {
+        // console.log(res);
+      });
     let data: any = await this.getParticipants();
   };
 
@@ -259,6 +268,13 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     if (command == 'toggleVideo') {
       this.onJoinIsVideoMuted = !this.onJoinIsVideoMuted;
     }
+  }
+
+  changeLoginStatus() {
+    this.supportStatus = this.toggleStatus ? 1 : 0;
+    this.dashboardService
+      .updateLoginStatus({ availability_status: this.supportStatus })
+      .subscribe((res: any) => {});
   }
 
   ngOnDestroy(): void {

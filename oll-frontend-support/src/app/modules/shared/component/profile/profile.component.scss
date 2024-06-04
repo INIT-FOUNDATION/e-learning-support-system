@@ -99,3 +99,21 @@
   padding: 0.6rem 0.75rem !important;
   border-radius: 0.25rem 0rem 0rem 0.25rem !important;
 }
+
+::ng-deep .mdc-list-item__primary-text,
+::ng-deep .mat-mdc-select-value {
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  font-family: "Poppins" !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  border: 1px solid #ddd;
+  background-color: transparent !important;
+}
+
+::ng-deep
+  .mdc-text-field--filled:not(.mdc-text-field--disabled)
+  .mdc-line-ripple::before {
+  border: 0px !important;
+}

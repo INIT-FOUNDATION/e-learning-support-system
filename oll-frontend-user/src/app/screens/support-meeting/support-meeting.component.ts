@@ -1,12 +1,13 @@
 import { Location, LocationStrategy } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DataService } from 'src/app/modules/shared/services/data.service';
 import { UtilityService } from 'src/app/modules/shared/services/utility.service';
 import { environment } from 'src/environments/environment';
 import { SupportMeetingService } from './services/support-meeting.service';
 import Swal from 'sweetalert2';
+import { WebsocketService } from 'src/app/modules/shared/services/websocket.service';
 
 declare var JitsiMeetExternalAPI: any;
 
@@ -48,7 +49,8 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private location: LocationStrategy,
     private supportMeetingService: SupportMeetingService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private websocketService: WebsocketService
   ) {
     this.utilityService.showHeaderSet = false;
     this.utilityService.showFooterSet = false;
@@ -90,6 +92,28 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
     history.pushState(null, null, window.location.href);
     this.location.onPopState(() => {
       history.pushState(null, null, window.location.href);
+    });
+
+    this.websocketService.connect();
+    this.websocketService.listen('connect').subscribe((res) => {
+      this.websocketService.emit(
+        'lss_user_requests',
+        this.meeting_details?.requestId
+      );
+    });
+    this.websocketService.listen('request_status').subscribe((res: any) => {
+      const data = JSON.parse(res);
+      if (data.expertRequestId) {
+        this.utilityService.showHeaderSet = true;
+        const navigationExtras: NavigationExtras = {
+          state: {
+            requestId: data.expertRequestId,
+            expertRequest: true,
+          },
+        };
+        this.websocketService.disconnect();
+        this.router.navigate(['/waiting'], navigationExtras);
+      }
     });
   }
 
@@ -191,15 +215,13 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       audioMuteStatusChanged: this.handleMuteStatus,
       videoMuteStatusChanged: this.handleVideoStatus,
     });
-
-    console.log(this.meeting_details);
   }
 
   closeRequestAndRoute = () => {
     this.router.navigate(['/']);
     const starsHtml = `
     <div class="rating">
-      <span class="star" id="star1"><i class="fa fa-star"></i></span>
+      <span class="star" id="star1"><i class="fa fa-star" style="color: #ffd700;"></i></span>
       <span class="star" id="star2"><i class="fa fa-star"></i></span>
       <span class="star" id="star3"><i class="fa fa-star"></i></span>
       <span class="star" id="star4"><i class="fa fa-star"></i></span>
@@ -216,6 +238,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
       showLoaderOnConfirm: true,
       allowOutsideClick: false,
       allowEscapeKey: false,
+      customClass: 'swal-width',
 
       didOpen: () => {
         const text = document.querySelector('.swal2-title');
@@ -279,17 +302,19 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
           this.redirectToExternalSite();
         }
 
-        let feedbackText = (
+        let feedbackText: any = [];
+        feedbackText = (
           document.getElementById('swal-input') as HTMLInputElement
         ).value;
         let rating = this.selectedRating;
-        if (feedbackText === '') {
+        if (feedbackText.length == 0) {
           Swal.showValidationMessage('Feedback is required');
         } else {
           let payload = {
             requestId: 'this.meeting_details.requestId',
             feedback: feedbackText,
             ratings: rating,
+            mark_as_favourite: false,
           };
 
           this.supportMeetingService
@@ -351,10 +376,7 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   handleVideoConferenceJoined = async (participant) => {
     this.api.isVideoMuted().then((muted) => {
       if (muted) {
-        console.log(this.meeting_details.videoButton);
         if (this.meeting_details.videoButton) {
-          console.log('Hii');
-
           this.api.executeCommand('toggleVideo');
         }
       } else {
@@ -385,7 +407,16 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
   }
 
   handleVideoConferenceLeft = () => {
-    this.closeRequestAndRoute();
+    if (this.meeting_details.expertRequest) {
+      const navigationExtras: NavigationExtras = {
+        state: {
+          ...this.meeting_details,
+        },
+      };
+      this.router.navigate(['/expert-feedback'], navigationExtras);
+    } else {
+      this.closeRequestAndRoute();
+    }
   };
 
   handleMuteStatus = (audio) => {
@@ -419,6 +450,6 @@ export class SupportMeetingComponent implements OnInit, AfterViewInit {
 
   ngOnDestroy(): void {
     window.removeEventListener('beforeunload', this.beforeUnload, true);
-    this.closeRequestAndRoute();
+    // this.closeRequestAndRoute();
   }
 }

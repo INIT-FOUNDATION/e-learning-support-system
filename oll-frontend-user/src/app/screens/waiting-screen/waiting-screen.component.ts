@@ -119,32 +119,40 @@ export class WaitingScreenComponent
   }
 
   ngAfterViewInit(): void {
-    this.startVideo();
+    this.startVideo(true);
   }
 
-  startVideo() {
+  startVideo(isStop) {
     this.video = this.videoElement.nativeElement;
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         this.stream = stream;
         this.video.srcObject = stream;
-        this.video.play();
 
-        this.displayPreviewScreen = true;
-        this.stream.getAudioTracks().forEach((track) => {
-          track.enabled = !track.enabled;
-          this.micEnabled = track.enabled;
-        });
-        this.stream.getVideoTracks().forEach((track) => {
-          track.enabled = !track.enabled;
-          this.videoEnabled = track.enabled;
-          track.stop();
-        });
+        if (isStop) {
+          this.displayPreviewScreen = true;
+          this.stream.getAudioTracks().forEach((track) => {
+            track.enabled = !track.enabled;
+            this.micEnabled = track.enabled;
+          });
+          this.stream.getVideoTracks().forEach((track) => {
+            track.enabled = !track.enabled;
+            this.videoEnabled = track.enabled;
+            track.stop();
+          });
+        } else {
+          this.video.play();
+        }
       })
       .catch((err) => {
         console.error('Error accessing the camera: ', err);
       });
+  }
+
+  stopCameraAndMic() {
+    if (this.stream) {
+    }
   }
 
   async toggleMute() {
@@ -169,7 +177,7 @@ export class WaitingScreenComponent
       track.enabled = !track.enabled;
       this.videoEnabled = track.enabled;
       if (this.videoEnabled) {
-        this.startVideo();
+        this.startVideo(false);
         this.toggleMute();
       } else {
         track.stop();

@@ -36,6 +36,7 @@ export class CounselorFormComponent implements OnInit {
   ];
   rolesList: any = [];
   roleId: string;
+  invalidDetails: boolean = false;
   constructor(
     private dialog: MatDialog,
     private supportService: SupportMeetingService,
@@ -84,7 +85,6 @@ export class CounselorFormComponent implements OnInit {
         this.requestDetailsFromParent?.requestDetails?.requestId
       ),
       roleId: new FormControl(null),
-      // guestUserId: new FormControl(null),
     });
   }
 
@@ -131,7 +131,7 @@ export class CounselorFormComponent implements OnInit {
       .getExpertsList(payload)
       .toPromise();
     this.activeExperts = expertsList.data;
-    if (this.activeExperts.length > 0) {
+    if (this.activeExperts.length == 0) {
       this.showExperts = true;
     }
   }
@@ -148,24 +148,36 @@ export class CounselorFormComponent implements OnInit {
   }
 
   getMobileNumber(mobile_number) {
-    this.supportService
-      .getUserByMobileNumber(mobile_number)
-      .subscribe((res: any) => {
-        this.getUserData = res?.data;
-        this.userLoginDetailsForm
-          .get('mobileNumber')
-          .setValue(this.getUserData.mobileNumber);
-        this.userLoginDetailsForm.get('name').setValue(this.getUserData.name);
-        this.userLoginDetailsForm
-          .get('educationQualification')
-          .setValue(this.getUserData.educationQualification);
-        this.userLoginDetailsForm
-          .get('preferredLanguage')
-          .setValue(this.getUserData.preferredLanguage);
-        // this.userLoginDetailsForm
-        //   .get('guestUserId')
-        //   .setValue(this.getUserData.guestUserId);
-      });
+    if (mobile_number.length < 10) {
+      this.invalidDetails = true;
+    } else {
+      this.invalidDetails = false;
+      this.supportService
+        .getUserByMobileNumber(mobile_number)
+        .subscribe((res: any) => {
+          this.getUserData = res?.data;
+          this.userLoginDetailsForm
+            .get('mobileNumber')
+            .setValue(
+              this.getUserData?.mobileNumber
+                ? this.getUserData?.mobileNumber
+                : mobile_number
+            );
+          this.userLoginDetailsForm
+            .get('name')
+            .setValue(this.getUserData ? this.getUserData.name : '');
+          this.userLoginDetailsForm
+            .get('educationQualification')
+            .setValue(
+              this.getUserData ? this.getUserData.educationQualification : ''
+            );
+          this.userLoginDetailsForm
+            .get('preferredLanguage')
+            .setValue(
+              this.getUserData ? this.getUserData.preferredLanguage : ''
+            );
+        });
+    }
   }
 
   showExpertsList(expertDetails) {
